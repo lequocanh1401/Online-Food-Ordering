@@ -3,7 +3,6 @@ package com.anh.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +12,6 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 // CHẶN JACKSON ĐỤNG VÀO RESTAURANT
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "restaurant"})
 public class IngredientCategory {

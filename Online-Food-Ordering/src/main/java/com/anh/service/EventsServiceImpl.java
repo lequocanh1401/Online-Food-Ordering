@@ -19,6 +19,9 @@ public class EventsServiceImpl implements EventsService {
     @Autowired
     private RestaurantService restaurantService;
 
+    @Autowired
+    private com.anh.repository.CouponRepository couponRepository;
+
     @Override
     public Events createEvent(Events event, Long restaurantId) throws Exception {
         Restaurant restaurant = restaurantService.findRestaurantById(restaurantId);
@@ -29,7 +32,27 @@ public class EventsServiceImpl implements EventsService {
         newEvent.setStartedAt(event.getStartedAt());
         newEvent.setEndsAt(event.getEndsAt());
         newEvent.setRestaurant(restaurant);
-        return eventsRepository.save(newEvent);
+        newEvent.setPromoCode(event.getPromoCode() != null ? event.getPromoCode().trim().toUpperCase() : null);
+        newEvent.setDiscountType(event.getDiscountType() != null ? event.getDiscountType() : "PERCENTAGE");
+        newEvent.setDiscountValue(event.getDiscountValue() != null ? event.getDiscountValue() : 0L);
+        newEvent.setMinimumOrderValue(event.getMinimumOrderValue() != null ? event.getMinimumOrderValue() : 0L);
+        Events savedEvent = eventsRepository.save(newEvent);
+
+        // Tự động đồng bộ tạo Coupon cho nhà hàng nếu có mã giảm giá
+        if (newEvent.getPromoCode() != null && !newEvent.getPromoCode().isEmpty()) {
+            String code = newEvent.getPromoCode();
+            Optional<com.anh.model.Coupon> opt = couponRepository.findByCodeAndRestaurantId(code, restaurantId);
+            com.anh.model.Coupon coupon = opt.orElse(new com.anh.model.Coupon());
+            coupon.setCode(code);
+            coupon.setRestaurant(restaurant);
+            coupon.setActive(true);
+            coupon.setDiscountType(newEvent.getDiscountType());
+            coupon.setDiscountValue(newEvent.getDiscountValue());
+            coupon.setMinimumOrderValue(newEvent.getMinimumOrderValue());
+            couponRepository.save(coupon);
+        }
+
+        return savedEvent;
     }
 
     @Override
@@ -65,6 +88,26 @@ public class EventsServiceImpl implements EventsService {
         existingEvent.setLocation(event.getLocation());
         existingEvent.setStartedAt(event.getStartedAt());
         existingEvent.setEndsAt(event.getEndsAt());
-        return eventsRepository.save(existingEvent);
+        existingEvent.setPromoCode(event.getPromoCode() != null ? event.getPromoCode().trim().toUpperCase() : null);
+        existingEvent.setDiscountType(event.getDiscountType() != null ? event.getDiscountType() : "PERCENTAGE");
+        existingEvent.setDiscountValue(event.getDiscountValue() != null ? event.getDiscountValue() : 0L);
+        existingEvent.setMinimumOrderValue(event.getMinimumOrderValue() != null ? event.getMinimumOrderValue() : 0L);
+        Events savedEvent = eventsRepository.save(existingEvent);
+
+        if (savedEvent.getPromoCode() != null && !savedEvent.getPromoCode().isEmpty() && savedEvent.getRestaurant() != null) {
+            String code = savedEvent.getPromoCode();
+            Long restId = savedEvent.getRestaurant().getId();
+            Optional<com.anh.model.Coupon> opt = couponRepository.findByCodeAndRestaurantId(code, restId);
+            com.anh.model.Coupon coupon = opt.orElse(new com.anh.model.Coupon());
+            coupon.setCode(code);
+            coupon.setRestaurant(savedEvent.getRestaurant());
+            coupon.setActive(true);
+            coupon.setDiscountType(savedEvent.getDiscountType());
+            coupon.setDiscountValue(savedEvent.getDiscountValue());
+            coupon.setMinimumOrderValue(savedEvent.getMinimumOrderValue());
+            couponRepository.save(coupon);
+        }
+
+        return savedEvent;
     }
 }

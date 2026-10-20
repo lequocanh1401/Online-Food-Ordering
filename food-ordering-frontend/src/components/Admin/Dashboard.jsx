@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
-    Grid, Card, CardContent, Typography, Box, Table, TableBody, 
+    Card, CardContent, Typography, Box, Table, TableBody, 
     TableCell, TableContainer, TableHead, TableRow, Paper, Avatar, 
     Switch, Chip 
 } from '@mui/material';
@@ -9,19 +10,32 @@ import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import KitchenIcon from '@mui/icons-material/Kitchen';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import { updateRestaurantStatus } from '../../State/Restaurant/Action';
 import { fetchRestaurantsOrder } from '../../State/RestaurantOrder/Action';
 import { getIngredientsOfRestaurant } from '../../State/Ingredients/Action';
 import { getMenuItemsByRestaurantId } from '../../State/Menu/Action';
 import { 
-    AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, 
-    CartesianGrid, Tooltip, Legend, ResponsiveContainer 
+    AreaChart, Area, PieChart, Pie, Cell, XAxis, YAxis, 
+    CartesianGrid, Tooltip, ResponsiveContainer 
 } from 'recharts';
 
 const COLORS = ['#e91e63', '#ff9800', '#3b82f6', '#8b5cf6', '#06b6d4'];
 
+const getOrderStatusLabel = (status) => {
+    switch (status) {
+        case "PENDING": return "Chờ xử lý";
+        case "PAID": return "Đã thanh toán";
+        case "OUT_FOR_DELIVERY": return "Đang giao hàng";
+        case "DELIVERED": return "Đã giao hàng";
+        case "COMPLETED": return "Hoàn thành";
+        default: return status;
+    }
+};
+
 export const Dashboard = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const jwt = localStorage.getItem("jwt");
     
     const { restaurant, restaurantOrder, menu, ingredients } = useSelector(store => store);
@@ -66,7 +80,7 @@ export const Dashboard = () => {
     // Tính toán số liệu thống kê
     const orders = restaurantOrder.orders || [];
     const completedOrders = orders.filter(o => o.orderStatus === "COMPLETED" || o.orderStatus === "DELIVERED");
-    const totalRevenue = completedOrders.reduce((sum, order) => sum + order.totalPrice, 0);
+    const totalRevenue = completedOrders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
     const pendingOrdersCount = orders.filter(o => o.orderStatus === "PENDING").length;
 
     // 1. Biểu đồ Doanh thu (7 ngày qua)
@@ -132,10 +146,18 @@ export const Dashboard = () => {
     }
     const activeStatusData = orderStatusData.filter(d => d.value > 0);
 
+    const ingredientItems = ingredients.ingredients || [];
+    const outOfStockCount = ingredientItems.filter(i => (i.quantity != null ? i.quantity : 50) <= 0).length;
+    const lowStockCount = ingredientItems.filter(i => {
+        const q = i.quantity != null ? i.quantity : 50;
+        const min = i.minThreshold != null ? i.minThreshold : 10;
+        return q > 0 && q <= min;
+    }).length;
+
     const stats = [
         {
             title: "Doanh Thu (Hoàn thành/Đã giao)",
-            value: `${totalRevenue.toLocaleString()} đ`,
+            value: `${totalRevenue.toLocaleString()}đ`,
             icon: <MonetizationOnIcon sx={{ fontSize: 40 }} />,
             color: "from-emerald-500 to-green-600",
             subtitle: `Đã thanh toán cho ${completedOrders.length} đơn hàng`
@@ -156,10 +178,14 @@ export const Dashboard = () => {
         },
         {
             title: "Tổng Số Nguyên Liệu",
-            value: ingredients.ingredients?.length || 0,
+            value: ingredientItems.length,
             icon: <KitchenIcon sx={{ fontSize: 40 }} />,
-            color: "from-pink-500 to-rose-600",
-            subtitle: "Quản lý trong kho bếp"
+            color: outOfStockCount > 0 ? "from-rose-600 to-red-700" : lowStockCount > 0 ? "from-amber-500 to-yellow-600" : "from-pink-500 to-rose-600",
+            subtitle: outOfStockCount > 0 
+                ? `⚠️ CẢNH BÁO: ${outOfStockCount} mục cạn kho!` 
+                : lowStockCount > 0 
+                ? `⚡ ${lowStockCount} mục sắp chạm ngưỡng` 
+                : "Tất cả nguyên liệu ổn định"
         }
     ];
 
@@ -170,7 +196,7 @@ export const Dashboard = () => {
                 <Box className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
                     <Box>
                         <Typography variant="h4" className="font-bold text-gray-50 flex items-center gap-2">
-                            Chào mừng trở lại, <span className="text-pink-500">{usersRestaurant.name}</span>!
+                             Chào mừng trở lại, <span className="text-pink-500">{usersRestaurant.name}</span>!
                         </Typography>
                         <Typography variant="body2" className="text-gray-400 mt-1">
                             Tổng quan hoạt động kinh doanh của quán ăn hôm nay.
@@ -178,10 +204,10 @@ export const Dashboard = () => {
                     </Box>
                     <Box className="flex items-center gap-3 bg-gray-800/50 px-4 py-2 rounded-full border border-gray-700">
                         <Typography className="font-semibold text-sm">
-                            Trạng thái quán:
+                            Nhận đơn Online:
                         </Typography>
                         <Chip 
-                            label={usersRestaurant.open ? "Đang mở cửa" : "Đang đóng cửa"} 
+                            label={usersRestaurant.open ? "Đang nhận đơn" : "Tạm ngưng nhận đơn"} 
                             color={usersRestaurant.open ? "success" : "error"} 
                             variant="outlined" 
                             size="small"
@@ -196,36 +222,66 @@ export const Dashboard = () => {
                 </Box>
             </Card>
 
-            {/* Grid 4 thẻ thống kê */}
-            <Grid container spacing={3}>
+            {/* AI Business Copilot Quick Banner */}
+            <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-pink-950/40 via-purple-950/30 to-indigo-950/40 border border-pink-500/30 p-5 shadow-xl">
+                <div className="absolute top-0 right-0 w-72 h-72 bg-pink-500/10 rounded-full blur-3xl pointer-events-none" />
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative z-10">
+                    <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-pink-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-pink-500/30 ring-2 ring-pink-400/40 shrink-0">
+                            <AutoAwesomeIcon sx={{ fontSize: 28 }} />
+                        </div>
+                        <div>
+                            <div className="flex items-center gap-2">
+                                <h3 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-white via-pink-200 to-rose-300">
+                                    AI Business Copilot • Phân Tích Thông Minh
+                                </h3>
+                                <span className="text-[10px] bg-pink-500/20 text-pink-300 border border-pink-500/40 px-2 py-0.5 rounded-full font-semibold">
+                                    Gemini AI Engine
+                                </span>
+                            </div>
+                            <p className="text-xs text-gray-400 mt-1 max-w-2xl">
+                                Hệ thống tự động phân tích dữ liệu bán hàng, phát hiện rủi ro nguyên liệu cạn kho và đề xuất chiến lược tăng trưởng doanh thu theo thời gian thực.
+                            </p>
+                        </div>
+                    </div>
+                    <button
+                        onClick={() => navigate('/admin/restaurant/ai-copilot')}
+                        className="bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-md shadow-pink-600/30 flex items-center gap-2 shrink-0 cursor-pointer"
+                    >
+                        <span>Mở Trợ lý AI</span>
+                        <AutoAwesomeIcon sx={{ fontSize: 16 }} />
+                    </button>
+                </div>
+            </div>
+
+            {/* Grid 4 thẻ thống kê - Responsive 4 cột đều nhau */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {stats.map((item, idx) => (
-                    <Grid item xs={12} sm={6} lg={3} key={idx}>
-                        <Card sx={{ height: '100%', bgcolor: '#111827', border: '1px solid #1f2937', borderRadius: 2, position: 'relative', overflow: 'hidden' }}>
-                            <Box className={`absolute top-0 left-0 w-2 h-full bg-gradient-to-b ${item.color}`} />
-                            <CardContent className="p-6">
-                                <Box className="flex justify-between items-start">
-                                    <Box className="space-y-2">
-                                        <Typography variant="body2" className="text-gray-400 font-medium uppercase tracking-wider">{item.title}</Typography>
-                                        <Typography variant="h4" className="font-bold text-gray-50">{item.value}</Typography>
-                                    </Box>
-                                    <Box className="text-gray-400 bg-gray-800/80 p-3 rounded-lg border border-gray-700">
-                                        {item.icon}
-                                    </Box>
+                    <Card key={idx} sx={{ height: '100%', bgcolor: '#111827', border: '1px solid #1f2937', borderRadius: 2, position: 'relative', overflow: 'hidden' }}>
+                        <Box className={`absolute top-0 left-0 w-2 h-full bg-gradient-to-b ${item.color}`} />
+                        <CardContent className="p-6">
+                            <Box className="flex justify-between items-start">
+                                <Box className="space-y-2">
+                                    <Typography variant="body2" className="text-gray-400 font-medium uppercase tracking-wider">{item.title}</Typography>
+                                    <Typography variant="h4" className="font-bold text-gray-50">{item.value}</Typography>
                                 </Box>
-                                <Typography variant="caption" className="text-gray-400 block mt-4 font-medium">
-                                    {item.subtitle}
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
+                                <Box className="text-gray-400 bg-gray-800/80 p-3 rounded-lg border border-gray-700">
+                                    {item.icon}
+                                </Box>
+                            </Box>
+                            <Typography variant="caption" className="text-gray-400 block mt-4 font-medium">
+                                {item.subtitle}
+                            </Typography>
+                        </CardContent>
+                    </Card>
                 ))}
-            </Grid>
+            </div>
 
             {/* Khu vực Biểu đồ Thống kê */}
-            <Grid container spacing={3}>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 {/* 1. Biểu đồ doanh thu 7 ngày gần đây */}
-                <Grid item xs={12} lg={6}>
-                    <Card sx={{ bgcolor: '#111827', border: '1px solid #1f2937', borderRadius: 2 }} className="p-6">
+                <div className="lg:col-span-6">
+                    <Card sx={{ bgcolor: '#111827', border: '1px solid #1f2937', borderRadius: 2, height: '100%' }} className="p-6">
                         <Typography variant="h6" className="font-bold text-gray-50 mb-4">
                             Biểu Đồ Doanh Thu (7 ngày qua)
                         </Typography>
@@ -259,7 +315,7 @@ export const Dashboard = () => {
                                             color: '#f3f4f6', 
                                             borderRadius: '8px' 
                                         }}
-                                        formatter={(value) => [`${value.toLocaleString()} đ`, "Doanh thu"]}
+                                        formatter={(value) => [`${value.toLocaleString()}đ`, "Doanh thu"]}
                                     />
                                     <Area 
                                         type="monotone" 
@@ -273,11 +329,11 @@ export const Dashboard = () => {
                             </ResponsiveContainer>
                         </Box>
                     </Card>
-                </Grid>
+                </div>
 
                 {/* 2. Biểu đồ tròn Món ăn bán chạy nhất */}
-                <Grid item xs={12} sm={6} lg={3}>
-                    <Card sx={{ bgcolor: '#111827', border: '1px solid #1f2937', borderRadius: 2 }} className="p-6 flex flex-col justify-between" style={{ height: '100%' }}>
+                <div className="sm:col-span-6 lg:col-span-3">
+                    <Card sx={{ bgcolor: '#111827', border: '1px solid #1f2937', borderRadius: 2, height: '100%' }} className="p-6 flex flex-col justify-between">
                         <Box>
                             <Typography variant="h6" className="font-bold text-gray-50 mb-1">
                                 Món Ăn Bán Chạy
@@ -323,9 +379,9 @@ export const Dashboard = () => {
                             <Box className="mt-2 space-y-1">
                                 {topDishesData.map((item, index) => (
                                     <Box key={item.name} className="flex justify-between items-center text-xs">
-                                        <Box className="flex items-center gap-1.5 truncate mr-2">
-                                            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: COLORS[index % COLORS.length] }} />
-                                            <span className="text-gray-300 truncate max-w-[120px]">{item.name}</span>
+                                        <Box className="flex items-center gap-1.5 truncate mr-2" title={item.name}>
+                                            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: COLORS[index % COLORS.length], flexShrink: 0 }} />
+                                            <span className="text-gray-300 truncate max-w-[150px]">{item.name}</span>
                                         </Box>
                                         <span className="text-gray-400 font-semibold">{item.value}</span>
                                     </Box>
@@ -333,11 +389,11 @@ export const Dashboard = () => {
                             </Box>
                         )}
                     </Card>
-                </Grid>
+                </div>
 
                 {/* 3. Biểu đồ tròn Trạng thái đơn hàng */}
-                <Grid item xs={12} sm={6} lg={3}>
-                    <Card sx={{ bgcolor: '#111827', border: '1px solid #1f2937', borderRadius: 2 }} className="p-6 flex flex-col justify-between" style={{ height: '100%' }}>
+                <div className="sm:col-span-6 lg:col-span-3">
+                    <Card sx={{ bgcolor: '#111827', border: '1px solid #1f2937', borderRadius: 2, height: '100%' }} className="p-6 flex flex-col justify-between">
                         <Box>
                             <Typography variant="h6" className="font-bold text-gray-50 mb-1">
                                 Trạng Thái Đơn Hàng
@@ -383,7 +439,7 @@ export const Dashboard = () => {
                                 {activeStatusData.map((item) => (
                                     <Box key={item.name} className="flex justify-between items-center text-xs">
                                         <Box className="flex items-center gap-1.5">
-                                            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: item.color }} />
+                                            <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: item.color, flexShrink: 0 }} />
                                             <span className="text-gray-300">{item.name}</span>
                                         </Box>
                                         <span className="text-gray-400 font-semibold">{item.value}</span>
@@ -392,13 +448,13 @@ export const Dashboard = () => {
                             </Box>
                         )}
                     </Card>
-                </Grid>
-            </Grid>
+                </div>
+            </div>
 
             {/* Bảng đơn hàng gần đây và Tóm tắt món ăn */}
-            <Grid container spacing={3}>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 {/* Đơn hàng gần đây */}
-                <Grid item xs={12} lg={8}>
+                <div className="lg:col-span-8">
                     <Card sx={{ bgcolor: '#111827', border: '1px solid #1f2937', borderRadius: 2 }} className="p-6">
                         <Box className="flex justify-between items-center mb-4">
                             <Typography variant="h6" className="font-bold text-gray-50">Đơn Hàng Gần Đây</Typography>
@@ -419,16 +475,16 @@ export const Dashboard = () => {
                                     {orders.slice(0, 5).map((order) => (
                                         <TableRow key={order.id} sx={{ '& td': { color: '#f3f4f6', borderBottom: '1px solid #1f2937' }, '&:hover': { bgcolor: 'rgba(255,255,255,0.02)' } }}>
                                             <TableCell className="font-mono">#{order.id}</TableCell>
-                                            <TableCell>{order.customer?.fullName}</TableCell>
+                                            <TableCell>{order.customer?.fullName || "Khách lẻ"}</TableCell>
                                             <TableCell>
-                                                <div className="max-w-[200px] truncate">
-                                                    {order.items.map(item => item.food?.name).join(", ")}
+                                                <div className="max-w-[200px] truncate" title={order.items?.map(item => item.food?.name).filter(Boolean).join(", ")}>
+                                                    {order.items?.map(item => item.food?.name).filter(Boolean).join(", ") || "Chưa có món"}
                                                 </div>
                                             </TableCell>
-                                            <TableCell align="right" className="font-semibold">{order.totalPrice.toLocaleString()} đ</TableCell>
+                                            <TableCell align="right" className="font-semibold text-emerald-400">{(order.totalPrice || 0).toLocaleString()}đ</TableCell>
                                             <TableCell align="center">
                                                 <Chip 
-                                                    label={order.orderStatus} 
+                                                    label={getOrderStatusLabel(order.orderStatus)} 
                                                     size="small" 
                                                     color={
                                                         order.orderStatus === "PENDING" ? "warning" : 
@@ -451,20 +507,20 @@ export const Dashboard = () => {
                             </Table>
                         </TableContainer>
                     </Card>
-                </Grid>
+                </div>
 
                 {/* Món ăn nổi bật / Thực đơn thu nhỏ */}
-                <Grid item xs={12} lg={4}>
+                <div className="lg:col-span-4">
                     <Card sx={{ bgcolor: '#111827', border: '1px solid #1f2937', borderRadius: 2 }} className="p-6">
                         <Typography variant="h6" className="font-bold text-gray-50 mb-4">Danh sách Món ăn mới</Typography>
                         <Box className="space-y-4">
                             {menu.menuItems?.slice(0, 4).map((food) => (
                                 <Box key={food.id} className="flex justify-between items-center p-3 rounded-lg bg-gray-800/40 border border-gray-700/60">
                                     <Box className="flex items-center gap-3">
-                                        <Avatar src={food.images[0]} variant="rounded" sx={{ width: 45, height: 45 }} />
+                                        <Avatar src={food.images?.[0]} variant="rounded" sx={{ width: 45, height: 45 }} />
                                         <Box>
                                             <Typography className="font-semibold text-sm text-gray-200">{food.name}</Typography>
-                                            <Typography variant="caption" className="text-gray-400">{food.price.toLocaleString()}đ</Typography>
+                                            <Typography variant="caption" className="text-gray-400">{(food.price || 0).toLocaleString()}đ</Typography>
                                         </Box>
                                     </Box>
                                     <Chip 
@@ -481,8 +537,8 @@ export const Dashboard = () => {
                             )}
                         </Box>
                     </Card>
-                </Grid>
-            </Grid>
+                </div>
+            </div>
         </div>
     );
 };

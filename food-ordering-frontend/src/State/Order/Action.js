@@ -11,7 +11,7 @@ import {
     COMPLETE_PAYMENT_FAILURE
 } from "./ActionType";
 
-export const createOrder = ({ reqData, jwt, navigate }) => {
+export const createOrder = ({ reqData, jwt, navigate, paymentMethod = "STRIPE" }) => {
     return async (dispatch) => {
         dispatch({ type: CREATE_ORDER_REQUEST });
         try {
@@ -23,7 +23,11 @@ export const createOrder = ({ reqData, jwt, navigate }) => {
 
             console.log("Tạo đơn hàng thành công: ", data);
             dispatch({ type: CREATE_ORDER_SUCCESS, payload: data });
-            if (navigate) {
+
+            // Nếu người dùng chọn thanh toán trực tuyến qua Stripe và Backend trả về link thanh toán
+            if (paymentMethod === "STRIPE" && data.payment_url) {
+                window.location.href = data.payment_url;
+            } else if (navigate) {
                 navigate("/my-profile/orders");
             }
         } catch (error) {

@@ -36,6 +36,15 @@ public class SeedController {
     @Autowired
     private CartRepository cartRepository;
 
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private OrderItemRepository orderItemRepository;
+
+    @Autowired
+    private ReviewRepository reviewRepository;
+
     @GetMapping("/seed")
     public ResponseEntity<String> seedDatabase() {
         try {
@@ -82,8 +91,8 @@ public class SeedController {
             r2.put("foods", Arrays.asList(
                 createFoodMap("Combo Obama", "Gồm 1 suất bún chả đặc biệt, 1 nem hải sản và 1 chai bia Hà Nội", 120000L, "Combo", "https://images.unsplash.com/photo-1596797038530-2c107229654b?w=500"),
                 createFoodMap("Bún Chả Truyền Thống", "Chả viên và chả miếng nướng than hoa thơm phức", 60000L, "Món Chính", "https://images.unsplash.com/photo-1596797038530-2c107229654b?w=500"),
-                createFoodMap("Nem Cua Bể", "Nem rán giòn nhân thịt cua bể tươi ngon đặc sản Hải Phòng", 25000L, "Nem Rán", "https://images.unsplash.com/photo-1601050690597-df056fb4ce78?w=500"),
-                createFoodMap("Nem Hải Sản", "Nem nhân tôm, mực sốt mayonnaise chiên xù", 20000L, "Nem Rán", "https://images.unsplash.com/photo-1601050690597-df056fb4ce78?w=500"),
+                createFoodMap("Nem Cua Bể", "Nem rán giòn nhân thịt cua bể tươi ngon đặc sản Hải Phòng", 25000L, "Nem Rán", "https://images.unsplash.com/photo-1544025162-d76694265947?w=500"),
+                createFoodMap("Nem Hải Sản", "Nem nhân tôm, mực sốt mayonnaise chiên xù", 20000L, "Nem Rán", "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=500"),
                 createFoodMap("Bia Hà Nội", "Bia chai Hà Nội ướp lạnh mát lạnh", 20000L, "Đồ Uống", "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500")
             ));
             seedData.add(r2);
@@ -145,13 +154,13 @@ public class SeedController {
             r5.put("city", "Quảng Nam");
             r5.put("state", "Hội An");
             r5.put("postalCode", "510000");
-            r5.put("images", Arrays.asList("https://images.unsplash.com/photo-1601050690597-df056fb4ce78?w=600"));
+            r5.put("images", Arrays.asList("https://images.unsplash.com/photo-1509722747041-616f39b57569?w=800"));
             r5.put("openingHours", "06:30 AM - 09:30 PM");
             r5.put("phone", "0905904838");
             r5.put("foods", Arrays.asList(
-                createFoodMap("Bánh Mì Thập Cẩm", "Đầy đủ pate bơ, chả lụa, xá xíu, lạp xưởng và nước sốt bí truyền", 35000L, "Bánh Mì", "https://images.unsplash.com/photo-1601050690597-df056fb4ce78?w=500"),
-                createFoodMap("Bánh Mì Gà Xé Bơ", "Gà xé tay mềm ngọt quyện cùng bơ trứng gà thơm béo", 30000L, "Bánh Mì", "https://images.unsplash.com/photo-1601050690597-df056fb4ce78?w=500"),
-                createFoodMap("Bánh Mì Thịt Nướng Sả", "Thịt lợn ướp sả nướng than thơm nồng nàn", 35000L, "Bánh Mì", "https://images.unsplash.com/photo-1601050690597-df056fb4ce78?w=500"),
+                createFoodMap("Bánh Mì Thập Cẩm", "Đầy đủ pate bơ, chả lụa, xá xíu, lạp xưởng và nước sốt bí truyền", 35000L, "Bánh Mì", "https://images.unsplash.com/photo-1509722747041-616f39b57569?w=500"),
+                createFoodMap("Bánh Mì Gà Xé Bơ", "Gà xé tay mềm ngọt quyện cùng bơ trứng gà thơm béo", 30000L, "Bánh Mì", "https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=500"),
+                createFoodMap("Bánh Mì Thịt Nướng Sả", "Thịt lợn ướp sả nướng than thơm nồng nàn", 35000L, "Bánh Mì", "https://images.unsplash.com/photo-1627308595229-7830a5c91f9f?w=500"),
                 createFoodMap("Sữa Bắp Hạt Sen", "Thơm bùi từ bắp ngọt kết hợp hạt sen bổ dưỡng", 15000L, "Đồ Uống", "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500"),
                 createFoodMap("Nước Sấu Đá", "Đặc sản giải nhiệt mát lạnh chua ngọt dịu êm", 15000L, "Đồ Uống", "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500")
             ));
@@ -175,7 +184,7 @@ public class SeedController {
                 createFoodMap("Phin Sữa Đá Lớn", "Cà phê phin đậm đà thơm ngậy sữa đặc", 39000L, "Cà Phê", "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500"),
                 createFoodMap("Trà Sen Vàng", "Trà ô long thanh mát kết hợp hạt sen bùi và kem sữa béo", 45000L, "Trà", "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500"),
                 createFoodMap("Freeze Trà Xanh", "Thức uống đá xay matcha kết hợp thạch trà xanh giòn dai", 55000L, "Đá Xay", "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500"),
-                createFoodMap("Bánh Mì Thịt Nướng", "Bánh mì kẹp thịt nướng rưới sốt bơ Highlands", 25000L, "Bánh Mì", "https://images.unsplash.com/photo-1601050690597-df056fb4ce78?w=500"),
+                createFoodMap("Bánh Mì Thịt Nướng", "Bánh mì kẹp thịt nướng rưới sốt bơ Highlands", 25000L, "Bánh Mì", "https://images.unsplash.com/photo-1509722747041-616f39b57569?w=500"),
                 createFoodMap("Bánh Mousse Đào", "Bánh mousse đào chua ngọt nhẹ nhàng, lớp bánh mềm tan", 35000L, "Bánh Ngọt", "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500")
             ));
             seedData.add(r6);
@@ -457,6 +466,172 @@ public class SeedController {
             return ResponseEntity.ok(String.format("Đã sửa ảnh lỗi cho %d nhà hàng thành công!", fixedCount));
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Thất bại khi sửa ảnh: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/seed-extra")
+    public ResponseEntity<String> seedOrdersAndReviews() {
+        try {
+            // 1. Tạo 5 khách hàng mẫu
+            List<User> customers = new ArrayList<>();
+            String[][] customerData = {
+                {"customer1@gmail.com", "Nguyễn Văn Minh"},
+                {"customer2@gmail.com", "Trần Thị Lan"},
+                {"customer3@gmail.com", "Lê Hoàng Nam"},
+                {"customer4@gmail.com", "Phạm Hồng Ngọc"},
+                {"customer5@gmail.com", "Vũ Văn Hùng"}
+            };
+
+            for (String[] data : customerData) {
+                User user = userRepository.findByEmail(data[0]);
+                if (user == null) {
+                    user = new User();
+                    user.setEmail(data[0]);
+                    user.setFullName(data[1]);
+                    user.setPassword(passwordEncoder.encode("123456"));
+                    user.setRole(USER_ROLE.ROLE_CUSTOMER);
+                    user = userRepository.save(user);
+                    
+                    Cart cart = new Cart();
+                    cart.setCustomer(user);
+                    cartRepository.save(cart);
+                }
+                customers.add(user);
+            }
+
+            // 2. Tìm tất cả nhà hàng
+            List<Restaurant> restaurants = restaurantRepository.findAll();
+            int ordersCreated = 0;
+            int reviewsCreated = 0;
+            Random rand = new Random();
+
+            String[] posComments = {
+                "Đồ ăn ngon tuyệt vời, giao hàng siêu nhanh!",
+                "Hương vị đậm đà chuẩn vị, sẽ ủng hộ tiếp.",
+                "Món ăn đóng gói cẩn thận, nóng hổi khi nhận hàng.",
+                "Rất hài lòng về chất lượng đồ ăn và cách phục vụ.",
+                "Ăn rất vừa miệng, giá cả hợp lý.",
+                "Đồ ăn sạch sẽ, trình bày đẹp mắt."
+            };
+            String[] neuComments = {
+                "Đồ ăn tạm ổn, nước dùng hơi nhạt một chút.",
+                "Giao hàng đúng giờ nhưng đồ ăn nguội đi một tí.",
+                "Món ăn ăn được, phục vụ tương đối tốt.",
+                "Giá hơi đắt nhưng chất lượng ổn."
+            };
+
+            for (Restaurant restaurant : restaurants) {
+                List<Food> foods = foodRepository.findByRestaurantId(restaurant.getId());
+                if (foods.isEmpty()) {
+                    continue;
+                }
+
+                // Tạo 8 - 12 đơn hàng cho mỗi nhà hàng
+                int orderCount = 8 + rand.nextInt(5);
+                for (int i = 0; i < orderCount; i++) {
+                    User customer = customers.get(rand.nextInt(customers.size()));
+                    
+                    // Tạo Địa Chỉ Giao Hàng
+                    Address addr = new Address();
+                    addr.setStreetAddress((10 + rand.nextInt(100)) + " Đường Láng, Đống Đa");
+                    addr.setCity("Hà Nội");
+                    addr.setCountry("Vietnam");
+                    addr = addressRepository.save(addr);
+
+                    // Tạo đơn hàng
+                    Order order = new Order();
+                    order.setCustomer(customer);
+                    order.setRestaurant(restaurant);
+                    order.setDeliveryAddress(addr);
+                    
+                    // Trạng thái ngẫu nhiên: COMPLETED, DELIVERED, PENDING, OUT_FOR_DELIVERY
+                    int statusRand = rand.nextInt(10);
+                    if (statusRand < 5) {
+                        order.setOrderStatus("COMPLETED");
+                    } else if (statusRand < 7) {
+                        order.setOrderStatus("DELIVERED");
+                    } else if (statusRand < 9) {
+                        order.setOrderStatus("PENDING");
+                    } else {
+                        order.setOrderStatus("OUT_FOR_DELIVERY");
+                    }
+
+                    // Thời gian ngẫu nhiên trong 7 ngày qua
+                    Calendar cal = Calendar.getInstance();
+                    cal.add(Calendar.DAY_OF_YEAR, -rand.nextInt(7));
+                    cal.add(Calendar.HOUR_OF_DAY, -rand.nextInt(24));
+                    cal.add(Calendar.MINUTE, -rand.nextInt(60));
+                    order.setCreatedAt(cal.getTime());
+
+                    // Thêm 1 - 3 món ăn ngẫu nhiên
+                    List<OrderItem> items = new ArrayList<>();
+                    int itemTypesCount = 1 + rand.nextInt(3);
+                    long totalRevenueOrder = 0;
+                    int totalItemsCount = 0;
+
+                    for (int j = 0; j < itemTypesCount; j++) {
+                        Food food = foods.get(rand.nextInt(foods.size()));
+                        int qty = 1 + rand.nextInt(3);
+
+                        OrderItem orderItem = new OrderItem();
+                        orderItem.setFood(food);
+                        orderItem.setQuantity(qty);
+                        orderItem.setTotalPrice(food.getPrice() * qty);
+                        orderItem.setIngredients(new ArrayList<>());
+                        orderItem = orderItemRepository.save(orderItem);
+                        
+                        items.add(orderItem);
+                        totalRevenueOrder += orderItem.getTotalPrice();
+                        totalItemsCount += qty;
+                    }
+
+                    order.setItems(items);
+                    order.setTotalPrice(totalRevenueOrder);
+                    order.setTotalAmount(totalRevenueOrder);
+                    order.setTotalItem(totalItemsCount);
+                    
+                    orderRepository.save(order);
+                    ordersCreated++;
+                }
+
+                // Tạo 3 - 5 đánh giá cho mỗi nhà hàng
+                int reviewCount = 3 + rand.nextInt(3);
+                for (int i = 0; i < reviewCount; i++) {
+                    User customer = customers.get(rand.nextInt(customers.size()));
+                    
+                    Review review = new Review();
+                    review.setCustomer(customer);
+                    review.setRestaurant(restaurant);
+                    
+                    double rating = 3.0 + rand.nextInt(3); // 3.0, 4.0, 5.0
+                    review.setRating(rating);
+                    
+                    if (rating >= 4.0) {
+                        review.setComment(posComments[rand.nextInt(posComments.length)]);
+                    } else {
+                        review.setComment(neuComments[rand.nextInt(neuComments.length)]);
+                    }
+
+                    Calendar cal = Calendar.getInstance();
+                    cal.add(Calendar.DAY_OF_YEAR, -rand.nextInt(7));
+                    review.setCreatedAt(LocalDateTime.ofInstant(cal.toInstant(), cal.getTimeZone().toZoneId()));
+                    
+                    reviewRepository.save(review);
+                    reviewsCreated++;
+                }
+            }
+
+            return ResponseEntity.ok(String.format(
+                "Đã nạp thêm dữ liệu mẫu thành công!\n" +
+                "- Số khách hàng mẫu kiểm tra: %d\n" +
+                "- Số đơn hàng ảo đã tạo: %d\n" +
+                "- Số đánh giá ảo đã tạo: %d\n" +
+                "Hãy làm mới trang web để xem sự thay đổi biểu đồ doanh thu và đánh giá!",
+                customers.size(), ordersCreated, reviewsCreated
+            ));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Lỗi khi nạp dữ liệu đơn hàng và đánh giá: " + e.getMessage());
         }
     }
 

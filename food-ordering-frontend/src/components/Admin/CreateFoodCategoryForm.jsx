@@ -9,12 +9,13 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
+    width: 420,
+    bgcolor: '#1f2937',
+    color: 'white',
     outline: 'none',
     boxShadow: 24,
     p: 4,
-    borderRadius: '8px'
+    borderRadius: '12px'
 };
 
 export const CreateFoodCategoryForm = ({ open, handleClose }) => {
@@ -51,7 +52,7 @@ export const CreateFoodCategoryForm = ({ open, handleClose }) => {
         >
             <Box sx={style}>
                 <form onSubmit={formik.handleSubmit}>
-                    <h1 className='text-gray-400 font-bold text-center text-xl pb-6'>
+                    <h1 className='text-white font-bold text-center text-xl pb-6'>
                         THÊM DANH MỤC MỚI
                     </h1>
                     <TextField

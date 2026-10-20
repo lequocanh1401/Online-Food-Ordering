@@ -1,0 +1,80 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam DefaultFontSize 14
+skinparam Linetype ortho
+
+entity "User" as user {
+  * id : BIGINT <<PK>>
+  --
+  fullName : VARCHAR
+  email : VARCHAR
+  role : VARCHAR
+}
+
+entity "Restaurant" as restaurant {
+  * id : BIGINT <<PK>>
+  --
+  owner_id : BIGINT <<FK>>
+  name : VARCHAR
+  cuisineType : VARCHAR
+}
+
+entity "Food" as food {
+  * id : BIGINT <<PK>>
+  --
+  restaurant_id : BIGINT <<FK>>
+  category_id : BIGINT <<FK>>
+  name : VARCHAR
+  price : BIGINT
+}
+
+entity "Order" as order {
+  * id : BIGINT <<PK>>
+  --
+  customer_id : BIGINT <<FK>>
+  restaurant_id : BIGINT <<FK>>
+  totalAmount : BIGINT
+  orderStatus : VARCHAR
+}
+
+entity "OrderItem" as order_item {
+  * id : BIGINT <<PK>>
+  --
+  order_id : BIGINT <<FK>>
+  food_id : BIGINT <<FK>>
+  quantity : INT
+}
+
+entity "Cart" as cart {
+  * id : BIGINT <<PK>>
+  --
+  customer_id : BIGINT <<FK>>
+  total : BIGINT
+}
+
+entity "IngredientsItem" as ingredient {
+  * id : BIGINT <<PK>>
+  --
+  restaurant_id : BIGINT <<FK>>
+  name : VARCHAR
+}
+
+entity "Coupon" as coupon {
+  * id : BIGINT <<PK>>
+  --
+  code : VARCHAR
+  discountValue : BIGINT
+}
+
+user "1" -- "0..*" order : "places"
+restaurant "1" -- "0..*" food : "offers"
+restaurant "1" -- "0..*" order : "receives"
+order "1" -- "1..*" order_item : "contains"
+food "1" -- "0..*" order_item : "selected in"
+user "1" -- "0..1" cart : "owns"
+restaurant "1" -- "0..*" ingredient : "manages"
+restaurant "1" -- "0..*" coupon : "issues"
+
+@enduml

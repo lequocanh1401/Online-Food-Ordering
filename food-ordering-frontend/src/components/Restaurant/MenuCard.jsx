@@ -4,19 +4,22 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useDispatch, useSelector } from 'react-redux';
-import { addItemToCart } from '../../State/Cart/Action';
+import { addItemToCart, clearCartAction } from '../../State/Cart/Action';
 import { getFoodReviews, getRestaurantReviews, deleteReview } from '../../State/Review/Action';
 import { ReviewModal } from './ReviewModal';
 
-export const MenuCard = ({ item, restaurantId }) => {
+export const MenuCard = ({ item, restaurantId, isRestaurantOpen = true, isHighlighted = false }) => {
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt");
     const [openReviewModal, setOpenReviewModal] = useState(false);
     const [selectedReviewToEdit, setSelectedReviewToEdit] = useState(null);
     const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
     const [reviewIdToDelete, setReviewIdToDelete] = useState(null);
+    const [switchRestaurantDialogOpen, setSwitchRestaurantDialogOpen] = useState(false);
 
     const auth = useSelector(store => store.auth);
+    const cartData = useSelector(store => store.cart);
+    const restaurantState = useSelector(store => store.restaurant);
     const reviewState = useSelector(store => store.review);
     const foodReviewData = reviewState.foodReviews[item.id] || { reviews: [], averageRating: 0, totalReviews: 0 };
 
@@ -65,6 +68,18 @@ export const MenuCard = ({ item, restaurantId }) => {
     const handleAddItemToCart = (e) => {
         e.preventDefault();
 
+        if (!isRestaurantOpen) return;
+
+        const cartItems = cartData.cartItems || cartData.cart?.item || cartData.cart?.items || [];
+        const currentRestId = item.restaurant?.id || restaurantId || restaurantState.restaurant?.id;
+        const existingRestId = cartItems[0]?.food?.restaurant?.id;
+
+        // Nếu giỏ hàng đã có món của quán khác, hỏi xác nhận đổi quán (ShopeeFood / GrabFood style)
+        if (cartItems.length > 0 && existingRestId && currentRestId && String(existingRestId) !== String(currentRestId)) {
+            setSwitchRestaurantDialogOpen(true);
+            return;
+        }
+
         const reqData = {
             foodId: item.id,
             quantity: 1,
@@ -75,15 +90,43 @@ export const MenuCard = ({ item, restaurantId }) => {
         console.log("Đang kích hoạt API thêm vào giỏ hàng:", reqData);
     };
 
+    const handleConfirmSwitchRestaurant = async () => {
+        setSwitchRestaurantDialogOpen(false);
+        try {
+            await dispatch(clearCartAction());
+            const reqData = {
+                foodId: item.id,
+                quantity: 1,
+                ingredients: []
+            };
+            dispatch(addItemToCart({ reqData, jwt }));
+            localStorage.removeItem("pending_coupon");
+        } catch (err) {
+            console.error("Lỗi làm mới giỏ hàng:", err);
+        }
+    };
+
     return (
-        <Accordion>
+        <div 
+            id={`menu-item-${item.id}`} 
+            className={`transition-all duration-500 rounded-lg ${
+                isHighlighted 
+                    ? "ring-2 ring-pink-500 shadow-[0_0_25px_rgba(233,30,99,0.45)] scale-[1.01]" 
+                    : ""
+            }`}
+        >
+            <Accordion defaultExpanded={isHighlighted}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />}>
                 <div className='lg:flex items-center justify-between w-full'>
                     <div className='lg:flex items-center lg:gap-5'>
                         <img
                             className='w-[7rem] h-[7rem] object-cover rounded-md'
-                            src={item.images?.[0] || "https://images.pexels.com/photos/1639562/pexels-photo-1639562.jpeg"}
+                            src={item.images?.[0] || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500"}
                             alt={item.name}
+                            onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500";
+                            }}
                         />
                         <div className='space-y-1 lg:space-y-3 lg:max-w-2xl'>
                             <p className='font-semibold text-xl flex items-center gap-2'>
@@ -106,10 +149,10 @@ export const MenuCard = ({ item, restaurantId }) => {
                         <Button
                             variant='contained'
                             color='primary'
-                            disabled={!item.available}
+                            disabled={!item.available || !isRestaurantOpen}
                             type='submit'
                         >
-                            {item.available ? "Thêm vào giỏ hàng" : "Hết hàng"}
+                            {!isRestaurantOpen ? "Quán tạm ngưng nhận đơn" : (item.available ? "Thêm vào giỏ hàng" : "Hết hàng")}
                         </Button>
                     </div>
                 </form>
@@ -258,7 +301,56 @@ export const MenuCard = ({ item, restaurantId }) => {
                         </Button>
                     </DialogActions>
                 </Dialog>
+
+                {/* Dialog xác nhận đổi quán khi thêm món (ShopeeFood / GrabFood style) */}
+                <Dialog 
+                    open={switchRestaurantDialogOpen} 
+                    onClose={() => setSwitchRestaurantDialogOpen(false)}
+                    PaperProps={{
+                        sx: {
+                            bgcolor: '#111827',
+                            border: '1px solid #1f2937',
+                            borderRadius: '16px',
+                            color: 'white',
+                            p: 1
+                        }
+                    }}
+                >
+                    <DialogTitle sx={{ fontWeight: 'bold', color: '#f43f5e' }}>
+                        Tạo Giỏ Hàng Mới?
+                    </DialogTitle>
+                    <DialogContent>
+                        <DialogContentText sx={{ color: '#d1d5db', fontSize: '0.95rem' }}>
+                            Giỏ hàng của bạn đang có món của quán <strong style={{ color: '#ec4899' }}>{cartData.cartItems?.[0]?.food?.restaurant?.name || cartData.cart?.item?.[0]?.food?.restaurant?.name || "nhà hàng khác"}</strong>.
+                            <br /><br />
+                            Mỗi đơn hàng chỉ áp dụng cho một nhà hàng để đảm bảo giao nhanh và đúng mã ưu đãi. Bạn có muốn <strong>xóa giỏ hàng hiện tại</strong> để bắt đầu đặt món tại <strong style={{ color: '#ec4899' }}>{item.restaurant?.name || restaurantState.restaurant?.name || "quán này"}</strong> không?
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions sx={{ p: 2 }}>
+                        <Button 
+                            onClick={() => setSwitchRestaurantDialogOpen(false)} 
+                            sx={{ color: '#9ca3af', textTransform: 'none' }}
+                        >
+                            Hủy bỏ
+                        </Button>
+                        <Button 
+                            onClick={handleConfirmSwitchRestaurant} 
+                            variant="contained" 
+                            sx={{ 
+                                bgcolor: '#e91e63', 
+                                '&:hover': { bgcolor: '#c2185b' }, 
+                                fontWeight: 'bold', 
+                                borderRadius: '8px', 
+                                textTransform: 'none',
+                                px: 2.5
+                            }}
+                        >
+                            Tạo giỏ mới & Thêm món
+                        </Button>
+                    </DialogActions>
+                </Dialog>
             </AccordionDetails>
         </Accordion>
+        </div>
     );
 };

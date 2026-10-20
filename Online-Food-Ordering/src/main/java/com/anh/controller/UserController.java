@@ -24,6 +24,14 @@ public class UserController {
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @PutMapping("/profile")
+    public ResponseEntity<User> updateUserProfile(
+            @RequestHeader("Authorization") String jwt,
+            @RequestBody User userDetails) throws Exception {
+        User updatedUser = userService.updateUserProfile(jwt, userDetails);
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+    }
+
     @PutMapping("/profile/address")
     public ResponseEntity<User> addAddressToUser(
             @RequestHeader("Authorization") String jwt,

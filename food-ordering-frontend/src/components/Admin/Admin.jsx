@@ -10,6 +10,7 @@ import { FoodCategory } from './FoodCategory';
 import { Events } from './Events';
 import { CreateRestaurantForm } from './CreateRestaurantForm';
 import { CreateMenuForm } from './CreateMenuForm'; // Import form thêm món ăn
+import { AiCopilot } from './AiCopilot';
 import { useDispatch, useSelector } from 'react-redux';
 import { getRestaurantByUserId } from '../../State/Restaurant/Action';
 
@@ -18,6 +19,8 @@ import { SuperAdminDashboard } from './SuperAdminDashboard';
 import { SuperAdminReviews } from './SuperAdminReviews';
 import { SuperAdminCoupons } from './SuperAdminCoupons';
 import { SuperAdminRevenue } from './SuperAdminRevenue';
+import { SuperAdminUsers } from './SuperAdminUsers';
+import { OrderNotificationListener } from './OrderNotificationListener';
 
 export const Admin = () => {
     const dispatch = useDispatch();
@@ -63,11 +66,15 @@ export const Admin = () => {
             <div className='lg:w-[20%]'>
                 <AdminSidebar handleClose={handleClose} />
             </div>
-            <div className='lg:w-[80%] pb-10'>
+            <div className='lg:w-[80%] pb-10 relative'>
+                {/* Real-time Order Alert Listener (Step 3) */}
+                <OrderNotificationListener />
                 <Routes>
                     {isSuperAdmin ? (
                         <>
                             <Route path='/' element={<SuperAdminDashboard />} />
+                            <Route path='/ai-copilot' element={<AiCopilot />} />
+                            <Route path='/users' element={<SuperAdminUsers />} />
                             <Route path='/reviews' element={<SuperAdminReviews />} />
                             <Route path='/coupons' element={<SuperAdminCoupons />} />
                             <Route path='/revenue' element={<SuperAdminRevenue />} />
@@ -75,6 +82,7 @@ export const Admin = () => {
                     ) : (
                         <>
                             <Route path='/' element={<Dashboard />} />
+                            <Route path='/ai-copilot' element={<AiCopilot />} />
                             <Route path='/orders' element={<Orders />} />
                             <Route path='/menu' element={<Menu />} />
                             <Route path='/add-menu' element={<CreateMenuForm />} /> {/* Đường dẫn gọi form */}

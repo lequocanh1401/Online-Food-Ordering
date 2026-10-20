@@ -123,3 +123,29 @@ export const updateIngredientCategoryAction = ({ id, data, jwt, restaurantId }) 
         console.log("Lỗi cập nhật nhóm nguyên liệu:", error.message);
     }
 };
+
+export const importIngredientStockAction = ({ id, additionalQuantity, note, jwt, restaurantId }) => async (dispatch) => {
+    try {
+        await api.post(`/api/admin/ingredients/${id}/import`, { additionalQuantity, note }, {
+            headers: { Authorization: `Bearer ${jwt}` },
+        });
+        dispatch(getIngredientsOfRestaurant({ id: restaurantId, jwt }));
+        if (restaurantId) {
+            dispatch(fetchInventoryLogsAction({ restaurantId, jwt }));
+        }
+    } catch (error) {
+        alert(error.response?.data?.message || error.response?.data || error.message);
+        console.log("Lỗi nhập kho:", error.message);
+    }
+};
+
+export const fetchInventoryLogsAction = ({ restaurantId, jwt }) => async (dispatch) => {
+    try {
+        const { data } = await api.get(`/api/admin/ingredients/restaurant/${restaurantId}/logs`, {
+            headers: { Authorization: `Bearer ${jwt}` },
+        });
+        dispatch({ type: "GET_INVENTORY_LOGS", payload: data });
+    } catch (error) {
+        console.log("Lỗi lấy lịch sử kho:", error.message);
+    }
+};

@@ -23,6 +23,9 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category createCategory(String name, Long userId) throws Exception {
         Restaurant restaurant = restaurantService.getRestaurantByUserId(userId);
+        if (restaurant == null) {
+            throw new Exception("Restaurant not found with owner id " + userId);
+        }
         Category category = new Category();
         category.setName(name);
         category.setRestaurant(restaurant);

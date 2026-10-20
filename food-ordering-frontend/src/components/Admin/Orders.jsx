@@ -3,10 +3,10 @@ import { Card, FormControl, RadioGroup, FormControlLabel, Radio, Typography } fr
 import { OrderTable } from './OrderTable';
 
 const orderStatus = [
-    { label: "All (Tất cả)", value: "ALL" },
-    { label: "Pending (Đang chờ)", value: "PENDING" },
-    { label: "Out For Delivery (Đang giao)", value: "OUT_FOR_DELIVERY" },
-    { label: "Completed (Hoàn thành)", value: "COMPLETED" }
+    { label: "Tất cả", value: "ALL" },
+    { label: "Chờ xử lý", value: "PENDING" },
+    { label: "Đang giao", value: "OUT_FOR_DELIVERY" },
+    { label: "Hoàn thành", value: "COMPLETED" }
 ];
 
 export const Orders = () => {
@@ -33,9 +33,9 @@ export const Orders = () => {
                             <FormControlLabel
                                 key={item.label}
                                 value={item.value}
-                                control={<Radio />}
+                                control={<Radio color="primary" />}
                                 label={item.label}
-                                sx={{ color: "gray" }}
+                                sx={{ color: filterValue === item.value ? 'primary.main' : 'gray' }}
                             />
                         ))}
                     </RadioGroup>
@@ -46,4 +46,4 @@ export const Orders = () => {
             <OrderTable filterValue={filterValue} />
         </div>
     );
-};
+};

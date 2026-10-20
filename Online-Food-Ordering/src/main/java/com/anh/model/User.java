@@ -4,7 +4,6 @@ import com.anh.dto.RestaurantDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.ArrayList;
@@ -13,7 +12,6 @@ import java.util.List;
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -21,6 +19,9 @@ public class User {
 
     private String fullName;
     private String email;
+
+    @Column(length = 1000)
+    private String avatar;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;

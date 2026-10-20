@@ -4,7 +4,7 @@ import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { createIngredientCategory } from '../../State/Ingredients/Action';
 
-const style = { position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', outline: 'none', boxShadow: 24, p: 4, borderRadius: '8px' };
+const style = { position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 420, bgcolor: '#1f2937', color: 'white', outline: 'none', boxShadow: 24, p: 4, borderRadius: '12px' };
 
 export const CreateIngredientCategoryForm = ({ open, handleClose }) => {
     const dispatch = useDispatch();
@@ -29,9 +29,9 @@ export const CreateIngredientCategoryForm = ({ open, handleClose }) => {
         <Modal open={open} onClose={handleClose}>
             <Box sx={style}>
                 <form onSubmit={formik.handleSubmit}>
-                    <h1 className='text-gray-400 font-bold text-center text-xl pb-6'>TẠO DANH MỤC NGUYÊN LIỆU</h1>
-                    <TextField fullWidth id="name" name="name" label="Tên danh mục (VD: Rau củ, Thịt...)" variant="outlined" onChange={formik.handleChange} value={formik.values.name} />
-                    <Button variant="contained" color="primary" type="submit" sx={{ mt: 3 }} fullWidth size='large'>Tạo Danh Mục</Button>
+                    <h1 className='text-white font-bold text-center text-xl pb-6'>TẠO NHÓM NGUYÊN LIỆU</h1>
+                    <TextField fullWidth id="name" name="name" label="Tên nhóm (VD: Rau củ, Thịt...)" variant="outlined" onChange={formik.handleChange} value={formik.values.name} />
+                    <Button variant="contained" color="primary" type="submit" sx={{ mt: 3 }} fullWidth size='large'>Tạo Nhóm Nguyên Liệu</Button>
                 </form>
             </Box>
         </Modal>

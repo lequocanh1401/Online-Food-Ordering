@@ -1,0 +1,76 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam DefaultFontSize 12
+
+actor "Khách hàng\n(Customer)" as customer
+participant "React Cart UI\n(Cart.jsx)" as cartUI
+participant "CouponController\n(/api/coupons)" as couponCtrl
+participant "OrderController\n(/api/order)" as orderCtrl
+participant "OrderServiceImpl" as orderSvc
+participant "CartService" as cartSvc
+participant "CouponRepository" as couponRepo
+database "MySQL Database" as db
+
+== Khách hàng Áp dụng Mã giảm giá (Coupon Constraint Validation) ==
+customer -> cartUI : Nhập mã ưu đãi (VD: "GIAM10%") hoặc click chọn từ danh sách
+cartUI -> couponCtrl : GET /api/coupons/validate?code=GIAM10%25&restaurantId=1
+activate couponCtrl
+
+couponCtrl -> couponRepo : findByCode("GIAM10%")
+couponRepo -> db : SELECT * FROM coupon WHERE code = 'GIAM10%'
+db --> couponRepo : couponData
+couponRepo --> couponCtrl : Coupon(minOrderValue, discountValue, discountType)
+
+alt Mã không tồn tại hoặc đã hết hạn (active == false)
+    couponCtrl --> cartUI : HTTP 400 "Mã giảm giá không hợp lệ hoặc đã hết hạn"
+    cartUI --> customer : Hiển thị cảnh báo lỗi (Alert Error)
+else Mã hợp lệ
+    couponCtrl --> cartUI : HTTP 200 OK (Coupon Details)
+    cartUI -> cartUI : Kiểm tra getApplicableSubtotalForCoupon(coupon) >= minOrderValue
+    alt Tổng giá trị chưa đạt mức tối thiểu
+        cartUI --> customer : Báo lỗi: "Đơn hàng chưa đạt mức tối thiểu ..."
+    else Đạt điều kiện áp dụng
+        cartUI -> cartUI : setAppliedCoupon(coupon) & Tính discountAmount
+        cartUI --> customer : Áp dụng thành công, cập nhật số tiền thanh toán thực tế
+    end
+end
+deactivate couponCtrl
+
+== Tự động Gỡ bỏ Mã giảm giá khi Giảm số lượng món ăn (Auto-Removal) ==
+customer -> cartUI : Giảm số lượng món trong giỏ hàng (Remove/Decrease)
+cartUI -> cartUI : Tính lại tổng tiền giỏ hàng mới
+alt Tổng tiền mới < appliedCoupon.minimumOrderValue
+    cartUI -> cartUI : setAppliedCoupon(null)
+    cartUI --> customer : Tự động gỡ mã kèm thông báo: "Đơn hàng không còn đủ điều kiện áp dụng mã"
+end
+
+== Đặt hàng và Chốt Khuyến mãi an toàn (Null-Safe Checkout) ==
+customer -> cartUI : Chọn địa chỉ nhận hàng & Nhấn "Đặt hàng / Thanh toán"
+cartUI -> orderCtrl : POST /api/order (CreateOrderRequest + Bearer JWT)
+activate orderCtrl
+
+orderCtrl -> orderSvc : createOrder(req, user)
+activate orderSvc
+
+orderSvc -> cartSvc : findCartByUserId(user.getId())
+cartSvc --> orderSvc : cart (danh sách món, tổng tiền)
+
+orderSvc -> couponRepo : findByCode(req.getCouponCode())
+couponRepo --> orderSvc : coupon
+
+orderSvc -> orderSvc : Kiểm tra tính hợp lệ & tính discount = Math.max(0, Math.min(discount, applicableTotal))
+orderSvc -> orderSvc : Tính finalPrice = Math.max(0, totalPrice - discount)
+
+orderSvc -> db : INSERT INTO orders (totalAmount, totalPrice, discountAmount, couponCode, ...)
+orderSvc -> db : INSERT INTO order_item (...)
+orderSvc -> cartSvc : clearCart(cart)
+cartSvc -> db : Xóa các cart_item đã chốt đơn
+
+orderSvc --> orderCtrl : createdOrder (kèm số tiền đã trừ khuyến mãi)
+deactivate orderSvc
+
+orderCtrl --> cartUI : Trả về thông tin đơn hàng đã tạo
+deactivate orderCtrl
+@enduml

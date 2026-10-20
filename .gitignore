@@ -1,0 +1,32 @@
+# Tool binaries
+plantuml.jar
+
+# Build outputs
+target/
+dist/
+node_modules/
+
+# OS / Temporary files
+*.log
+.DS_Store
+Thumbs.db
+
+# LaTeX temporary files
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.synctex.gz
+*.toc
+*.out
+*.lof
+*.lot
+
+# Large reference archives
+Tham khảo/
+*.zip
+*.tar.gz
+*.rar
+
+

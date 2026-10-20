@@ -5,7 +5,8 @@ import {
     LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS,
     LOGOUT,
     REGISTER_FAILURE, REGISTER_REQUEST, REGISTER_SUCCESS,
-    ADD_TO_FAVORITES_REQUEST, ADD_TO_FAVORITES_SUCCESS, ADD_TO_FAVORITES_FAILURE
+    ADD_TO_FAVORITES_REQUEST, ADD_TO_FAVORITES_SUCCESS, ADD_TO_FAVORITES_FAILURE,
+    UPDATE_USER_PROFILE_REQUEST, UPDATE_USER_PROFILE_SUCCESS, UPDATE_USER_PROFILE_FAILURE
 } from "./ActionType";
 
 export const registerUser = (reqData) => async (dispatch) => {
@@ -154,5 +155,24 @@ export const socialLogin = ({ provider, token, navigate }) => async (dispatch) =
         dispatch({ type: LOGIN_FAILURE, payload: errorMessage });
         console.log(`Lỗi đăng nhập ${provider}`, errorMessage);
         alert(`Lỗi đăng nhập qua ${provider}: ` + errorMessage);
+    }
+};
+
+export const updateUserProfile = ({ reqData, jwt }) => async (dispatch) => {
+    dispatch({ type: UPDATE_USER_PROFILE_REQUEST });
+    try {
+        const { data } = await axios.put(`${API_URL}/api/users/profile`, reqData, {
+            headers: {
+                Authorization: `Bearer ${jwt}`
+            }
+        });
+        dispatch({ type: UPDATE_USER_PROFILE_SUCCESS, payload: data });
+        console.log("Cập nhật Profile thành công", data);
+        return data;
+    } catch (error) {
+        const errorMessage = error.response?.data?.message || error.message;
+        dispatch({ type: UPDATE_USER_PROFILE_FAILURE, payload: errorMessage });
+        console.log("Lỗi cập nhật Profile", errorMessage);
+        throw error;
     }
 };

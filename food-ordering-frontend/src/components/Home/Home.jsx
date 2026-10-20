@@ -7,11 +7,16 @@ import SearchIcon from '@mui/icons-material/Search';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { Button } from '@mui/material';
+import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
+import StorefrontIcon from '@mui/icons-material/Storefront';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
+import { Button, Snackbar, Alert } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '../../config/api';
+import { HOME_CUISINE_FILTERS } from '../../config/cuisineConfig';
 
 export const Home = () => {
     const dispatch = useDispatch();
@@ -19,11 +24,14 @@ export const Home = () => {
     const jwt = localStorage.getItem("jwt");
 
     const restaurant = useSelector(store => store.restaurant);
+    const cart = useSelector(store => store.cart);
+    const hasCartItems = (cart.cart?.item?.length || cart.cartItems?.length || 0) > 0;
 
     const [selectedCity, setSelectedCity] = useState("ALL");
     const [selectedCuisine, setSelectedCuisine] = useState("ALL");
-    const [copiedCode, setCopiedCode] = useState("");
     const [promos, setPromos] = useState([]);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
 
     const fetchCoupons = async () => {
         try {
@@ -41,10 +49,47 @@ export const Home = () => {
         fetchCoupons();
     }, [dispatch, jwt]);
 
-    const handleCopyCode = (code) => {
-        navigator.clipboard.writeText(code);
-        setCopiedCode(code);
-        setTimeout(() => setCopiedCode(""), 2000);
+    // Kích hoạt mã giảm giá 1-click dẫn luồng đặt món mượt mà
+    const handleUseCoupon = (promo) => {
+        const isRestaurantCoupon = Boolean(promo.restaurant && promo.restaurant.id);
+        const restName = promo.restaurant?.name || "nhà hàng";
+
+        try {
+            localStorage.setItem("pending_coupon", JSON.stringify({
+                code: promo.code,
+                restaurantId: promo.restaurant?.id || null,
+                restName: restName,
+                timestamp: Date.now()
+            }));
+        } catch (e) {
+            console.error("Lỗi lưu pending_coupon:", e);
+        }
+
+        if (isRestaurantCoupon) {
+            setSnackbarMessage(`Đã kích hoạt mã "${promo.code}"! Đang mở thực đơn ${restName}...`);
+            setSnackbarOpen(true);
+            const city = promo.restaurant.address?.city || "vietnam";
+            const name = promo.restaurant.name || "restaurant";
+            const id = promo.restaurant.id;
+            setTimeout(() => {
+                navigate(`/restaurant/${city}/${name}/${id}`);
+            }, 500);
+        } else {
+            if (hasCartItems) {
+                setSnackbarMessage(`Đã kích hoạt mã toàn sàn "${promo.code}"! Đang chuyển đến giỏ hàng...`);
+                setSnackbarOpen(true);
+                setTimeout(() => {
+                    navigate("/cart");
+                }, 500);
+            } else {
+                setSnackbarMessage(`Đã kích hoạt mã toàn sàn "${promo.code}"! Hãy chọn quán ăn bên dưới để áp dụng.`);
+                setSnackbarOpen(true);
+                const restaurantSection = document.getElementById("restaurants-discovery-section");
+                if (restaurantSection) {
+                    restaurantSection.scrollIntoView({ behavior: 'smooth' });
+                }
+            }
+        }
     };
 
     const cities = [
@@ -54,19 +99,7 @@ export const Home = () => {
         { label: "Quảng Nam", value: "Quảng Nam" }
     ];
 
-    const cuisines = [
-        { label: "Tất cả món", value: "ALL" },
-        { label: "Phở & Bún", value: "Phở & Bún" },
-        { label: "Bún & Mì", value: "Bún & Mì" },
-        { label: "Pizza & Pasta", value: "Pizza & Pasta" },
-        { label: "Sushi & Sashimi", value: "Sushi & Sashimi" },
-        { label: "Bánh Mì & Đường Phố", value: "Bánh Mì & Đường Phố" },
-        { label: "Cà Phê & Bánh", value: "Cà Phê & Bánh" },
-        { label: "Dimsum & Trung Hoa", value: "Dimsum & Trung Hoa" },
-        { label: "Gà Rán & Fastfood", value: "Gà Rán & Fastfood" },
-        { label: "Lẩu & Nướng", value: "Lẩu & Nướng" },
-        { label: "Steak & Wine", value: "Steak & Wine" }
-    ];
+    const cuisines = HOME_CUISINE_FILTERS;
 
     // Lọc nhà hàng theo bộ lọc pill
     const filteredRestaurants = restaurant.restaurants?.filter(item => {
@@ -125,13 +158,25 @@ export const Home = () => {
                 </div>
             </section>
 
-            {/* Carousel phần "Hôm nay ăn gì" */}
+            {/* Carousel phần "Hôm nay ăn gì - Món ăn bán chạy nhất" */}
             <section className='py-12 bg-[#09090b] border-b border-gray-900'>
                 <div className='max-w-[1400px] mx-auto px-5 lg:px-20'>
-                    <h2 className='text-xl lg:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-100 to-gray-400 mb-2'>
-                        Hôm Nay Ăn Gì?
-                    </h2>
-                    <p className='text-gray-500 text-sm mb-8'>Gợi ý các món ăn phổ biến được đặt nhiều nhất tuần này</p>
+                    <div className='flex flex-col md:flex-row md:items-end justify-between mb-8 gap-3 border-b border-gray-800/60 pb-4'>
+                        <div>
+                            <div className='flex items-center gap-2 mb-2'>
+                                <span className='text-xl'>🔥</span>
+                                <h2 className='text-xl lg:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gray-100 via-pink-200 to-gray-400'>
+                                    Hôm Nay Ăn Gì? Món Bán Chạy Nhất
+                                </h2>
+                            </div>
+                            <p className='text-gray-400 text-sm'>
+                                Gợi ý các món ngon được thực khách đặt nhiều nhất tuần này — Bấm để đặt món trực tiếp tại quán!
+                            </p>
+                        </div>
+                        <div className='text-xs text-pink-400/90 bg-pink-500/10 border border-pink-500/20 px-3 py-1 rounded-full font-medium w-fit'>
+                            ⚡ Cập nhật theo thời gian thực
+                        </div>
+                    </div>
                     <MultiItemCarousel />
                 </div>
             </section>
@@ -139,14 +184,27 @@ export const Home = () => {
             {/* Khuyến Mãi Hot */}
             <section className='py-12 bg-black'>
                 <div className='max-w-[1400px] mx-auto px-5 lg:px-20'>
-                    <h2 className='text-xl lg:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-400 mb-2'>
-                        Ưu Đãi Đặc Biệt Dành Cho Bạn
-                    </h2>
-                    <p className='text-gray-500 text-sm mb-8'>Nhận ngay mã giảm giá siêu hot, số lượng có hạn!</p>
+                    <div className='flex flex-col md:flex-row md:items-end justify-between mb-8 gap-3 border-b border-gray-900 pb-5'>
+                        <div>
+                            <div className='flex items-center gap-2 mb-2'>
+                                <ConfirmationNumberIcon className='text-pink-500' sx={{ fontSize: 24 }} />
+                                <h2 className='text-xl lg:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-rose-400'>
+                                    Ưu Đãi Đặc Biệt Dành Cho Bạn
+                                </h2>
+                            </div>
+                            <p className='text-gray-400 text-sm'>
+                                Kích hoạt trực tiếp mã giảm giá siêu hot và đặt món ngay không cần sao chép!
+                            </p>
+                        </div>
+                        <div className='text-xs text-gray-500 font-medium'>
+                            {promos.length} mã ưu đãi sẵn sàng áp dụng
+                        </div>
+                    </div>
 
                     <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6'>
                         {promos.length > 0 ? (
                             promos.map((promo, index) => {
+                                const isRestaurantPromo = Boolean(promo.restaurant && promo.restaurant.id);
                                 const colors = [
                                     "from-pink-500 to-rose-500",
                                     "from-purple-500 to-indigo-500",
@@ -154,50 +212,87 @@ export const Home = () => {
                                     "from-amber-500 to-orange-500"
                                 ];
                                 const color = colors[index % colors.length];
-                                const title = promo.restaurant ? promo.restaurant.name.toUpperCase() : "ƯU ĐÃI TOÀN SÀN";
-                                const discountText = promo.discountType === "PERCENTAGE" ? `GIẢM ${promo.discountValue}%` : `GIẢM ${promo.discountValue?.toLocaleString()}đ`;
-                                const description = (promo.restaurant 
-                                    ? `Áp dụng riêng cho các đơn hàng đặt tại nhà hàng ${promo.restaurant.name}.`
-                                    : "Áp dụng cho mọi đơn hàng của bất kỳ nhà hàng nào trên toàn hệ thống.") +
-                                    (promo.minimumOrderValue ? ` Đơn hàng tối thiểu từ ${promo.minimumOrderValue.toLocaleString()} đ.` : "");
+                                const restName = promo.restaurant ? promo.restaurant.name : "Toàn Hệ Thống";
+                                const discountText = promo.discountType === "PERCENTAGE" 
+                                    ? `GIẢM ${promo.discountValue}%` 
+                                    : `GIẢM ${promo.discountValue?.toLocaleString('vi-VN')}đ`;
+                                const description = promo.restaurant 
+                                    ? `Áp dụng riêng cho đơn đặt tại ${promo.restaurant.name}.`
+                                    : "Áp dụng cho mọi đơn hàng của bất kỳ nhà hàng nào trên toàn hệ thống.";
 
                                 return (
                                     <div 
                                         key={promo.id} 
-                                        className='bg-gradient-to-br from-gray-950 to-gray-900 border border-gray-800 rounded-2xl p-5 flex flex-col justify-between hover:border-gray-700 transition-all duration-300 hover:shadow-[0_10px_20px_rgba(0,0,0,0.4)] group relative overflow-hidden'
+                                        className='bg-gradient-to-br from-[#121216] to-[#0c0c10] border border-gray-800/80 rounded-2xl p-5 flex flex-col justify-between hover:border-pink-500/40 transition-all duration-300 hover:shadow-[0_12px_28px_rgba(233,30,99,0.15)] group relative overflow-hidden'
                                     >
-                                        <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${color} opacity-10 rounded-full blur-xl group-hover:scale-150 transition-transform duration-500`}></div>
+                                        {/* Hiệu ứng hào quang */}
+                                        <div className={`absolute -top-8 -right-8 w-28 h-28 bg-gradient-to-br ${color} opacity-15 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500`}></div>
                                         
                                         <div>
-                                            <div className='flex justify-between items-center mb-3'>
-                                                <span className='text-xs font-bold text-gray-500 tracking-wider truncate max-w-[150px]' title={title}>{title}</span>
-                                                <span className={`text-sm font-black bg-gradient-to-r ${color} text-transparent bg-clip-text`}>HOT</span>
+                                            <div className='flex justify-between items-center mb-3 gap-2'>
+                                                <div className='flex items-center gap-1.5 min-w-0'>
+                                                    {isRestaurantPromo ? (
+                                                        <StorefrontIcon sx={{ fontSize: 16 }} className='text-pink-400 shrink-0' />
+                                                    ) : (
+                                                        <LocalOfferIcon sx={{ fontSize: 16 }} className='text-indigo-400 shrink-0' />
+                                                    )}
+                                                    <span 
+                                                        className={`text-xs font-bold tracking-wider truncate ${isRestaurantPromo ? 'text-pink-400' : 'text-indigo-300'}`} 
+                                                        title={restName}
+                                                    >
+                                                        {isRestaurantPromo ? restName.toUpperCase() : "ƯU ĐÃI TOÀN SÀN"}
+                                                    </span>
+                                                </div>
+                                                <span className={`text-[11px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-gradient-to-r ${color} text-white shadow-sm shrink-0`}>
+                                                    HOT
+                                                </span>
                                             </div>
-                                            <h3 className='text-2xl font-extrabold text-white mb-2'>{discountText}</h3>
-                                            <p className='text-gray-400 text-xs leading-relaxed mb-4'>{description}</p>
+
+                                            <h3 className='text-2xl font-black text-white tracking-tight mb-2'>
+                                                {discountText}
+                                            </h3>
+
+                                            <p className='text-gray-400 text-xs leading-relaxed mb-3 line-clamp-2'>
+                                                {description}
+                                            </p>
+
+                                            {promo.minimumOrderValue ? (
+                                                <div className='inline-block text-[11px] font-medium text-amber-400/90 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-md mb-2'>
+                                                    Đơn tối thiểu: {promo.minimumOrderValue.toLocaleString('vi-VN')} đ
+                                                </div>
+                                            ) : null}
                                         </div>
 
-                                        <div className='mt-4 pt-4 border-t border-gray-800 flex items-center justify-between'>
-                                            <div className='bg-gray-900 border border-gray-800 px-3 py-1.5 rounded-lg text-xs font-mono font-bold text-pink-500 select-all'>
-                                                {promo.code}
+                                        <div className='mt-4 pt-3.5 border-t border-gray-800/80 flex items-center justify-between gap-2'>
+                                            {/* Tem mã voucher phong cách thẻ ưu đãi */}
+                                            <div className='bg-gray-900/90 border border-dashed border-pink-500/30 px-2.5 py-1.5 rounded-lg text-xs font-mono font-bold text-pink-400 flex items-center gap-1 shadow-inner shrink-0'>
+                                                <ConfirmationNumberIcon sx={{ fontSize: 14 }} className='text-pink-500' />
+                                                <span>{promo.code}</span>
                                             </div>
+
+                                            {/* Nút 1-Click dẫn luồng */}
                                             <Button
                                                 size="small"
-                                                onClick={() => handleCopyCode(promo.code)}
-                                                variant="outlined"
+                                                onClick={() => handleUseCoupon(promo)}
+                                                variant="contained"
                                                 sx={{ 
-                                                    borderColor: copiedCode === promo.code ? '#10b981' : 'rgba(233,30,99,0.3)',
-                                                    color: copiedCode === promo.code ? '#10b981' : '#e91e63',
+                                                    background: 'linear-gradient(to right, #ec4899, #f43f5e)',
+                                                    color: '#ffffff',
                                                     textTransform: 'none',
                                                     fontWeight: 'bold',
+                                                    fontSize: '0.75rem',
+                                                    borderRadius: '0.65rem',
+                                                    padding: '5px 12px',
+                                                    boxShadow: '0 4px 12px rgba(236,72,153,0.25)',
+                                                    whiteSpace: 'nowrap',
                                                     '&:hover': {
-                                                        borderColor: copiedCode === promo.code ? '#10b981' : '#e91e63',
-                                                        bgcolor: 'rgba(233,30,99,0.05)'
+                                                        background: 'linear-gradient(to right, #db2777, #e11d48)',
+                                                        boxShadow: '0 6px 16px rgba(236,72,153,0.35)',
                                                     }
                                                 }}
-                                                startIcon={copiedCode === promo.code ? null : <ContentCopyIcon sx={{ fontSize: 14 }} />}
+                                                endIcon={isRestaurantPromo ? <ArrowForwardIcon sx={{ fontSize: 14 }} /> : <RestaurantMenuIcon sx={{ fontSize: 14 }} />}
                                             >
-                                                {copiedCode === promo.code ? "Đã sao chép" : "Lấy mã"}
+                                                {isRestaurantPromo ? "Đến quán" : "Dùng ngay"}
                                             </Button>
                                         </div>
                                     </div>
@@ -213,7 +308,7 @@ export const Home = () => {
             </section>
 
             {/* Danh sách nhà hàng khám phá */}
-            <section className='py-12 bg-[#09090b] border-t border-gray-900'>
+            <section id="restaurants-discovery-section" className='py-12 bg-[#09090b] border-t border-gray-900 scroll-mt-6'>
                 <div className='max-w-[1400px] mx-auto px-5 lg:px-20'>
                     <div className='flex flex-col lg:flex-row lg:justify-between lg:items-end border-b border-gray-800 pb-5 mb-8 space-y-4 lg:space-y-0'>
                         <div>
@@ -334,6 +429,30 @@ export const Home = () => {
                     </div>
                 </div>
             </section>
+
+            {/* Snackbar thông báo khi kích hoạt mã ưu đãi */}
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={4000}
+                onClose={() => setSnackbarOpen(false)}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+            >
+                <Alert
+                    onClose={() => setSnackbarOpen(false)}
+                    severity="success"
+                    variant="filled"
+                    sx={{
+                        width: '100%',
+                        bgcolor: '#10b981',
+                        color: '#fff',
+                        fontWeight: 600,
+                        borderRadius: '12px',
+                        boxShadow: '0 8px 24px rgba(16, 185, 129, 0.3)'
+                    }}
+                >
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
         </div>
     );
 };

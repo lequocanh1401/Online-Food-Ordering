@@ -53,15 +53,15 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     public Coupon findCouponByCode(String code, Long restaurantId) throws Exception {
-        java.util.Optional<Coupon> opt = couponRepository.findByCodeAndRestaurantId(code, restaurantId);
-        if (!opt.isPresent()) {
-            // Kiểm tra xem có phải mã toàn sàn không (restaurant == null)
-            java.util.Optional<Coupon> globalOpt = couponRepository.findByCode(code);
-            if (globalOpt.isPresent() && globalOpt.get().getRestaurant() == null) {
-                opt = globalOpt;
-            }
+        java.util.Optional<Coupon> opt = java.util.Optional.empty();
+        if (restaurantId != null) {
+            opt = couponRepository.findByCodeAndRestaurantId(code, restaurantId);
         }
-        return opt.orElseThrow(() -> new Exception("Coupon code is invalid or expired"));
+        if (!opt.isPresent()) {
+            // Tìm theo mã trên toàn hệ thống để lấy thông tin chi tiết nhà hàng sở hữu mã
+            opt = couponRepository.findByCode(code);
+        }
+        return opt.orElseThrow(() -> new Exception("Mã giảm giá không tồn tại hoặc đã hết hạn"));
     }
 
     @Override

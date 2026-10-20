@@ -12,6 +12,7 @@ import com.anh.request.CreateFoodRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -158,5 +159,39 @@ public class FoodServiceImpl implements FoodService {
         food.setSeasonal(req.isSeasional());
         food.setVegetarian(req.isVegetarian());
         return foodRepository.save(food);
+    }
+
+    @Override
+    public List<Food> getPopularFoods() {
+        List<Food> popular = new ArrayList<>();
+        try {
+            List<Long> topIds = foodRepository.findTopSellingFoodIds();
+            if (topIds != null) {
+                for (Long id : topIds) {
+                    Food f = foodRepository.findById(id).orElse(null);
+                    if (f != null && f.isAvailable() && f.getRestaurant() != null) {
+                        popular.add(f);
+                    }
+                    if (popular.size() >= 10) break;
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Lỗi query top selling foods: " + e.getMessage());
+        }
+
+        // Nếu chưa đủ món từ đơn hàng, lấy thêm các món có sẵn từ các nhà hàng
+        if (popular.size() < 8) {
+            List<Food> allFoods = foodRepository.findAll();
+            for (Food f : allFoods) {
+                if (f.isAvailable() && f.getRestaurant() != null) {
+                    boolean alreadyExists = popular.stream().anyMatch(item -> item.getId().equals(f.getId()));
+                    if (!alreadyExists) {
+                        popular.add(f);
+                    }
+                }
+                if (popular.size() >= 10) break;
+            }
+        }
+        return popular;
     }
 }

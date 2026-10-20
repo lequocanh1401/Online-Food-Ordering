@@ -6,6 +6,7 @@ import com.anh.model.Food;
 import com.anh.model.User;
 import com.anh.repository.CartItemRepository;
 import com.anh.repository.CartRepository;
+import com.anh.repository.UserRepository;
 import com.anh.request.AddCartItemRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,8 @@ public class CartServiceImpl implements CartService {
     private CartRepository cartRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
     @Autowired
     private CartItemRepository cartItemRepository;
     @Autowired
@@ -103,6 +106,13 @@ public class CartServiceImpl implements CartService {
     @Override
     public Cart findCartByUserId(Long userId) throws Exception {
         Cart cart = cartRepository.findByCustomerId(userId);
+        if (cart == null) {
+            cart = new Cart();
+            User user = userRepository.findById(userId).orElse(null);
+            cart.setCustomer(user);
+            cart.setTotal(0L);
+            cart = cartRepository.save(cart);
+        }
         cart.setTotal(calculateCartTotals(cart));
         return cart;
     }
@@ -110,7 +120,10 @@ public class CartServiceImpl implements CartService {
     @Override
     public Cart clearCart(Long userId) throws Exception {
         Cart cart = cartRepository.findByCustomerId(userId);
-        cart.getItem().clear();
-        return cartRepository.save(cart);
+        if (cart != null && cart.getItem() != null) {
+            cart.getItem().clear();
+            return cartRepository.save(cart);
+        }
+        return cart;
     }
 }

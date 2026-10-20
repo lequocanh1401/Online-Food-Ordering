@@ -146,7 +146,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     public Restaurant getRestaurantByUserId(Long userId) throws Exception {
         Restaurant restaurant = restaurantRepository.findByOwnerId(userId);
         if (restaurant == null) {
-            throw new Exception("Restaurant not found with owner id " + userId);
+            return null;
         }
         populateRestaurantRating(restaurant);
         return restaurant;

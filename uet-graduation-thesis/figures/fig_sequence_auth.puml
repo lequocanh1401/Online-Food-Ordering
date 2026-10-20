@@ -1,0 +1,76 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam DefaultFontSize 12
+
+actor "Người dùng\n(User)" as user
+participant "React Client\n(AuthModal)" as client
+participant "AuthController" as authCtrl
+participant "PasswordEncoder\n(BCrypt)" as encoder
+participant "UserRepository" as userRepo
+participant "CartRepository" as cartRepo
+participant "JwtProvider" as jwtProv
+database "MySQL Database" as db
+
+== Quy trình Đăng ký (Signup) & Kiểm soát Phân quyền ==
+user -> client : Nhập FullName, Email, Mật khẩu, Chọn Role
+client -> authCtrl : POST /auth/signup (JSON Payload)
+activate authCtrl
+
+authCtrl -> userRepo : findByEmail(email)
+userRepo -> db : SELECT * FROM users WHERE email = ?
+db --> userRepo : null (chưa tồn tại)
+userRepo --> authCtrl : null
+
+alt Người dùng gửi yêu cầu với role = ROLE_ADMIN
+    authCtrl --> client : HTTP 400/500 "Registration as ADMIN is not allowed."
+    client --> user : Thông báo lỗi: Không cho phép tự đăng ký quyền Admin
+else Vai trò hợp lệ (ROLE_CUSTOMER hoặc ROLE_RESTAURANT_OWNER)
+    authCtrl -> encoder : encode(rawPassword)
+    encoder --> authCtrl : hashedPassword
+    
+    authCtrl -> userRepo : save(createdUser)
+    userRepo -> db : INSERT INTO users (...)
+    db --> userRepo : savedUser
+    userRepo --> authCtrl : savedUser
+    
+    authCtrl -> cartRepo : save(emptyCart)
+    cartRepo -> db : INSERT INTO cart (customer_id, total) VALUES (savedUser.id, 0)
+    db --> cartRepo : savedCart
+    cartRepo --> authCtrl : savedCart
+    
+    authCtrl -> jwtProv : generateToken(authentication)
+    jwtProv --> authCtrl : jwtToken
+    
+    authCtrl --> client : HTTP 201 Created (jwt, role, "Register success")
+    client -> client : Lưu jwt vào localStorage & cập nhật Redux store
+    client --> user : Chuyển hướng theo vai trò (Customer -> Trang chủ / Owner -> Admin Dashboard)
+end
+deactivate authCtrl
+
+== Quy trình Đăng nhập (Signin) & Cấp phát JWT ==
+user -> client : Nhập Email & Mật khẩu
+client -> authCtrl : POST /auth/signin (LoginRequest)
+activate authCtrl
+
+authCtrl -> userRepo : findByEmail(email)
+userRepo -> db : SELECT * FROM users WHERE email = ?
+db --> userRepo : UserDetails
+userRepo --> authCtrl : UserDetails
+
+authCtrl -> encoder : matches(rawPassword, storedHashedPassword)
+alt Mật khẩu không chính xác
+    encoder --> authCtrl : false
+    authCtrl --> client : HTTP 401 Unauthorized (BadCredentialsException)
+    client --> user : Thông báo sai thông tin đăng nhập
+else Mật khẩu hợp lệ
+    encoder --> authCtrl : true
+    authCtrl -> jwtProv : generateToken(authentication)
+    jwtProv --> authCtrl : jwtToken
+    authCtrl --> client : HTTP 200 OK (jwt, role, "Login success")
+    client -> client : Lưu jwt vào localStorage & dispatch(getUser(jwt))
+    client --> user : Đăng nhập thành công, mở khóa tính năng
+end
+deactivate authCtrl
+@enduml

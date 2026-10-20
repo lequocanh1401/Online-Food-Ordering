@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Card, CardHeader, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Avatar, Button, Modal, TextField, FormControl, InputLabel, Select, MenuItem, OutlinedInput, Chip, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
-import CreateIcon from '@mui/icons-material/Create';
+import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WarningIcon from '@mui/icons-material/Warning';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteFoodAction, getMenuItemsByRestaurantId, updateMenuItemAction } from '../../State/Menu/Action';
+import { deleteFoodAction, getMenuItemsByRestaurantId, updateMenuItemAction, updateMenuItemsAvailability } from '../../State/Menu/Action';
 import { getIngredientsOfRestaurant } from '../../State/Ingredients/Action';
 import { getRestaurantsCategory } from '../../State/Restaurant/Action';
 
@@ -35,6 +35,10 @@ export const MenuTable = () => {
     // Custom confirm delete modal states
     const [confirmOpen, setConfirmOpen] = useState(false);
     const [deleteFoodId, setDeleteFoodId] = useState(null);
+
+    const handleUpdateAvailability = (foodId) => {
+        dispatch(updateMenuItemsAvailability({ foodId, jwt }));
+    };
 
     // Kéo danh sách món ăn, danh mục, nguyên liệu khi load trang
     useEffect(() => {
@@ -120,11 +124,15 @@ export const MenuTable = () => {
             <Card className='mt-1'>
                 <CardHeader
                     action={
-                        <IconButton onClick={() => navigate("/admin/restaurant/add-menu")} aria-label="settings">
-                            <CreateIcon />
+                        <IconButton 
+                            onClick={() => navigate("/admin/restaurant/add-menu")} 
+                            sx={{ color: '#ec4899', bgcolor: 'rgba(236, 72, 153, 0.1)', '&:hover': { bgcolor: 'rgba(236, 72, 153, 0.2)' } }}
+                            title="Thêm món ăn mới"
+                        >
+                            <AddIcon />
                         </IconButton>
                     }
-                    title={"Thực Đơn (Menu)"}
+                    title={"Danh Sách Thực Đơn"}
                     sx={{ pt: 2, alignItems: "center" }}
                 />
                 <TableContainer component={Paper}>
@@ -149,8 +157,18 @@ export const MenuTable = () => {
                                     <TableCell align="right">
                                         {item.ingredients?.map((ing) => ing.name).join(", ")}
                                     </TableCell>
-                                    <TableCell align="right">{item.price} VND</TableCell>
-                                    <TableCell align="right">{item.available ? "Có sẵn" : "Hết hàng"}</TableCell>
+                                    <TableCell align="right">{item.price?.toLocaleString()} VND</TableCell>
+                                    <TableCell align="right">
+                                        <Button
+                                            size="small"
+                                            onClick={() => handleUpdateAvailability(item.id)}
+                                            color={item.available ? "success" : "error"}
+                                            sx={{ fontWeight: 'bold' }}
+                                            title="Bấm để đổi trạng thái Còn hàng / Hết hàng"
+                                        >
+                                            {item.available ? "Có sẵn" : "Hết hàng"}
+                                        </Button>
+                                    </TableCell>
                                     <TableCell align="right">
                                         <Box className="flex justify-end gap-1">
                                             <IconButton
@@ -177,9 +195,9 @@ export const MenuTable = () => {
             </Card>
 
             <Modal open={editOpen} onClose={() => setEditOpen(false)}>
-                <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 500, bgcolor: 'background.paper', outline: 'none', boxShadow: 24, p: 4, borderRadius: '8px', maxHeight: '90vh', overflowY: 'auto' }}>
+                <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 500, bgcolor: '#1f2937', color: 'white', outline: 'none', boxShadow: 24, p: 4, borderRadius: '12px', maxHeight: '90vh', overflowY: 'auto' }}>
                     <form onSubmit={handleEditSubmit} className="space-y-4">
-                        <h1 className='text-gray-800 font-bold text-center text-xl pb-4'>CẬP NHẬT MÓN ẢN</h1>
+                        <h1 className='text-white font-bold text-center text-xl pb-4'>CẬP NHẬT MÓN ĂN</h1>
                         <TextField fullWidth label="Tên món ăn" name="name" value={editForm.name} onChange={handleEditChange} required />
                         <TextField fullWidth label="Giá tiền (VND)" name="price" type="number" value={editForm.price} onChange={handleEditChange} required />
                         <TextField fullWidth multiline rows={2} label="Mô tả chi tiết" name="description" value={editForm.description} onChange={handleEditChange} required />

@@ -20,9 +20,7 @@ export const RestaurantCard = ({ item }) => {
     const isOpen = item.open !== undefined ? item.open : true;
 
     const handleNavigateToRestaurant = () => {
-        if (isOpen) {
-            navigate(`/restaurant/${city}/${name}/${item.id}`);
-        }
+        navigate(`/restaurant/${city}/${name}/${item.id}`);
     };
 
     const handleToggleFavorite = (e) => {
@@ -35,13 +33,17 @@ export const RestaurantCard = ({ item }) => {
     return (
         <Card className='m-5 w-[18rem] bg-gray-900 text-white rounded-lg overflow-hidden shadow-xl border border-gray-800 relative group'>
             <div
-                className={`${isOpen ? 'cursor-pointer' : 'cursor-not-allowed'} relative h-[12rem] overflow-hidden`}
+                className='cursor-pointer relative h-[12rem] overflow-hidden'
                 onClick={handleNavigateToRestaurant}
             >
                 <img
-                    className='w-full h-full object-cover group-hover:scale-105 transition-transform duration-300'
-                    src={item.images?.[0] || "https://images.pexels.com/photos/262978/pexels-photo-262978.jpeg"}
+                    className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${!isOpen ? 'grayscale-[50%] opacity-85' : ''}`}
+                    src={item.images?.[0] || "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800"}
                     alt={name}
+                    onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800";
+                    }}
                 />
                 <div className='absolute top-2 left-2'>
                     {item.open !== undefined ? (
@@ -49,7 +51,7 @@ export const RestaurantCard = ({ item }) => {
                             size="small"
                             className='font-semibold'
                             color={item.open ? "success" : "error"}
-                            label={item.open ? "Open" : "Closed"}
+                            label={item.open ? "Đang nhận đơn" : "Tạm ngưng nhận đơn"}
                         />
                     ) : (
                         <Chip

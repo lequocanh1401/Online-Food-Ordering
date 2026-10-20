@@ -41,4 +41,10 @@ public class FoodController {
         List<Food> foods = foodService.getRestaurantsFood(restaurantId, vegetarian, nonveg, seasonal, food_category);
         return new ResponseEntity<>(foods, HttpStatus.OK);
     }
+
+    @GetMapping("/popular")
+    public ResponseEntity<List<Food>> getPopularFoods() {
+        List<Food> foods = foodService.getPopularFoods();
+        return new ResponseEntity<>(foods, HttpStatus.OK);
+    }
 }

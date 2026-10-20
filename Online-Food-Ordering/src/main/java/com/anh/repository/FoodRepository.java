@@ -17,4 +17,7 @@ public interface FoodRepository extends JpaRepository<Food, Long> {
 
     @Query("SELECT COUNT(f) > 0 FROM Food f JOIN f.ingredients i WHERE i.id = :ingredientId")
     boolean existsByIngredientId(@Param("ingredientId") Long ingredientId);
+
+    @Query("SELECT oi.food.id FROM OrderItem oi WHERE oi.food IS NOT NULL GROUP BY oi.food.id ORDER BY SUM(oi.quantity) DESC")
+    List<Long> findTopSellingFoodIds();
 }

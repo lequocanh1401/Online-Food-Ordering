@@ -29,7 +29,14 @@ public class IngredientsController {
     @PostMapping()
     public ResponseEntity<IngredientsItem> createIngredientItem(
             @RequestBody IngredientRequest req) throws Exception {
-        IngredientsItem item = ingredientsService.createIngredientItem(req.getRestaurantId(), req.getName(), req.getCategoryId());
+        IngredientsItem item = ingredientsService.createIngredientItem(
+                req.getRestaurantId(),
+                req.getName(),
+                req.getCategoryId(),
+                req.getQuantity(),
+                req.getUnit(),
+                req.getMinThreshold()
+        );
         return new ResponseEntity<>(item, HttpStatus.CREATED);
     }
 
@@ -38,6 +45,32 @@ public class IngredientsController {
             @PathVariable Long id) throws Exception {
         IngredientsItem item = ingredientsService.updateStock(id);
         return new ResponseEntity<>(item, HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}/import")
+    public ResponseEntity<IngredientsItem> importIngredientStock(
+            @PathVariable Long id,
+            @RequestBody java.util.Map<String, Object> req) throws Exception {
+        Double additionalQuantity = req.get("additionalQuantity") != null 
+                ? Double.valueOf(req.get("additionalQuantity").toString()) 
+                : 0.0;
+        String note = req.get("note") != null ? req.get("note").toString() : null;
+        IngredientsItem item = ingredientsService.importStock(id, additionalQuantity, note);
+        return new ResponseEntity<>(item, HttpStatus.OK);
+    }
+
+    @GetMapping("/restaurant/{id}/logs")
+    public ResponseEntity<List<com.anh.model.InventoryLog>> getRestaurantInventoryLogs(
+            @PathVariable Long id) {
+        List<com.anh.model.InventoryLog> logs = ingredientsService.getInventoryLogs(id);
+        return new ResponseEntity<>(logs, HttpStatus.OK);
+    }
+
+    @GetMapping("/restaurant/{id}/alerts")
+    public ResponseEntity<List<IngredientsItem>> getLowStockAlerts(
+            @PathVariable Long id) {
+        List<IngredientsItem> alerts = ingredientsService.getLowStockIngredients(id);
+        return new ResponseEntity<>(alerts, HttpStatus.OK);
     }
 
     @GetMapping("/restaurant/{id}")
@@ -75,7 +108,14 @@ public class IngredientsController {
     public ResponseEntity<IngredientsItem> updateIngredientItem(
             @PathVariable Long id,
             @RequestBody IngredientRequest req) throws Exception {
-        IngredientsItem item = ingredientsService.updateIngredientItem(id, req.getName(), req.getCategoryId());
+        IngredientsItem item = ingredientsService.updateIngredientItem(
+                id,
+                req.getName(),
+                req.getCategoryId(),
+                req.getQuantity(),
+                req.getUnit(),
+                req.getMinThreshold()
+        );
         return new ResponseEntity<>(item, HttpStatus.OK);
     }
 

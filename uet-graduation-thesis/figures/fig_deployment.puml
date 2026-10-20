@@ -1,0 +1,35 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam DefaultFontSize 12
+
+node "Client Device (PC/Mobile)" {
+    node "Web Browser (Chrome/Firefox/Safari)" as browser {
+        artifact "React Client Bundle\n(HTML/CSS/JS)" as react
+    }
+}
+
+node "Application Server (AWS EC2 / VPS)" {
+    node "Java Runtime Environment (JRE 17)" as jre {
+        component "Embedded Tomcat Server\n(Port: 5454)" as tomcat
+        artifact "Spring Boot Application\n(.jar file)" as spring
+    }
+}
+
+node "Database Server (AWS RDS)" {
+    node "MySQL DBMS (Port: 3307)" as mysql {
+        database "online_food_ordering\n(Schema)" as db
+    }
+}
+
+cloud "Stripe Cloud Services" as stripe {
+    component "Stripe Checkout & Billing Engine" as stripe_engine
+}
+
+browser -- jre : "HTTP/HTTPS (JSON & JWT)\nPort 5454"
+browser -- stripe : "HTTPS (Secure Tokenization)"
+jre -- mysql : "JDBC/TCP\nPort 3307"
+jre -- stripe : "HTTPS (REST API Calls)"
+
+@enduml

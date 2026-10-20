@@ -1,0 +1,123 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam DefaultFontSize 16
+skinparam ClassFontSize 20
+skinparam AttributeFontSize 15
+skinparam Linetype ortho
+
+skinparam nodesep 60
+skinparam ranksep 60
+
+entity "Address" as address {
+  * id : BIGINT <<PK>>
+}
+
+entity "User" as user {
+  * id : BIGINT <<PK>>
+}
+
+entity "Cart" as cart {
+  * id : BIGINT <<PK>>
+  --
+  customer_id : BIGINT <<FK>>
+}
+
+entity "CartItem" as cart_item {
+  * id : BIGINT <<PK>>
+  --
+  cart_id : BIGINT <<FK>>
+  food_id : BIGINT <<FK>>
+}
+
+entity "Order" as order {
+  * id : BIGINT <<PK>>
+  --
+  customer_id : BIGINT <<FK>>
+  restaurant_id : BIGINT <<FK>>
+  deliveryAddress_id : BIGINT <<FK>>
+}
+
+entity "OrderItem" as order_item {
+  * id : BIGINT <<PK>>
+  --
+  order_id : BIGINT <<FK>>
+  food_id : BIGINT <<FK>>
+}
+
+entity "Restaurant" as restaurant {
+  * id : BIGINT <<PK>>
+  --
+  owner_id : BIGINT <<FK>>
+  address_id : BIGINT <<FK>>
+}
+
+entity "Events" as events {
+  * id : BIGINT <<PK>>
+  --
+  restaurant_id : BIGINT <<FK>>
+}
+
+entity "Coupon" as coupon {
+  * id : BIGINT <<PK>>
+  --
+  restaurant_id : BIGINT <<FK>>
+}
+
+entity "Category" as category {
+  * id : BIGINT <<PK>>
+  --
+  restaurant_id : BIGINT <<FK>>
+}
+
+entity "Food" as food {
+  * id : BIGINT <<PK>>
+  --
+  restaurant_id : BIGINT <<FK>>
+  category_id : BIGINT <<FK>>
+}
+
+entity "Review" as review {
+  * id : BIGINT <<PK>>
+  --
+  customer_id : BIGINT <<FK>>
+  restaurant_id : BIGINT <<FK>>
+  food_id : BIGINT <<FK>>
+}
+
+entity "IngredientCategory" as ingredient_category {
+  * id : BIGINT <<PK>>
+  --
+  restaurant_id : BIGINT <<FK>>
+}
+
+entity "IngredientsItem" as ingredient {
+  * id : BIGINT <<PK>>
+  --
+  category_id : BIGINT <<FK>>
+  restaurant_id : BIGINT <<FK>>
+}
+
+address --> user
+user --> cart
+cart --> cart_item
+user --> order
+order --> order_item
+
+restaurant --> category
+category --> food
+food --> review
+restaurant --> ingredient_category
+ingredient_category --> ingredient
+
+user "1" --> "0..*" restaurant : owns
+cart_item "0..*" --> "1" food : references
+order_item "0..*" --> "1" food : references
+order "1" --> "1" address : delivered to
+restaurant "1" --> "1" address : located at
+restaurant "1" --> "0..*" events : hosts
+restaurant "1" --> "0..*" coupon : issues
+user "1" --> "0..*" review : writes
+
+@enduml

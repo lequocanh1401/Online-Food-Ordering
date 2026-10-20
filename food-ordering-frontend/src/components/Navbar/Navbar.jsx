@@ -55,9 +55,13 @@ export const Navbar = () => {
 
                 <div className=''>
                     {auth.user ? (
-                        <Avatar onClick={handleAvatarClick} sx={{ bgcolor: "white", color: "#e91e63", cursor: "pointer" }}>
-                            {/* Lấy chữ cái đầu tiên của tên để làm Avatar */}
-                            {auth.user?.fullName[0].toUpperCase()}
+                        <Avatar 
+                            onClick={handleAvatarClick} 
+                            src={auth.user?.avatar}
+                            sx={{ bgcolor: "white", color: "#e91e63", cursor: "pointer" }}
+                        >
+                            {/* Lấy chữ cái đầu tiên của tên nếu chưa có Avatar */}
+                            {auth.user?.fullName?.[0]?.toUpperCase()}
                         </Avatar>
                     ) : (
                         <IconButton onClick={() => navigate("/account/login")}>

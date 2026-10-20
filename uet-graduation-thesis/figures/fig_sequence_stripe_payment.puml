@@ -1,0 +1,60 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam DefaultFontSize 12
+
+actor "Khách hàng\n(Customer)" as customer
+participant "Trình duyệt Web\n(React 19 Client)" as client
+participant "OrderController\n(/api/order)" as orderCtrl
+participant "PaymentServiceImpl" as paymentSvc
+participant "Stripe API Cloud\n(Stripe Checkout)" as stripe
+database "MySQL Database" as db
+
+== Khởi tạo Phiên thanh toán Điện tử Stripe ==
+customer -> client : Nhấn "Tiến hành thanh toán qua Stripe"
+client -> orderCtrl : POST /api/order (CreateOrderRequest + JWT)
+activate orderCtrl
+
+orderCtrl -> orderCtrl : createOrder(...) -> Lưu Order trạng thái "PENDING"
+orderCtrl -> paymentSvc : createPaymentLink(order)
+activate paymentSvc
+
+paymentSvc -> paymentSvc : Tính unitAmount = order.getTotalPrice()
+paymentSvc -> stripe : Session.create(amount, currency="vnd", successUrl, cancelUrl)
+activate stripe
+stripe --> paymentSvc : Session(url: "https://checkout.stripe.com/c/pay/cs_test_...")
+deactivate stripe
+
+paymentSvc --> orderCtrl : PaymentResponse(payment_url)
+deactivate paymentSvc
+
+orderCtrl --> client : HTTP 200 OK (payment_url)
+deactivate orderCtrl
+
+client -> client : window.location.href = res.data.payment_url
+client --> customer : Chuyển hướng trình duyệt sang cổng thanh toán Stripe
+
+== Khách hàng Thực hiện Thanh toán tại Cổng Stripe ==
+customer -> stripe : Nhập số thẻ tín dụng/ghi nợ, ngày hết hạn, mã CVC bảo mật
+stripe -> stripe : Mã hóa token hóa (PCI DSS Tokenization) & Xử lý trừ tiền
+alt Thanh toán bị người dùng Hủy (Cancel)
+    stripe --> client : Redirect về cancelUrl ("http://localhost:5173/payment/fail")
+    client --> customer : Hiển thị màn hình Thanh toán thất bại (PaymentFail.jsx)
+else Thanh toán Thành công (Payment Success)
+    stripe --> client : Redirect về successUrl ("http://localhost:5173/payment/success/{orderId}")
+    activate client
+    
+    client -> orderCtrl : PUT /api/order/{orderId}/complete-payment (Bearer JWT)
+    activate orderCtrl
+    
+    orderCtrl -> db : UPDATE orders SET orderStatus = 'PAID' WHERE id = ?
+    db --> orderCtrl : updatedOrder
+    
+    orderCtrl --> client : HTTP 200 OK (Order với trạng thái PAID)
+    deactivate orderCtrl
+    
+    client --> customer : Hiển thị màn hình Chúc mừng & Mã đơn hàng (PaymentSuccess.jsx)
+    deactivate client
+end
+@enduml

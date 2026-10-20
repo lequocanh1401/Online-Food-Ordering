@@ -15,4 +15,5 @@ public interface FoodService {
     public Food findFoodById(Long foodId) throws Exception;
     public Food updateAvailibilityStatus(Long foodId) throws Exception;
     public Food updateFood(Long foodId, CreateFoodRequest req, Category category) throws Exception;
+    public List<Food> getPopularFoods();
 }

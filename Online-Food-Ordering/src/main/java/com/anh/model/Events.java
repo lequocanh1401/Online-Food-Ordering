@@ -2,14 +2,12 @@ package com.anh.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class Events {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,6 +18,11 @@ public class Events {
     private String endsAt;
     private String name;
     private String location;
+
+    private String promoCode;
+    private String discountType = "PERCENTAGE"; // "PERCENTAGE" or "FLAT"
+    private Long discountValue = 0L;
+    private Long minimumOrderValue = 0L;
 
     @ManyToOne
     @JsonIgnoreProperties({"owner", "orders", "foods", "images"})

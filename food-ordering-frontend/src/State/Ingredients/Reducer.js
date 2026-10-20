@@ -7,6 +7,7 @@ const initialState = {
     ingredients: [],
     update: null,
     category: [],
+    inventoryLogs: []
 };
 
 export const ingredientReducer = (state = initialState, action) => {
@@ -25,6 +26,8 @@ export const ingredientReducer = (state = initialState, action) => {
                 update: action.payload,
                 ingredients: state.ingredients.map((item) => item.id === action.payload.id ? action.payload : item)
             };
+        case "GET_INVENTORY_LOGS":
+            return { ...state, inventoryLogs: action.payload };
         default:
             return state;
     }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Card, CardHeader, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Modal, TextField, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
-import CreateIcon from '@mui/icons-material/Create';
+import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WarningIcon from '@mui/icons-material/Warning';
@@ -59,13 +59,21 @@ export const IngredientCategoryTable = () => {
     return (
         <Box>
             <Card className='mt-1'>
-                <CardHeader action={<IconButton onClick={handleOpen}><CreateIcon /></IconButton>} title={"Ingredient Category"} sx={{ pt: 2, alignItems: "center" }} />
+                <CardHeader 
+                    action={
+                        <IconButton onClick={handleOpen} sx={{ color: '#ec4899', bgcolor: 'rgba(236, 72, 153, 0.1)', '&:hover': { bgcolor: 'rgba(236, 72, 153, 0.2)' } }} title="Thêm nhóm nguyên liệu">
+                            <AddIcon />
+                        </IconButton>
+                    } 
+                    title={"Nhóm Nguyên Liệu"} 
+                    sx={{ pt: 2, alignItems: "center" }} 
+                />
                 <TableContainer component={Paper}>
                     <Table aria-label="simple table">
                         <TableHead>
                             <TableRow>
                                 <TableCell>ID</TableCell>
-                                <TableCell align="left">Name</TableCell>
+                                <TableCell align="left">Tên nhóm</TableCell>
                                 <TableCell align="right">Hành động</TableCell>
                             </TableRow>
                         </TableHead>
@@ -101,9 +109,9 @@ export const IngredientCategoryTable = () => {
             <CreateIngredientCategoryForm open={open} handleClose={handleClose} />
 
             <Modal open={editOpen} onClose={() => setEditOpen(false)}>
-                <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', outline: 'none', boxShadow: 24, p: 4, borderRadius: '8px' }}>
+                <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 420, bgcolor: '#1f2937', color: 'white', outline: 'none', boxShadow: 24, p: 4, borderRadius: '12px' }}>
                     <form onSubmit={handleEditSubmit}>
-                        <h1 className='text-gray-800 font-bold text-center text-xl pb-6'>CẬP NHẬT NHÓM NGUYÊN LIỆU</h1>
+                        <h1 className='text-white font-bold text-center text-xl pb-6'>CẬP NHẬT NHÓM NGUYÊN LIỆU</h1>
                         <TextField fullWidth label="Tên nhóm nguyên liệu" variant="outlined" value={editName} onChange={(e) => setEditName(e.target.value)} sx={{ mb: 3 }} required />
                         <Button variant="contained" color="primary" type="submit" fullWidth size='large'>Cập nhật</Button>
                     </form>

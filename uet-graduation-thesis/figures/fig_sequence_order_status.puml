@@ -1,0 +1,55 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam DefaultFontSize 12
+
+actor "Chủ nhà hàng\n(Restaurant Owner)" as owner
+participant "Admin Portal\n(Orders.jsx)" as adminUI
+participant "AdminOrderController\n(/api/admin/orders)" as adminOrderCtrl
+participant "OrderService" as orderSvc
+participant "RestaurantRepository" as restRepo
+participant "OrderRepository" as orderRepo
+database "MySQL Database" as db
+
+== Xem Danh sách Đơn hàng của Nhà hàng ==
+owner -> adminUI : Mở trang "Quản lý Đơn hàng" (/admin/restaurant/orders)
+adminUI -> adminOrderCtrl : GET /api/admin/order/restaurant/{restaurantId}?order_status=ALL
+activate adminOrderCtrl
+
+adminOrderCtrl -> orderSvc : getRestaurantsOrder(restaurantId, orderStatus)
+orderSvc -> orderRepo : findByRestaurantId(restaurantId)
+orderRepo -> db : SELECT * FROM orders WHERE restaurant_id = ?
+db --> orderRepo : List<Order>
+orderRepo --> orderSvc : List<Order>
+orderSvc --> adminOrderCtrl : List<Order>
+adminOrderCtrl --> adminUI : HTTP 200 OK (Danh sách đơn hàng)
+deactivate adminOrderCtrl
+adminUI --> owner : Hiển thị bảng đơn hàng (Mã đơn, Món ăn, Khách hàng, Trạng thái)
+
+== Cập nhật Trạng thái Xử lý Đơn hàng (Fulfillment) ==
+owner -> adminUI : Chọn đơn hàng & Click chuyển trạng thái (VD: "OUT_FOR_DELIVERY")
+adminUI -> adminOrderCtrl : PUT /api/admin/orders/{orderId}/{orderStatus}
+activate adminOrderCtrl
+
+adminOrderCtrl -> orderSvc : updateOrder(orderId, orderStatus)
+activate orderSvc
+
+orderSvc -> orderRepo : findById(orderId)
+orderRepo -> db : SELECT * FROM orders WHERE id = ?
+db --> orderRepo : order
+
+orderSvc -> orderSvc : order.setOrderStatus("OUT_FOR_DELIVERY")
+orderSvc -> orderRepo : save(order)
+orderRepo -> db : UPDATE orders SET orderStatus = 'OUT_FOR_DELIVERY' WHERE id = ?
+db --> orderRepo : updatedOrder
+
+orderSvc --> adminOrderCtrl : updatedOrder
+deactivate orderSvc
+
+adminOrderCtrl --> adminUI : HTTP 200 OK (updatedOrder)
+deactivate adminOrderCtrl
+
+adminUI -> adminUI : Cập nhật trạng thái đơn hàng trên bảng hiển thị
+adminUI --> owner : Thông báo thành công: "Trạng thái đơn hàng đã được cập nhật"
+@enduml

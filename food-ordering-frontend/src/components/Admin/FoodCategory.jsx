@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Card, CardHeader, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Modal, TextField, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
-import CreateIcon from '@mui/icons-material/Create';
+import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WarningIcon from '@mui/icons-material/Warning';
@@ -10,8 +10,8 @@ import { getRestaurantsCategory, deleteCategoryAction, updateCategoryAction } fr
 
 const editModalStyle = {
     position: 'absolute', top: '50%', left: '50%',
-    transform: 'translate(-50%, -50%)', width: 400,
-    bgcolor: 'background.paper', boxShadow: 24, p: 4, borderRadius: '8px',
+    transform: 'translate(-50%, -50%)', width: 420,
+    bgcolor: '#1f2937', color: 'white', boxShadow: 24, p: 4, borderRadius: '12px',
     outline: 'none'
 };
 
@@ -78,11 +78,15 @@ export const FoodCategory = () => {
                 <Card className='mt-1'>
                     <CardHeader
                         action={
-                            <IconButton onClick={handleOpen} aria-label="settings">
-                                <CreateIcon />
+                            <IconButton 
+                                onClick={handleOpen} 
+                                sx={{ color: '#ec4899', bgcolor: 'rgba(236, 72, 153, 0.1)', '&:hover': { bgcolor: 'rgba(236, 72, 153, 0.2)' } }} 
+                                title="Thêm danh mục mới"
+                            >
+                                <AddIcon />
                             </IconButton>
                         }
-                        title={"Food Category (Danh mục món ăn)"}
+                        title={"Danh Mục Món Ăn"}
                         sx={{ pt: 2, alignItems: "center" }}
                     />
                     <TableContainer component={Paper}>
@@ -131,7 +135,7 @@ export const FoodCategory = () => {
             <Modal open={editOpen} onClose={() => setEditOpen(false)}>
                 <Box sx={editModalStyle}>
                     <form onSubmit={handleEditSubmit}>
-                        <h1 className='text-gray-800 font-bold text-center text-xl pb-6'>CẬP NHẬT DANH MỤC</h1>
+                        <h1 className='text-white font-bold text-center text-xl pb-6'>CẬP NHẬT DANH MỤC</h1>
                         <TextField 
                             fullWidth 
                             label="Tên danh mục mới" 

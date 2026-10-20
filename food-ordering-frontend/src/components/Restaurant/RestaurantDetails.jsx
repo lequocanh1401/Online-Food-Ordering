@@ -5,7 +5,7 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { MenuCard } from './MenuCard';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getRestaurantById, getRestaurantsCategory } from '../../State/Restaurant/Action';
 import { getMenuItemsByRestaurantId } from '../../State/Menu/Action';
@@ -29,6 +29,8 @@ export const RestaurantDetails = () => {
 
     // Rút id nhà hàng từ thanh URL (VD: /restaurant/hanoi/zosh/1)
     const { id } = useParams();
+    const [searchParams] = useSearchParams();
+    const highlightFoodId = searchParams.get("foodId");
     const dispatch = useDispatch();
     const jwt = localStorage.getItem("jwt");
 
@@ -94,13 +96,34 @@ export const RestaurantDetails = () => {
         }
     }, [dispatch, jwt, id, foodType, foodCategory]);
 
+    // Tự động cuộn đến món ăn và làm nổi bật khi điều hướng từ trang chủ
+    useEffect(() => {
+        if (highlightFoodId && menu.menuItems?.length) {
+            const timer = setTimeout(() => {
+                const element = document.getElementById(`menu-item-${highlightFoodId}`);
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }, 500);
+            return () => clearTimeout(timer);
+        }
+    }, [highlightFoodId, menu.menuItems]);
+
     return (
         <div className='px-5 lg:px-20 text-white min-h-screen'>
             {/* Header: Ảnh bìa và Thông tin */}
             <section>
                 <h3 className='text-gray-500 py-2 mt-5'>Home / {restaurant.restaurant?.address?.city} / {restaurant.restaurant?.name} / {id}</h3>
                 <div>
-                    <img className='w-full h-[40vh] object-cover rounded-lg' src={restaurant.restaurant?.images?.[0] || "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg"} alt="" />
+                    <img
+                        className='w-full h-[40vh] object-cover rounded-lg'
+                        src={restaurant.restaurant?.images?.[0] || "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200"}
+                        alt={restaurant.restaurant?.name || "Restaurant"}
+                        onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200";
+                        }}
+                    />
                 </div>
                 <div className='pt-3 pb-5'>
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -125,6 +148,17 @@ export const RestaurantDetails = () => {
             </section>
 
             <Divider sx={{ bgcolor: "gray" }} />
+
+            {/* Banner thông báo khi quán tạm ngưng nhận đơn */}
+            {restaurant.restaurant && restaurant.restaurant.open === false && (
+                <div className='my-4 p-4 rounded-xl bg-red-950/60 border border-red-500/40 text-red-200 flex items-center gap-3'>
+                    <span className='text-2xl'>⚠️</span>
+                    <div>
+                        <p className='font-bold text-red-400'>Quán hiện đang tạm ngưng nhận đơn online</p>
+                        <p className='text-sm text-red-300/80'>Bạn vẫn có thể tham khảo thực đơn và đánh giá, nhưng hiện tại quán không thể tiếp nhận đơn đặt hàng mới.</p>
+                    </div>
+                </div>
+            )}
 
             {/* Phần thân: Bộ lọc và Danh sách Món ăn */}
             <section className='pt-[2rem] lg:flex relative'>
@@ -159,7 +193,15 @@ export const RestaurantDetails = () => {
 
                 {/* Cột phải: Danh sách thực đơn */}
                 <div className='space-y-5 lg:w-[80%] lg:pl-10 pb-10 mt-10 lg:mt-0'>
-                    {menu.menuItems?.map((item) => <MenuCard key={item.id} item={item} restaurantId={id} />)}
+                    {menu.menuItems?.map((item) => (
+                        <MenuCard 
+                            key={item.id} 
+                            item={item} 
+                            restaurantId={id} 
+                            isRestaurantOpen={restaurant.restaurant?.open !== false}
+                            isHighlighted={Boolean(highlightFoodId && String(item.id) === String(highlightFoodId))}
+                        />
+                    ))}
                 </div>
             </section>
 

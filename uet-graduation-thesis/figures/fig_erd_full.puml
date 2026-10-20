@@ -1,0 +1,245 @@
+@startuml
+' --- Style Configuration (Monochrome & Premium Spacing) ---
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam DefaultFontSize 15
+skinparam ClassFontSize 18
+skinparam AttributeFontSize 14
+skinparam Linetype ortho
+
+' --- Nodesep & Ranksep to expand layout and make text readable ---
+skinparam nodesep 100
+skinparam ranksep 100
+
+' --- Entity Definitions (Original 20 Tables) ---
+
+entity "User" as user {
+  * id : BIGINT <<PK>>
+  --
+  fullName : VARCHAR(255)
+  email : VARCHAR(255) <<Unique>>
+  password : VARCHAR(255)
+  role : VARCHAR(50)
+}
+
+entity "User_Favorites" as user_favorites {
+  user_id : BIGINT <<FK>>
+  restaurant_id : BIGINT <<FK>>
+  --
+  description : TEXT
+  title : VARCHAR(255)
+  images : VARCHAR(1000)
+}
+
+entity "User_Addresses" as user_addresses {
+  user_id : BIGINT <<FK>>
+  address_id : BIGINT <<FK>>
+}
+
+entity "Address" as address {
+  * id : BIGINT <<PK>>
+  --
+  streetAddress : VARCHAR(255)
+  city : VARCHAR(255)
+  stateProvince : VARCHAR(255)
+  postalCode : VARCHAR(50)
+  country : VARCHAR(100)
+}
+
+entity "Cart" as cart {
+  * id : BIGINT <<PK>>
+  --
+  customer_id : BIGINT <<FK>>
+  total : BIGINT
+}
+
+entity "CartItem" as cart_item {
+  * id : BIGINT <<PK>>
+  --
+  cart_id : BIGINT <<FK>>
+  food_id : BIGINT <<FK>>
+  quantity : INT
+  totalPrice : BIGINT
+}
+
+entity "CartItem_Ingredients" as cart_item_ingredients {
+  cart_item_id : BIGINT <<FK>>
+  --
+  ingredient_name : VARCHAR(255)
+}
+
+entity "Restaurant" as restaurant {
+  * id : BIGINT <<PK>>
+  --
+  owner_id : BIGINT <<FK>>
+  address_id : BIGINT <<FK>>
+  name : VARCHAR(255)
+  description : TEXT
+  cuisineType : VARCHAR(255)
+  openingHours : VARCHAR(255)
+  registrationDate : DATETIME
+  open : BOOLEAN
+  -- ContactInformation (Embedded) --
+  email : VARCHAR(255)
+  mobile : VARCHAR(50)
+  twitter : VARCHAR(100)
+  instagram : VARCHAR(100)
+}
+
+entity "Restaurant_Images" as restaurant_images {
+  restaurant_id : BIGINT <<FK>>
+  --
+  image_url : VARCHAR(1000)
+}
+
+entity "Food" as food {
+  * id : BIGINT <<PK>>
+  --
+  restaurant_id : BIGINT <<FK>>
+  category_id : BIGINT <<FK>>
+  name : VARCHAR(255)
+  description : TEXT
+  price : BIGINT
+  available : BOOLEAN
+  isVegetarian : BOOLEAN
+  isSeasonal : BOOLEAN
+  creationDate : DATETIME
+}
+
+entity "Food_Images" as food_images {
+  food_id : BIGINT <<FK>>
+  --
+  image_url : VARCHAR(1000)
+}
+
+entity "Food_Ingredients" as food_ingredients {
+  food_id : BIGINT <<FK>>
+  ingredient_id : BIGINT <<FK>>
+}
+
+entity "Category" as category {
+  * id : BIGINT <<PK>>
+  --
+  restaurant_id : BIGINT <<FK>>
+  name : VARCHAR(255)
+}
+
+entity "IngredientsItem" as ingredient {
+  * id : BIGINT <<PK>>
+  --
+  category_id : BIGINT <<FK>>
+  restaurant_id : BIGINT <<FK>>
+  name : VARCHAR(255)
+  inStock : BOOLEAN
+}
+
+entity "IngredientCategory" as ingredient_category {
+  * id : BIGINT <<PK>>
+  --
+  restaurant_id : BIGINT <<FK>>
+  name : VARCHAR(255)
+}
+
+entity "Order" as order {
+  * id : BIGINT <<PK>>
+  --
+  customer_id : BIGINT <<FK>>
+  restaurant_id : BIGINT <<FK>>
+  deliveryAddress_id : BIGINT <<FK>>
+  totalAmount : BIGINT
+  orderStatus : VARCHAR(50)
+  createdAt : DATETIME
+  totalItem : INT
+  totalPrice : BIGINT
+  couponCode : VARCHAR(50)
+  discountAmount : BIGINT
+}
+
+entity "OrderItem" as order_item {
+  * id : BIGINT <<PK>>
+  --
+  order_id : BIGINT <<FK>>
+  food_id : BIGINT <<FK>>
+  quantity : INT
+  totalPrice : BIGINT
+}
+
+entity "OrderItem_Ingredients" as order_item_ingredients {
+  order_item_id : BIGINT <<FK>>
+  --
+  ingredient_name : VARCHAR(255)
+}
+
+entity "Coupon" as coupon {
+  * id : BIGINT <<PK>>
+  --
+  restaurant_id : BIGINT <<FK>>
+  code : VARCHAR(50) <<Unique>>
+  discountType : VARCHAR(50)
+  discountValue : BIGINT
+  active : BOOLEAN
+  minimumOrderValue : BIGINT
+}
+
+entity "Events" as events {
+  * id : BIGINT <<PK>>
+  --
+  restaurant_id : BIGINT <<FK>>
+  image : VARCHAR(1000)
+  startedAt : VARCHAR(255)
+  endsAt : VARCHAR(255)
+  name : VARCHAR(255)
+  location : VARCHAR(255)
+}
+
+entity "Review" as review {
+  * id : BIGINT <<PK>>
+  --
+  customer_id : BIGINT <<FK>>
+  restaurant_id : BIGINT <<FK>>
+  food_id : BIGINT <<FK>>
+  rating : DOUBLE
+  comment : TEXT
+  createdAt : DATETIME
+}
+
+' --- Layout Positioning & Relationships ---
+
+user "1" -- "0..*" review : "writes"
+user "1" -- "0..*" user_favorites : "favors"
+user "1" -- "0..*" user_addresses : "offers"
+user "1" -- "0..1" cart : "has"
+user "1" -- "0..*" order : "places"
+user_addresses "0..*" -- "1" address : "maps"
+
+restaurant "1" -- "0..*" user_favorites : "receives"
+restaurant "1" -- "0..*" restaurant_images : "has"
+restaurant "1" -- "0..*" events : "hosts"
+restaurant "1" -- "0..*" coupon : "issues"
+restaurant "1" -- "0..*" food : "offers"
+restaurant "1" -- "0..*" order : "receives"
+restaurant "1" -- "0..*" ingredient : "supplies"
+restaurant "1" -- "0..*" ingredient_category : "defines"
+restaurant "1" -- "1" address : "located at"
+
+cart "1" -- "0..*" cart_item : "contains"
+cart_item "1" -- "0..*" cart_item_ingredients : "customized by"
+cart_item "0..*" -- "1" food : "references"
+
+order "1" -- "1..*" order_item : "composed of"
+order "1" -- "1" address : "delivered to"
+order_item "1" -- "0..*" order_item_ingredients : "customized by"
+order_item "0..*" -- "1" food : "contains"
+
+food "1" -- "0..*" food_images : "has"
+food "1" -- "0..*" food_ingredients : "uses"
+food "0..*" -- "1" category : "belongs to"
+food "1" -- "0..*" review : "about"
+
+ingredient "1" -- "0..*" food_ingredients : "part of"
+ingredient "0..*" -- "1" ingredient_category : "categorized by"
+ingredient "1" -- "0..*" cart_item_ingredients : "references"
+ingredient "1" -- "0..*" order_item_ingredients : "references"
+
+@enduml

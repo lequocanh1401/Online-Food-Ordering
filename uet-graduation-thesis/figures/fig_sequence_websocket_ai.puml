@@ -1,0 +1,57 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam DefaultFontSize 12
+
+actor "Khách hàng\n(Customer)" as customer
+participant "Client Ứng dụng\n(React Web)" as client
+participant "OrderService" as orderSvc
+participant "IngredientsService" as ingSvc
+participant "OrderWebSocketHandler\n(/ws/orders)" as wsHandler
+participant "Admin Portal\n(OrderNotificationListener)" as adminPortal
+actor "Chủ nhà hàng\n(Restaurant Owner)" as owner
+participant "AiCopilotService" as aiSvc
+participant "Google Gemini API\n(hoặc Heuristic DSS)" as gemini
+
+== 1. Phát sinh Đơn hàng & Tự động Trừ Kho & Đẩy Thông báo Real-time ==
+customer -> client : Xác nhận Đặt hàng (Thanh toán thành công)
+client -> orderSvc : createOrder(req, user)
+activate orderSvc
+
+orderSvc -> ingSvc : depleteStockForOrder(savedOrder)
+activate ingSvc
+ingSvc -> ingSvc : Tính lượng nguyên liệu tiêu thụ theo món ăn
+ingSvc -> ingSvc : Trừ quantity trong IngredientsItem & ghi InventoryLog(AUTO_DEPLETION)
+ingSvc --> orderSvc : Cập nhật kho hoàn tất
+deactivate ingSvc
+
+orderSvc -> wsHandler : broadcastToRestaurant(restaurantId, orderNotificationDTO)
+activate wsHandler
+
+wsHandler -> adminPortal : Gửi TextMessage JSON (type: "NEW_ORDER", orderId, totalAmount, items)
+activate adminPortal
+
+adminPortal -> adminPortal : playOrderChime() (Phát âm thanh chuông báo qua Web Audio API)
+adminPortal -> adminPortal : Dispatch nạp lại danh sách Orders, Kho nguyên liệu & Logs
+adminPortal --> owner : Hiển thị Banner thông báo nổi bật & phát chuông báo đơn mới!
+deactivate adminPortal
+deactivate wsHandler
+deactivate orderSvc
+
+== 2. Chủ nhà hàng Tương tác với Trợ lý AI Copilot Thông minh ==
+owner -> adminPortal : Truy cập mục "AI Copilot" & gửi câu hỏi: "Phân tích doanh thu và đề xuất món ế"
+adminPortal -> aiSvc : POST /api/admin/ai/copilot/chat (AiChatRequest)
+activate aiSvc
+
+aiSvc -> aiSvc : collectRestaurantMetrics(restaurantId) (Doanh thu, Top món bán chạy, Món ế, Tồn kho thấp)
+aiSvc -> gemini : Gửi System Prompt + Dữ liệu nghiệp vụ thực tế
+activate gemini
+gemini --> aiSvc : Trả về phân tích chiến lược, bảng so sánh & đề xuất khuyến mãi (Markdown)
+deactivate gemini
+
+aiSvc --> adminPortal : HTTP 200 OK (AiChatResponse: tin nhắn Markdown, metrics, prompts gợi ý)
+deactivate aiSvc
+
+adminPortal --> owner : Kết xuất báo cáo Markdown đẹp mắt, gợi ý hành động cụ thể
+@enduml

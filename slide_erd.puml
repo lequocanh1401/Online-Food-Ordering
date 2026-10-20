@@ -1,0 +1,105 @@
+@startuml
+' --- Configuration & Styling ---
+skinparam roundcorner 8
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam DefaultFontSize 13
+skinparam Linetype ortho
+
+' --- Curated Color Palette (Soft & Premium) ---
+skinparam class {
+    HeaderBackgroundColor #2C3E50
+    HeaderFontColor #FFFFFF
+    BorderColor #BDC3C7
+}
+
+' Module Colors
+!define USER_COLOR #EBF5FB
+!define RESTAURANT_COLOR #E8F8F5
+!define ORDER_COLOR #FDEDEC
+!define MARKETING_COLOR #FEF9E7
+
+' --- Entity Definitions ---
+
+entity "User (Người dùng)" as user USER_COLOR {
+  * id : BIGINT <<PK>>
+  --
+  fullName : VARCHAR
+  email : VARCHAR
+  role : VARCHAR
+}
+
+entity "Cart (Giỏ hàng)" as cart USER_COLOR {
+  * id : BIGINT <<PK>>
+  --
+  customer_id : BIGINT <<FK>>
+  total : BIGINT
+}
+
+entity "Restaurant (Nhà hàng)" as restaurant RESTAURANT_COLOR {
+  * id : BIGINT <<PK>>
+  --
+  owner_id : BIGINT <<FK>>
+  name : VARCHAR
+  cuisineType : VARCHAR
+}
+
+entity "Food (Món ăn)" as food RESTAURANT_COLOR {
+  * id : BIGINT <<PK>>
+  --
+  restaurant_id : BIGINT <<FK>>
+  name : VARCHAR
+  price : BIGINT
+}
+
+entity "IngredientsItem (Nguyên liệu)" as ingredient RESTAURANT_COLOR {
+  * id : BIGINT <<PK>>
+  --
+  restaurant_id : BIGINT <<FK>>
+  name : VARCHAR
+}
+
+entity "Order (Đơn hàng)" as order ORDER_COLOR {
+  * id : BIGINT <<PK>>
+  --
+  customer_id : BIGINT <<FK>>
+  restaurant_id : BIGINT <<FK>>
+  totalAmount : BIGINT
+  orderStatus : VARCHAR
+}
+
+entity "OrderItem (Chi tiết đơn)" as order_item ORDER_COLOR {
+  * id : BIGINT <<PK>>
+  --
+  order_id : BIGINT <<FK>>
+  food_id : BIGINT <<FK>>
+  quantity : INT
+}
+
+entity "Coupon (Mã giảm giá)" as coupon MARKETING_COLOR {
+  * id : BIGINT <<PK>>
+  --
+  code : VARCHAR
+  discountValue : BIGINT
+}
+
+' --- Relationships (Logical & Spaced) ---
+
+user "1" --> "0..*" order : "places (đặt hàng)"
+restaurant "1" --> "0..*" food : "offers (cung cấp món)"
+restaurant "1" --> "0..*" order : "receives (nhận đơn)"
+order "1" *-- "1..*" order_item : "contains (gồm chi tiết)"
+food "1" --> "0..*" order_item : "selected in"
+user "1" --> "0..1" cart : "owns (sở hữu giỏ)"
+restaurant "1" --> "0..*" ingredient : "manages (quản lý kho)"
+restaurant "1" --> "0..*" coupon : "issues (phát hành mã)"
+
+' --- Legend for Slide clarity ---
+legend right
+  |<back:USER_COLOR>      </back>| Phân hệ Khách hàng (Customer) |
+  |<back:RESTAURANT_COLOR>      </back>| Phân hệ Đối tác (Restaurant) |
+  |<back:ORDER_COLOR>      </back>| Phân hệ Giao dịch & Đơn hàng |
+  |<back:MARKETING_COLOR>      </back>| Phân hệ Khuyến mãi (Coupon) |
+endlegend
+
+@enduml

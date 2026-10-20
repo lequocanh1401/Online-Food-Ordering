@@ -1,0 +1,64 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam DefaultFontSize 12
+
+actor "Quản trị viên\n(Super Admin)" as admin
+participant "Super Admin UI\n(SuperAdminReviews.jsx)" as adminUI
+participant "ReviewController\n(/api/review)" as reviewCtrl
+participant "AdminRestaurantController\n(/api/admin/restaurants)" as adminRestCtrl
+participant "ReviewService" as reviewSvc
+participant "RestaurantService" as restSvc
+participant "ReviewRepository" as reviewRepo
+participant "RestaurantRepository" as restRepo
+database "MySQL Database" as db
+
+== Kiểm duyệt và Xóa Đánh giá Vi phạm Chuẩn mực ==
+admin -> adminUI : Mở giao diện "Kiểm duyệt đánh giá" (/admin/restaurant/reviews)
+adminUI -> reviewCtrl : GET /api/reviews/all (Bearer JWT)
+activate reviewCtrl
+
+reviewCtrl -> reviewRepo : findAll()
+reviewRepo -> db : SELECT * FROM review
+db --> reviewRepo : List<Review>
+reviewRepo --> reviewCtrl : List<Review>
+reviewCtrl --> adminUI : HTTP 200 OK (Danh sách toàn bộ đánh giá)
+deactivate reviewCtrl
+adminUI --> admin : Hiển thị bảng đánh giá (Khách hàng, Món ăn, Số sao, Bình luận)
+
+admin -> adminUI : Nhấn nút "Xóa đánh giá vi phạm" (id = 45)
+adminUI -> reviewCtrl : DELETE /api/admin/reviews/45 (Bearer JWT)
+activate reviewCtrl
+
+reviewCtrl -> reviewSvc : deleteReview(45, adminUser)
+activate reviewSvc
+reviewSvc -> reviewRepo : deleteById(45)
+reviewRepo -> db : DELETE FROM review WHERE id = 45
+db --> reviewRepo : Success
+reviewSvc --> reviewCtrl : void
+deactivate reviewSvc
+
+reviewCtrl --> adminUI : HTTP 200 OK ("Review deleted successfully")
+deactivate reviewCtrl
+
+adminUI -> adminUI : Loại bỏ đánh giá khỏi danh sách hiển thị
+adminUI --> admin : Thông báo thành công: "Đã xóa đánh giá vi phạm chuẩn mực cộng đồng"
+
+== Kiểm duyệt & Đình chỉ Nhà hàng Vi phạm ==
+admin -> adminUI : Mở màn hình quản trị nhà hàng & nhấn "Xóa nhà hàng"
+adminUI -> adminRestCtrl : DELETE /api/admin/restaurants/{restaurantId}
+activate adminRestCtrl
+
+adminRestCtrl -> restSvc : deleteRestaurant(restaurantId)
+activate restSvc
+restSvc -> restRepo : deleteById(restaurantId)
+restRepo -> db : CASCADE DELETE / Disable restaurant record
+db --> restRepo : Success
+restSvc --> adminRestCtrl : void
+deactivate restSvc
+
+adminRestCtrl --> adminUI : HTTP 200 OK ("Restaurant deleted successfully")
+deactivate adminRestCtrl
+adminUI --> admin : Thông báo cập nhật danh sách nhà hàng toàn sàn
+@enduml

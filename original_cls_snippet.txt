@@ -1,0 +1,70 @@
+111: 	}%
+112: }{\clearpage\normalsize}
+113: \newcommand\makecovers{
+114: 	\begin{coverpage}%
+115: 		\centering%
+116: 		\setfontsize{12pt}\textbf{ĐẠI HỌC QUỐC GIA HÀ NỘI}\par
+117: 		\textbf{TRƯỜNG ĐẠI HỌC CÔNG NGHỆ}\par
+118: 		\vspace{2cm}\includegraphics[scale=0.6]{UET logo.pdf}\par
+119: 		\vspace{0.5cm}\setfontsize{14pt}\textbf{\@meta@studentname}\par
+120: 		\vspace{1.5cm}\setfontsize{18pt}\textbf{\MakeUppercase{\@meta@title}}\par
+121: 		\vspace{2cm}\setfontsize{14pt}\textbf{\MakeUppercase{\@meta@documenttype}}\par
+122: 		\textbf{Ngành: \@meta@major}\par
+123: 		\vfill\setfontsize{12pt}\textbf{HÀ NỘI -- \@meta@year}\par%
+124: 	\end{coverpage}
+125: 	\begin{coverpage}%
+126: 		{
+127: 			\centering%
+128: 			\setfontsize{12pt}\textbf{ĐẠI HỌC QUỐC GIA HÀ NỘI}\par
+129: 			\textbf{TRƯỜNG ĐẠI HỌC CÔNG NGHỆ}\par
+130: 			\vspace{1.5cm}\setfontsize{14pt}\textbf{\@meta@studentname}\par
+131: 			\vspace{1.5cm}\setfontsize{18pt}\textbf{\MakeUppercase{\@meta@title}}\par
+132: 			\vspace{3cm}\setfontsize{14pt}\textbf{\MakeUppercase{\@meta@documenttype}}\par
+133: 			\textbf{Ngành: \@meta@major}\par%
+134: 		}
+135: 		\vspace{2.5cm}\setfontsize{14pt}\textbf{Cán bộ hướng dẫn: \@meta@supervisor}\par%
+136: 		\if@meta@hascosupervisor\vspace{3cm}\textbf{Cán bộ đồng hướng dẫn: \@meta@cosupervisor}\par\fi%
+137: 		{
+138: 			\centering\vfill\setfontsize{12pt}\textbf{HÀ NỘI -- \@meta@year}\par%
+139: 		}
+140: 	\end{coverpage}
+141: 	\if@meta@hasenglishsections\begin{coverpage}%
+142: 		{
+143: 			\centering%
+144: 			\setfontsize{12pt}\textbf{VIETNAM NATIONAL UNIVERSITY, HANOI}\par
+145: 			\textbf{UNIVERSITY OF ENGINEERING AND TECHNOLOGY}\par
+146: 			\vspace{1.5cm}\setfontsize{14pt}\textbf{\@meta@studentname}\par
+147: 			\vspace{1.5cm}\setfontsize{18pt}\textbf{\MakeUppercase{\@meta@englishtitle}}\par
+148: 			\vspace{3cm}\setfontsize{14pt}\textbf{Major: \@meta@englishmajor}\par
+149: 		}
+150: 		\vspace{3cm}\setfontsize{14pt}\textbf{Supervisor: \@meta@englishsupervisor}\par%
+151: 		\if@meta@hascosupervisor\vspace{3cm}\textbf{Co-Supervisor: \@meta@englishcosupervisor}\par\fi%
+152: 		{
+153: 			\centering\vfill\setfontsize{12pt}\textbf{HÀ NỘI -- \@meta@year}\par%
+154: 		}
+155: 	\end{coverpage}\fi
+156: }
+157: 
+158: \newenvironment{preamble}[1]{%
+159: 	\clearpage\setlength\parindent{0cm}{\centering\textbf{\MakeUppercase{#1}}\par}\vspace{1cm}\setfontsize{12pt}
+160: }{\normalsize}
+161: 
+162: \newif\if@incontentlisting\@incontentlistingfalse
+163: \newenvironment{contentlisting}{\clearpage\@incontentlistingtrue}{\@incontentlistingfalse\clearpage}
+164: 
+165: \setcounter{tocdepth}{3}
+166: \newenvironment{contentlistingsection}[1]{%
+167: 	\if@incontentlisting\else\PackageError{uetgraduation}{
+168: 		Content listing section not in \`contentlisting\` environment.
+169: 	}{
+170: 		To ensure consistency, place all content listing sections into the \`contentlisting\` environment.
+171: 	}\fi%
+172: 	\noindent\Large\textbf{#1}\par\vspace{1cm}\normalsize
+173: }{\clearpage}
+174: \newcommand\tableofcontents{\begin{contentlistingsection}{Mục lục}\@starttoc{toc}\end{contentlistingsection}}
+175: \renewcommand\numberline[2]{#1 #2}
+176: \newcommand\@tocline[4]{\ifnum #1>\c@tocdepth\else
+177: 	\vskip\z@\@plus.2\p@{%
+178: 		\raggedright\parindent #2\hangindent #2\rightskip 1cm\parfillskip -1cm\interlinepenalty\@M\leavevmode
+179: 		\ifnum #1=1\textbf{#3}\else #3\fi%
+180: 		\leaders\hbox{$\m@th\mkern0.5mu\hbox{.}\mkern0.5mu$}\hfill #4\par%

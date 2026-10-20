@@ -1,0 +1,82 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam DefaultFontSize 12
+
+actor "Khách hàng\n(Customer)" as customer
+actor "Chủ nhà hàng\n(Restaurant Owner)" as owner
+actor "Quản trị viên\n(Super Admin)" as admin
+
+rectangle "Hệ Thống Đặt & Quản Lý Đồ Ăn Trực Tuyến (Online Food Ordering)" {
+    ' Nhóm xác thực
+    usecase "Đăng ký tài khoản" as UC_Register
+    usecase "Đăng nhập & Xác thực JWT" as UC_Login
+    usecase "Quản lý thông tin cá nhân & Địa chỉ" as UC_Profile
+
+    ' Phân hệ Khách hàng
+    package "Phân hệ Khách hàng" {
+        usecase "Khám phá & Tìm kiếm nhà hàng/món ăn" as UC_Search
+        usecase "Tùy biến món ăn & Thêm vào giỏ hàng" as UC_Cart
+        usecase "Áp dụng mã giảm giá (Coupon Engine)" as UC_ApplyCoupon
+        usecase "Thanh toán trực tuyến (Stripe Checkout)" as UC_Payment
+        usecase "Xem lịch sử & Theo dõi trạng thái đơn hàng" as UC_TrackOrder
+        usecase "Gửi đánh giá & Số sao nhận xét" as UC_Review
+    }
+
+    ' Phân hệ Chủ nhà hàng
+    package "Phân hệ Chủ nhà hàng" {
+        usecase "Quản lý thông tin & Giờ mở cửa nhà hàng" as UC_ManageRest
+        usecase "Quản lý danh mục món ăn (Category)" as UC_ManageCategory
+        usecase "Quản lý thực đơn & Món ăn (Food Menu)" as UC_ManageFood
+        usecase "Quản lý kho nguyên liệu (Ingredients)" as UC_ManageIngredients
+        usecase "Tiếp nhận & Cập nhật đơn hàng" as UC_ManageOrder
+        usecase "Tạo sự kiện & Ưu đãi của quán" as UC_ManageEvents
+    }
+
+    ' Phân hệ Super Admin
+    package "Phân hệ Super Admin" {
+        usecase "Quản lý & Khóa tài khoản người dùng" as UC_AdminUsers
+        usecase "Kiểm duyệt & Xóa nhà hàng vi phạm" as UC_AdminRest
+        usecase "Kiểm duyệt đánh giá vi phạm chuẩn mực" as UC_AdminReview
+        usecase "Quản trị mã giảm giá toàn sàn" as UC_AdminCoupon
+        usecase "Thống kê doanh thu & Hiệu suất toàn sàn" as UC_AdminStats
+    }
+}
+
+' Quan hệ Khách hàng
+customer --> UC_Register
+customer --> UC_Login
+customer --> UC_Profile
+customer --> UC_Search
+customer --> UC_Cart
+customer --> UC_ApplyCoupon
+customer --> UC_Payment
+customer --> UC_TrackOrder
+customer --> UC_Review
+
+' Quan hệ Chủ nhà hàng
+owner --> UC_Register
+owner --> UC_Login
+owner --> UC_Profile
+owner --> UC_ManageRest
+owner --> UC_ManageCategory
+owner --> UC_ManageFood
+owner --> UC_ManageIngredients
+owner --> UC_ManageOrder
+owner --> UC_ManageEvents
+
+' Quan hệ Super Admin
+admin --> UC_Login
+admin --> UC_AdminUsers
+admin --> UC_AdminRest
+admin --> UC_AdminReview
+admin --> UC_AdminCoupon
+admin --> UC_AdminStats
+
+' Mở rộng / Include
+UC_Payment ..> UC_Cart : <<include>>
+UC_ApplyCoupon ..> UC_Cart : <<extend>>
+UC_Payment ..> UC_ApplyCoupon : <<include>>
+@enduml

@@ -1,5 +1,7 @@
 package com.anh.service;
 
+import com.anh.config.OrderWebSocketHandler;
+import com.anh.dto.OrderNotificationDTO;
 import com.anh.model.*;
 import com.anh.repository.*;
 import com.anh.request.CreateOrderRequest;
@@ -29,6 +31,10 @@ public class OrderServiceImpl implements OrderService {
     private CartService cartService;
     @Autowired
     private CouponRepository couponRepository;
+    @Autowired
+    private IngredientsService ingredientsService;
+    @Autowired
+    private OrderWebSocketHandler orderWebSocketHandler;
 
     @Override
     public Order createOrder(CreateOrderRequest orderReq, User user) throws Exception {
@@ -56,6 +62,10 @@ public class OrderServiceImpl implements OrderService {
 
         if (restaurant == null) {
             throw new Exception("Restaurant not found for this order");
+        }
+
+        if (!restaurant.isOpen()) {
+            throw new Exception("Nhà hàng hiện đang tạm ngưng nhận đơn online. Vui lòng quay lại sau!");
         }
 
         // 1. Lưu địa chỉ giao hàng trước
@@ -98,9 +108,9 @@ public class OrderServiceImpl implements OrderService {
         if (orderReq.getCouponCode() != null && !orderReq.getCouponCode().trim().isEmpty()) {
             java.util.Optional<com.anh.model.Coupon> couponOpt = couponRepository.findByCodeAndRestaurantId(orderReq.getCouponCode(), restaurant.getId());
             if (!couponOpt.isPresent()) {
-                // Kiểm tra xem có phải mã toàn sàn không (restaurant == null)
+                // Kiểm tra mã trong hệ thống (mã toàn sàn hoặc mã của quán có món trong đơn)
                 java.util.Optional<com.anh.model.Coupon> globalCouponOpt = couponRepository.findByCode(orderReq.getCouponCode());
-                if (globalCouponOpt.isPresent() && globalCouponOpt.get().getRestaurant() == null) {
+                if (globalCouponOpt.isPresent()) {
                     couponOpt = globalCouponOpt;
                 }
             }
@@ -108,22 +118,41 @@ public class OrderServiceImpl implements OrderService {
                 com.anh.model.Coupon coupon = couponOpt.get();
                 if (coupon.isActive()) {
                     long minOrderVal = coupon.getMinimumOrderValue() != null ? coupon.getMinimumOrderValue() : 0L;
-                    if (totalPrice < minOrderVal) {
-                        throw new Exception("Đơn hàng chưa đạt giá trị tối thiểu " + minOrderVal + " đ để áp dụng mã giảm giá này.");
+                    long applicableTotal = 0L;
+
+                    if (coupon.getRestaurant() != null) {
+                        Long couponRestId = coupon.getRestaurant().getId();
+                        for (OrderItem oi : orderItems) {
+                            if (oi.getFood() != null && oi.getFood().getRestaurant() != null && couponRestId.equals(oi.getFood().getRestaurant().getId())) {
+                                applicableTotal += oi.getTotalPrice();
+                            }
+                        }
+                        if (applicableTotal == 0) {
+                            throw new Exception("Mã giảm giá này chỉ áp dụng cho các món ăn của nhà hàng " + coupon.getRestaurant().getName());
+                        }
+                        if (applicableTotal < minOrderVal) {
+                            throw new Exception("Tổng tiền các món của nhà hàng " + coupon.getRestaurant().getName() + " chưa đạt giá trị tối thiểu " + minOrderVal + " đ để áp dụng mã này.");
+                        }
+                    } else {
+                        applicableTotal = totalPrice;
+                        if (applicableTotal < minOrderVal) {
+                            throw new Exception("Đơn hàng chưa đạt giá trị tối thiểu " + minOrderVal + " đ để áp dụng mã giảm giá này.");
+                        }
                     }
+
                     long discount = 0;
                     long discVal = coupon.getDiscountValue() != null ? coupon.getDiscountValue() : 0L;
                     String discType = coupon.getDiscountType() != null ? coupon.getDiscountType() : "";
                     if ("PERCENTAGE".equalsIgnoreCase(discType)) {
-                        discount = (totalPrice * discVal) / 100;
+                        discount = (applicableTotal * discVal) / 100;
                     } else if ("FLAT".equalsIgnoreCase(discType)) {
                         discount = discVal;
                     }
-                    // Đảm bảo số tiền giảm giá không âm và không vượt quá tổng tiền của giỏ hàng
-                    discount = Math.max(0, Math.min(discount, totalPrice));
+                    // Đảm bảo số tiền giảm giá không âm và không vượt quá tổng tiền của món áp dụng
+                    discount = Math.max(0, Math.min(discount, applicableTotal));
                     createdOrder.setCouponCode(coupon.getCode());
                     createdOrder.setDiscountAmount(discount);
-                    totalPrice = totalPrice - discount;
+                    totalPrice = Math.max(0, totalPrice - discount);
                 }
             }
         }
@@ -133,6 +162,43 @@ public class OrderServiceImpl implements OrderService {
         createdOrder.setTotalAmount(totalPrice);
 
         Order savedOrder = orderRepository.save(createdOrder);
+
+        // Smart Inventory (Step 2): Tự động trừ tồn kho nguyên liệu khi tạo đơn hàng
+        try {
+            ingredientsService.depleteStockForOrder(savedOrder);
+        } catch (Exception e) {
+            System.err.println("Lỗi tự động trừ kho nguyên liệu: " + e.getMessage());
+        }
+
+        // Step 3: Real-time Order Alert qua WebSocket
+        try {
+            OrderNotificationDTO notification = new OrderNotificationDTO();
+            notification.setType("NEW_ORDER");
+            notification.setOrderId(savedOrder.getId());
+            notification.setRestaurantId(restaurant.getId());
+            notification.setCustomerName(managedUser.getFullName() != null ? managedUser.getFullName() : managedUser.getEmail());
+            notification.setCustomerEmail(managedUser.getEmail());
+            if (savedOrder.getDeliveryAddress() != null) {
+                String street = savedOrder.getDeliveryAddress().getStreetAddress() != null ? savedOrder.getDeliveryAddress().getStreetAddress() : "";
+                String city = savedOrder.getDeliveryAddress().getCity() != null ? savedOrder.getDeliveryAddress().getCity() : "";
+                notification.setDeliveryAddress((street + " " + city).trim());
+            }
+            notification.setTotalAmount(savedOrder.getTotalAmount() != null ? savedOrder.getTotalAmount() : savedOrder.getTotalPrice());
+            notification.setTotalItemCount(orderItems.size());
+            notification.setOrderStatus(savedOrder.getOrderStatus());
+            notification.setCreatedAt(savedOrder.getCreatedAt() != null ? savedOrder.getCreatedAt() : new Date());
+
+            List<String> itemsSummary = new ArrayList<>();
+            for (OrderItem oi : orderItems) {
+                String foodName = (oi.getFood() != null && oi.getFood().getName() != null) ? oi.getFood().getName() : "Món ăn";
+                itemsSummary.add(oi.getQuantity() + "x " + foodName);
+            }
+            notification.setItemsSummary(itemsSummary);
+
+            orderWebSocketHandler.broadcastToRestaurant(restaurant.getId(), notification);
+        } catch (Exception e) {
+            System.err.println("Lỗi phát sóng WebSocket đơn hàng mới: " + e.getMessage());
+        }
 
         // Làm sạch giỏ hàng của User sau khi đặt hàng thành công
         cartService.clearCart(user.getId());
@@ -149,7 +215,23 @@ public class OrderServiceImpl implements OrderService {
                 orderStatus.equals("PENDING") ||
                 orderStatus.equals("PAID")) {
             order.setOrderStatus(orderStatus);
-            return orderRepository.save(order);
+            Order updated = orderRepository.save(order);
+
+            // Step 3: Phát sóng thay đổi trạng thái đơn qua WebSocket
+            try {
+                if (updated.getRestaurant() != null) {
+                    OrderNotificationDTO statusNotification = new OrderNotificationDTO();
+                    statusNotification.setType("ORDER_STATUS_CHANGED");
+                    statusNotification.setOrderId(orderId);
+                    statusNotification.setRestaurantId(updated.getRestaurant().getId());
+                    statusNotification.setOrderStatus(orderStatus);
+                    orderWebSocketHandler.broadcastToRestaurant(updated.getRestaurant().getId(), statusNotification);
+                }
+            } catch (Exception e) {
+                System.err.println("Lỗi phát sóng WebSocket trạng thái: " + e.getMessage());
+            }
+
+            return updated;
         }
         throw new Exception("Please select a valid order status");
     }
@@ -160,6 +242,27 @@ public class OrderServiceImpl implements OrderService {
         if (!"PENDING".equals(order.getOrderStatus())) {
             throw new Exception("Chỉ có thể hủy/xóa đơn hàng chưa thanh toán.");
         }
+        // Smart Inventory (Step 2): Tự động hoàn lại tồn kho nguyên liệu khi hủy đơn hàng
+        try {
+            ingredientsService.restoreStockForOrder(order);
+        } catch (Exception e) {
+            System.err.println("Lỗi hoàn kho khi hủy đơn: " + e.getMessage());
+        }
+
+        // Step 3: Phát sóng thông báo hủy đơn qua WebSocket
+        try {
+            if (order.getRestaurant() != null) {
+                OrderNotificationDTO cancelNotification = new OrderNotificationDTO();
+                cancelNotification.setType("ORDER_CANCELLED");
+                cancelNotification.setOrderId(orderId);
+                cancelNotification.setRestaurantId(order.getRestaurant().getId());
+                cancelNotification.setOrderStatus("CANCELLED");
+                orderWebSocketHandler.broadcastToRestaurant(order.getRestaurant().getId(), cancelNotification);
+            }
+        } catch (Exception e) {
+            System.err.println("Lỗi phát sóng WebSocket hủy đơn: " + e.getMessage());
+        }
+
         orderRepository.deleteById(orderId);
     }
 

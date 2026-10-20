@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useFormik } from 'formik';
-import { TextField, Button, Grid, IconButton, CircularProgress } from '@mui/material';
+import { TextField, Button, Grid, IconButton, CircularProgress, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import CloseIcon from '@mui/icons-material/Close';
 import { uploadImageToCloudinary } from '../util/uploadToCloudinary';
 import { useDispatch } from 'react-redux';
 import { createRestaurant } from '../../State/Restaurant/Action'; // Đảm bảo đường dẫn này chuẩn với máy bạn
+import { ALL_CUISINE_DROPDOWN_OPTIONS, OTHER_CUISINE_OPTION } from '../../config/cuisineConfig';
 
 const initialValues = {
     name: "", description: "", cuisineType: "", openingHours: "08:00 - 22:00",
@@ -16,6 +17,8 @@ const initialValues = {
 export const CreateRestaurantForm = () => {
     const [uploadImage, setUploadImage] = useState(false);
     const [images, setImages] = useState([]);
+    const [selectedCuisine, setSelectedCuisine] = useState("");
+    const [customCuisine, setCustomCuisine] = useState("");
 
     // Khai báo Redux và lấy Token
     const dispatch = useDispatch();
@@ -24,10 +27,19 @@ export const CreateRestaurantForm = () => {
     const formik = useFormik({
         initialValues,
         onSubmit: (values) => {
+            const finalCuisine = selectedCuisine === OTHER_CUISINE_OPTION 
+                ? customCuisine.trim() 
+                : (values.cuisineType || selectedCuisine);
+
+            if (!finalCuisine) {
+                alert("Vui lòng chọn hoặc nhập loại ẩm thực cho nhà hàng!");
+                return;
+            }
+
             const reqData = {
                 name: values.name,
                 description: values.description,
-                cuisineType: values.cuisineType,
+                cuisineType: finalCuisine,
                 openingHours: values.openingHours,
                 address: {
                     streetAddress: values.streetAddress, city: values.city, stateProvince: values.stateProvince, postalCode: values.postalCode, country: values.country
@@ -42,6 +54,22 @@ export const CreateRestaurantForm = () => {
             dispatch(createRestaurant({ data: reqData, token: jwt }));
         }
     });
+
+    const handleCuisineSelectChange = (e) => {
+        const val = e.target.value;
+        setSelectedCuisine(val);
+        if (val === OTHER_CUISINE_OPTION) {
+            formik.setFieldValue("cuisineType", customCuisine.trim());
+        } else {
+            formik.setFieldValue("cuisineType", val);
+        }
+    };
+
+    const handleCustomCuisineChange = (e) => {
+        const val = e.target.value;
+        setCustomCuisine(val);
+        formik.setFieldValue("cuisineType", val);
+    };
 
     const handleImageChange = async (e) => {
         const file = e.target.files[0];
@@ -83,7 +111,37 @@ export const CreateRestaurantForm = () => {
                             </div>
                         </Grid>
                         <Grid item="true" xs={12} lg={6}><TextField fullWidth label="Tên quán ăn" name="name" value={formik.values.name} onChange={formik.handleChange} /></Grid>
-                        <Grid item="true" xs={12} lg={6}><TextField fullWidth label="Loại ẩm thực" name="cuisineType" value={formik.values.cuisineType} onChange={formik.handleChange} /></Grid>
+                        <Grid item="true" xs={12} lg={6}>
+                            <FormControl fullWidth required>
+                                <InputLabel id="cuisine-type-label">Loại ẩm thực</InputLabel>
+                                <Select
+                                    labelId="cuisine-type-label"
+                                    id="cuisine-type-select"
+                                    value={selectedCuisine}
+                                    label="Loại ẩm thực"
+                                    onChange={handleCuisineSelectChange}
+                                >
+                                    {ALL_CUISINE_DROPDOWN_OPTIONS.map((cuisine) => (
+                                        <MenuItem key={cuisine} value={cuisine}>
+                                            {cuisine}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                        {selectedCuisine === OTHER_CUISINE_OPTION && (
+                            <Grid item="true" xs={12}>
+                                <TextField
+                                    fullWidth
+                                    required
+                                    label="Nhập loại ẩm thực cụ thể của quán"
+                                    placeholder="Ví dụ: Món Hàn Quốc, Món Thái, Trà đạo..."
+                                    value={customCuisine}
+                                    onChange={handleCustomCuisineChange}
+                                    helperText="Nhập tên loại ẩm thực nếu quán của bạn chưa có trong danh mục sẵn có"
+                                />
+                            </Grid>
+                        )}
                         <Grid item="true" xs={12}><TextField fullWidth multiline rows={2} label="Mô tả quán" name="description" value={formik.values.description} onChange={formik.handleChange} /></Grid>
                         <Grid item="true" xs={12} lg={6}><TextField fullWidth label="Giờ hoạt động" name="openingHours" value={formik.values.openingHours} onChange={formik.handleChange} /></Grid>
 
