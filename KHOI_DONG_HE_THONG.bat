@@ -11,14 +11,14 @@ echo.
 cd /d "%~dp0"
 
 echo [1/4] Kiem tra va giai phong cac cong mang (5454, 5173) neu bi treo...
-for /f "tokens=5" %%a in ('netstat -aon ^| findstr :5454 ^| findstr LISTENING') do (
-    echo     -> Phat hien tien trinh cu chiem cong 5454 (PID: %%a). Dang giai phong...
-    taskkill /F /T /PID %%a >nul 2>&1
+powershell -NoProfile -Command "Get-NetTCPConnection -LocalPort 5454 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique | ForEach-Object { if ($_ -gt 0) { Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue } }" >nul 2>&1
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr :5454') do (
+    if not "%%a"=="0" taskkill /F /T /PID %%a >nul 2>&1
 )
 
-for /f "tokens=5" %%a in ('netstat -aon ^| findstr :5173 ^| findstr LISTENING') do (
-    echo     -> Phat hien tien trinh cu chiem cong 5173 (PID: %%a). Dang giai phong...
-    taskkill /F /T /PID %%a >nul 2>&1
+powershell -NoProfile -Command "Get-NetTCPConnection -LocalPort 5173 -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess -Unique | ForEach-Object { if ($_ -gt 0) { Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue } }" >nul 2>&1
+for /f "tokens=5" %%a in ('netstat -aon ^| findstr :5173') do (
+    if not "%%a"=="0" taskkill /F /T /PID %%a >nul 2>&1
 )
 echo     [OK] Cong mang sach se va san sang!
 echo.
