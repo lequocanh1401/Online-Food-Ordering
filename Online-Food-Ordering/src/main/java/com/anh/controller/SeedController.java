@@ -1463,6 +1463,159 @@ public class SeedController {
         return categoryRepository.save(c);
     }
 
+    @GetMapping("/update-curated-images")
+    public ResponseEntity<String> updateAllCuratedImages() {
+        try {
+            // 1. Cập nhật ảnh chuẩn cho 15 Nhà Hàng
+            Map<String, String> restImgMap = new HashMap<>();
+            restImgMap.put("Tiệm Cơm Tấm Sài Gòn - Đặc Biệt", "https://images.unsplash.com/photo-1541544741938-0af808871cc0?w=1200&auto=format&fit=crop");
+            restImgMap.put("Phở Gia Truyền Bát Đàn", "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=1200&auto=format&fit=crop");
+            restImgMap.put("Bún Chả Hương Liên (Obama)", "https://images.unsplash.com/photo-1596797038530-2c107229654b?w=1200&auto=format&fit=crop");
+            restImgMap.put("Pizza 4P's - Lê Thánh Tôn", "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=1200&auto=format&fit=crop");
+            restImgMap.put("Sushi Bar - Tôn Đức Thắng", "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=1200&auto=format&fit=crop");
+            restImgMap.put("Bánh Mì Phượng Hội An", "https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=1200&auto=format&fit=crop");
+            restImgMap.put("Highlands Coffee - Nguyễn Huệ", "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=1200&auto=format&fit=crop");
+            restImgMap.put("Dim Sum Tiến Phát - Điểm Tâm Hoa", "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=1200&auto=format&fit=crop");
+            restImgMap.put("KFC Việt Nam - Bà Triệu", "https://images.unsplash.com/photo-1562967914-608f82629710?w=1200&auto=format&fit=crop");
+            restImgMap.put("Lẩu Phan - Buffet Bò Mỹ", "https://images.unsplash.com/photo-1547592180-85f173990554?w=1200&auto=format&fit=crop");
+            restImgMap.put("El Gaucho Argentinian Steakhouse", "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=1200&auto=format&fit=crop");
+            restImgMap.put("Gà Rán Jollibee - Vincom Center", "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=1200&auto=format&fit=crop");
+            restImgMap.put("The Coffee House - Cà Phê & Trà", "https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=1200&auto=format&fit=crop");
+            restImgMap.put("Trà Sữa Phê La - Đậm Vị Ô Long", "https://images.unsplash.com/photo-1558857563-b371033873b8?w=1200&auto=format&fit=crop");
+            restImgMap.put("Bún Bò Huế Ngự Uyển", "https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=1200&auto=format&fit=crop");
+
+            List<Restaurant> restaurants = restaurantRepository.findAll();
+            for (Restaurant r : restaurants) {
+                for (Map.Entry<String, String> entry : restImgMap.entrySet()) {
+                    if (r.getName() != null && r.getName().trim().equalsIgnoreCase(entry.getKey().trim())) {
+                        r.setImages(new ArrayList<>(Collections.singletonList(entry.getValue())));
+                        restaurantRepository.save(r);
+                        break;
+                    }
+                }
+            }
+
+            // 2. Cập nhật ảnh chuẩn chính xác cho từng món ăn
+            Map<String, String> foodImgMap = new HashMap<>();
+            foodImgMap.put("Cơm Sườn Bì Chả", "https://images.unsplash.com/photo-1541544741938-0af808871cc0?w=800&auto=format&fit=crop");
+            foodImgMap.put("Cơm Sườn Cây Nướng Mật Ong", "https://images.unsplash.com/photo-1544025162-d76694265947?w=800&auto=format&fit=crop");
+            foodImgMap.put("Cơm Tấm Ba Rọi Nướng Giòn", "https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=800&auto=format&fit=crop");
+            foodImgMap.put("Chả Trứng Cua Hấp", "https://images.unsplash.com/photo-1505253758473-96b3d58f73fe?w=800&auto=format&fit=crop");
+            foodImgMap.put("Trứng Ốp La Lòng Đào", "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800&auto=format&fit=crop");
+            foodImgMap.put("Đùi Gà Nướng Mật Ong", "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=800&auto=format&fit=crop");
+            foodImgMap.put("Canh Khổ Qua Dồn Thịt", "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800&auto=format&fit=crop");
+            foodImgMap.put("Canh Cải Chua Nấu Sườn", "https://images.unsplash.com/photo-1543339308-43e59d6b73a6?w=800&auto=format&fit=crop");
+            foodImgMap.put("Trà Đá Đường Phèn", "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=800&auto=format&fit=crop");
+            foodImgMap.put("Nước Mía Tươi Tắc", "https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=800&auto=format&fit=crop");
+
+            foodImgMap.put("Phở Bò Tái", "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=800&auto=format&fit=crop");
+            foodImgMap.put("Phở Bò Chín", "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=800&auto=format&fit=crop");
+            foodImgMap.put("Phở Tái Nạm Gầu", "https://images.unsplash.com/photo-1503764654157-72d979d9af2f?w=800&auto=format&fit=crop");
+            foodImgMap.put("Quẩy Nóng", "https://images.unsplash.com/photo-1568051243851-f9b136146e97?w=800&auto=format&fit=crop");
+            foodImgMap.put("Trà Đá", "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=800&auto=format&fit=crop");
+
+            foodImgMap.put("Combo Obama", "https://images.unsplash.com/photo-1596797038530-2c107229654b?w=800&auto=format&fit=crop");
+            foodImgMap.put("Bún Chả Truyền Thống", "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&auto=format&fit=crop");
+            foodImgMap.put("Nem Cua Bể", "https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=800&auto=format&fit=crop");
+            foodImgMap.put("Nem Hải Sản", "https://images.unsplash.com/photo-1541529086526-db283c563270?w=800&auto=format&fit=crop");
+            foodImgMap.put("Bia Hà Nội", "https://images.unsplash.com/photo-1608278248354-998816f1c798?w=800&auto=format&fit=crop");
+
+            foodImgMap.put("Pizza 4 Cheeses", "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&auto=format&fit=crop");
+            foodImgMap.put("Pizza Burrata Parma Ham", "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800&auto=format&fit=crop");
+            foodImgMap.put("Mỳ Ý Sốt Kem Cua", "https://images.unsplash.com/photo-1621996346565-e3d5d6281745?w=800&auto=format&fit=crop");
+            foodImgMap.put("Salad Phô Mai Burrata", "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800&auto=format&fit=crop");
+            foodImgMap.put("Bánh Tiramisu", "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=800&auto=format&fit=crop");
+
+            foodImgMap.put("Sashimi Cá Hồi", "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=800&auto=format&fit=crop");
+            foodImgMap.put("Sushi Rồng (Dragon Roll)", "https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=800&auto=format&fit=crop");
+            foodImgMap.put("Mỳ Tempura Udon", "https://images.unsplash.com/photo-1618841557871-b4664fbf0c34?w=800&auto=format&fit=crop");
+            foodImgMap.put("Đậu Nành Nhật (Edamame)", "https://images.unsplash.com/photo-1554502078-ef0fc409efce?w=800&auto=format&fit=crop");
+            foodImgMap.put("Kem Trà Xanh Matcha", "https://images.unsplash.com/photo-1505394033641-40c6ad1178d7?w=800&auto=format&fit=crop");
+
+            foodImgMap.put("Bánh Mì Thập Cẩm", "https://images.unsplash.com/photo-1626804475297-41608ea09aeb?w=800&auto=format&fit=crop");
+            foodImgMap.put("Bánh Mì Gà Xé Bơ", "https://images.unsplash.com/photo-1509722747041-616f39b57569?w=800&auto=format&fit=crop");
+            foodImgMap.put("Bánh Mì Thịt Nướng Sả", "https://images.unsplash.com/photo-1550547660-d9450f859349?w=800&auto=format&fit=crop");
+            foodImgMap.put("Sữa Bắp Hạt Sen", "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=800&auto=format&fit=crop");
+            foodImgMap.put("Nước Sấu Đá", "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=800&auto=format&fit=crop");
+
+            foodImgMap.put("Phin Sữa Đá Lớn", "https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=800&auto=format&fit=crop");
+            foodImgMap.put("Trà Sen Vàng", "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=800&auto=format&fit=crop");
+            foodImgMap.put("Freeze Trà Xanh", "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=800&auto=format&fit=crop");
+            foodImgMap.put("Bánh Mì Thịt Nướng", "https://images.unsplash.com/photo-1509722747041-616f39b57569?w=800&auto=format&fit=crop");
+            foodImgMap.put("Bánh Mousse Đào", "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800&auto=format&fit=crop");
+
+            foodImgMap.put("Há Cảo Tôm", "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=800&auto=format&fit=crop");
+            foodImgMap.put("Xíu Mại Tôm Thịt", "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=800&auto=format&fit=crop");
+            foodImgMap.put("Bánh Bao Kim Sa", "https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?w=800&auto=format&fit=crop");
+            foodImgMap.put("Chân Gà Hấp Tàu Xì", "https://images.unsplash.com/photo-1608897013039-887f21d8c804?w=800&auto=format&fit=crop");
+            foodImgMap.put("Trà Hoa Cúc Mật Ong", "https://images.unsplash.com/photo-1597481499750-3e6b22637e12?w=800&auto=format&fit=crop");
+
+            foodImgMap.put("Combo Gà Giòn Cay", "https://images.unsplash.com/photo-1562967914-608f82629710?w=800&auto=format&fit=crop");
+            foodImgMap.put("Gà Popcorn Lớn", "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=800&auto=format&fit=crop");
+            foodImgMap.put("Burger Tôm", "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&auto=format&fit=crop");
+            foodImgMap.put("Khoai Tây Chiên Lớn", "https://images.unsplash.com/photo-1576107232684-1279f3908594?w=800&auto=format&fit=crop");
+            foodImgMap.put("Pepsi Ly Lớn", "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=800&auto=format&fit=crop");
+
+            foodImgMap.put("Buffet Lẩu Bò 139k", "https://images.unsplash.com/photo-1547592180-85f173990554?w=800&auto=format&fit=crop");
+            foodImgMap.put("Buffet Lẩu Hải Sản 199k", "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&auto=format&fit=crop");
+            foodImgMap.put("Đĩa Ba Chỉ Bò Mỹ Thêm", "https://images.unsplash.com/photo-1558030006-450675393462?w=800&auto=format&fit=crop");
+            foodImgMap.put("Ngô Chiên Bơ Tỏi", "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=800&auto=format&fit=crop");
+            foodImgMap.put("Coca Cola Chai", "https://images.unsplash.com/photo-1554866585-cd94860890b7?w=800&auto=format&fit=crop");
+
+            foodImgMap.put("Ribeye Steak 250g", "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=800&auto=format&fit=crop");
+            foodImgMap.put("Filet Mignon 200g", "https://images.unsplash.com/photo-1544025162-d76694265947?w=800&auto=format&fit=crop");
+            foodImgMap.put("Cá Hồi Nướng Than", "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&auto=format&fit=crop");
+            foodImgMap.put("Caesar Salad Classic", "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=800&auto=format&fit=crop");
+            foodImgMap.put("Ly Vang Đỏ Cabernet", "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=800&auto=format&fit=crop");
+
+            foodImgMap.put("Cơm Gà Giòn Sốt Tiêu Jollibee", "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=800&auto=format&fit=crop");
+            foodImgMap.put("Combo 2 Miếng Gà Giòn Vui Vẻ", "https://images.unsplash.com/photo-1562967914-608f82629710?w=800&auto=format&fit=crop");
+            foodImgMap.put("Mỳ Ý Sốt Bò Bằm Jollibee", "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800&auto=format&fit=crop");
+            foodImgMap.put("Khoai Tây Lắc Phô Mai", "https://images.unsplash.com/photo-1576107232684-1279f3908594?w=800&auto=format&fit=crop");
+            foodImgMap.put("Bánh Pie Xoài Đào Giòn Rụm", "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&auto=format&fit=crop");
+
+            foodImgMap.put("Trà Đào Cam Sả Trứ Danh", "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=800&auto=format&fit=crop");
+            foodImgMap.put("Cà Phê Sữa Đá Đậm Đà", "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=800&auto=format&fit=crop");
+            foodImgMap.put("Trà Sữa Mắc Ca Trân Châu Trắng", "https://images.unsplash.com/photo-1558857563-b371033873b8?w=800&auto=format&fit=crop");
+            foodImgMap.put("Bánh Mousse Tiramisu Cacao", "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=800&auto=format&fit=crop");
+
+            foodImgMap.put("Ô Long Sữa Phê La Trân Châu", "https://images.unsplash.com/photo-1558857563-b371033873b8?w=800&auto=format&fit=crop");
+            foodImgMap.put("Gấm Ô Long Nhiệt Đới", "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=800&auto=format&fit=crop");
+            foodImgMap.put("Khói B'lao Kem Cheese", "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=800&auto=format&fit=crop");
+            foodImgMap.put("Bánh Croissant Nướng Bơ Pháp", "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=800&auto=format&fit=crop");
+
+            foodImgMap.put("Bún Bò Huế Đặc Biệt Bắp Bò Chả Cua", "https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=800&auto=format&fit=crop");
+            foodImgMap.put("Bún Bò Nạm Giò Heo", "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=800&auto=format&fit=crop");
+            foodImgMap.put("Bánh Bột Lọc Tôm Thịt Cố Đô", "https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=800&auto=format&fit=crop");
+            foodImgMap.put("Trà Cung Đình Huế Mát Lạnh", "https://images.unsplash.com/photo-1597481499750-3e6b22637e12?w=800&auto=format&fit=crop");
+
+            List<Food> foods = foodRepository.findAll();
+            for (Food f : foods) {
+                // Sửa món 352 bị nhầm tên ở Jollibee
+                if (f.getName() != null && f.getName().toLowerCase().contains("cơm tấm") && f.getRestaurant() != null && f.getRestaurant().getName().contains("Jollibee")) {
+                    f.setName("Cơm Gà Giòn Sốt Tiêu Jollibee");
+                    f.setDescription("Cơm gà rán giòn rụm rưới sốt tiêu nấm thơm ngon đặc trưng Jollibee");
+                    f.setImages(new ArrayList<>(Collections.singletonList("https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=800&auto=format&fit=crop")));
+                    foodRepository.save(f);
+                    continue;
+                }
+
+                for (Map.Entry<String, String> entry : foodImgMap.entrySet()) {
+                    if (f.getName() != null && f.getName().trim().equalsIgnoreCase(entry.getKey().trim())) {
+                        f.setImages(new ArrayList<>(Collections.singletonList(entry.getValue())));
+                        foodRepository.save(f);
+                        break;
+                    }
+                }
+            }
+
+            return ResponseEntity.ok("Đã cập nhật ảnh chuẩn 100% cho toàn bộ " + restaurants.size() + " nhà hàng và " + foods.size() + " món ăn thành công!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Lỗi cập nhật ảnh: " + e.getMessage());
+        }
+    }
+
     private Map<String, Object> createFoodMap(String name, String desc, Long price, String category, String imageUrl) {
         Map<String, Object> map = new HashMap<>();
         map.put("name", name);
