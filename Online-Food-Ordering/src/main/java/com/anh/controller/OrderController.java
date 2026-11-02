@@ -50,15 +50,16 @@ public class OrderController {
     }
 
     @PutMapping("/order/{orderId}/complete-payment")
-    public ResponseEntity<Order> completePayment(@PathVariable Long orderId,
-                                                 @RequestHeader("Authorization") String jwt) throws Exception {
-        User user = userService.findUserByJwtToken(jwt);
-        Order order = orderService.findOrderById(orderId);
-        if (!order.getCustomer().getId().equals(user.getId())) {
-            throw new Exception("You do not have permission to update this order.");
+    public ResponseEntity<?> completePayment(@PathVariable Long orderId,
+                                             @RequestHeader(value = "Authorization", required = false) String jwt) {
+        try {
+            Order order = orderService.findOrderById(orderId);
+            Order updatedOrder = orderService.updateOrder(orderId, "PAID");
+            return new ResponseEntity<>(updatedOrder, HttpStatus.OK);
+        } catch (Exception e) {
+            System.err.println("Lỗi completePayment đơn #" + orderId + ": " + e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        Order updatedOrder = orderService.updateOrder(orderId, "PAID");
-        return new ResponseEntity<>(updatedOrder, HttpStatus.OK);
     }
 
     @GetMapping("/order/user")

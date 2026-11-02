@@ -222,10 +222,10 @@ public class OrderServiceImpl implements OrderService {
             throw new Exception("Đơn hàng này đã hoàn thành, không thể thay đổi trạng thái!");
         }
 
-        // 2. Chặn quán tự ý chuyển đơn Stripe PENDING thành PAID/làm món khi khách chưa quẹt thẻ
+        // 2. Chặn đơn Stripe PENDING nhảy cóc sang OUT_FOR_DELIVERY / COMPLETED khi chưa thanh toán (chỉ cho phép PAID hoặc CANCELLED)
         if ("STRIPE".equalsIgnoreCase(order.getPaymentMethod()) && "PENDING".equalsIgnoreCase(currentStatus)) {
-            if (!"CANCELLED".equalsIgnoreCase(orderStatus) && !"CANCELED".equalsIgnoreCase(orderStatus)) {
-                throw new Exception("Đơn hàng đang chờ khách quẹt thẻ Stripe. Quán chỉ có thể hủy đơn nếu khách không thanh toán.");
+            if (!"PAID".equalsIgnoreCase(orderStatus) && !"CANCELLED".equalsIgnoreCase(orderStatus) && !"CANCELED".equalsIgnoreCase(orderStatus)) {
+                throw new Exception("Đơn hàng đang chờ khách quẹt thẻ Stripe. Quán chỉ có thể xác nhận thanh toán (PAID) hoặc hủy đơn nếu khách không thanh toán.");
             }
         }
 

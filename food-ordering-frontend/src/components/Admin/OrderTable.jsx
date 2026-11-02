@@ -452,9 +452,9 @@ export const OrderTable = ({ filterValue }) => {
 
                         return orderStatusList
                             .filter(status => {
-                                // 1. Nếu đơn Stripe đang chờ khách thanh toán, quán CHỈ được Hủy đơn, KHÔNG được tự bấm làm món/PAID
+                                // 1. Nếu đơn Stripe đang chờ khách thanh toán, quán có thể Xác nhận thanh toán (PAID) hoặc Hủy đơn (CANCELLED)
                                 if (isPendingStripe) {
-                                    return status.value === "CANCELLED";
+                                    return status.value === "PAID" || status.value === "CANCELLED";
                                 }
                                 // 2. Nếu đơn không còn là PENDING (đã trả tiền hoặc đang giao), không cho phép Hủy đơn
                                 if (status.value === "CANCELLED" && !canCancel) {
@@ -466,9 +466,15 @@ export const OrderTable = ({ filterValue }) => {
                                 <MenuItem 
                                     key={status.value} 
                                     onClick={() => handleUpdateOrder(status.value)}
-                                    sx={status.value === "CANCELLED" ? { color: '#f87171 !important' } : {}}
+                                    sx={
+                                        status.value === "CANCELLED" 
+                                            ? { color: '#f87171 !important' } 
+                                            : (status.value === "PAID" && isPendingStripe)
+                                                ? { color: '#34d399 !important', fontWeight: 'bold' }
+                                                : {}
+                                    }
                                 >
-                                    {status.label}
+                                    {isPendingStripe && status.value === "PAID" ? "✓ Xác nhận đã quẹt thẻ (Bắt đầu làm món)" : status.label}
                                 </MenuItem>
                             ));
                     })()}
