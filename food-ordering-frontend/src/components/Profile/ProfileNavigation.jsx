@@ -3,6 +3,7 @@ import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import HomeIcon from '@mui/icons-material/Home';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 import EventIcon from '@mui/icons-material/Event';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -19,7 +20,7 @@ const menu = [
     { title: "Đơn hàng", icon: <ShoppingBagIcon />, path: "orders" },
     { title: "Yêu thích", icon: <FavoriteIcon />, path: "favorites" },
     { title: "Địa chỉ", icon: <HomeIcon />, path: "address" },
-    { title: "Thanh toán", icon: <AccountBalanceWalletIcon />, path: "payments" },
+    { title: "Lịch sử thanh toán", icon: <ReceiptLongIcon />, path: "payments" },
     { title: "Thông báo", icon: <NotificationsActiveIcon />, path: "notifications" },
     { title: "Sự kiện", icon: <EventIcon />, path: "events" },
     { title: "Đăng xuất", icon: <LogoutIcon />, path: "logout" }

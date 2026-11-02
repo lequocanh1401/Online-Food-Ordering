@@ -81,7 +81,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public ReviewResponseDto getRestaurantReviews(Long restaurantId) {
-        List<Review> reviews = reviewRepository.findByRestaurantIdAndFoodIsNullOrderByCreatedAtDesc(restaurantId);
+        List<Review> reviews = reviewRepository.findByRestaurantIdOrderByCreatedAtDesc(restaurantId);
         Double avgRating = reviewRepository.getAverageRatingForRestaurant(restaurantId);
         Long count = reviewRepository.getCountForRestaurant(restaurantId);
 

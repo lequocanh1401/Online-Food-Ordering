@@ -45,6 +45,12 @@ public class SeedController {
     @Autowired
     private ReviewRepository reviewRepository;
 
+    @Autowired
+    private IngredientItemRepository ingredientItemRepository;
+
+    @Autowired
+    private IngredientCategoryRepository ingredientCategoryRepository;
+
     @GetMapping("/seed")
     public ResponseEntity<String> seedDatabase() {
         try {
@@ -469,6 +475,119 @@ public class SeedController {
         }
     }
 
+    @GetMapping("/seed-comtam")
+    public ResponseEntity<String> seedComTamCategoriesAndFoods() {
+        try {
+            User owner1 = userRepository.findByEmail("chuquan@gmail.com");
+            Restaurant r1 = null;
+            if (owner1 != null) {
+                r1 = restaurantRepository.findByOwnerId(owner1.getId());
+            }
+            if (r1 == null) {
+                r1 = restaurantRepository.findById(1L).orElse(null);
+            }
+            if (r1 == null) {
+                return ResponseEntity.status(404).body("Không tìm thấy Tiệm Cơm Tấm!");
+            }
+
+            // 1. Cập nhật hoặc tạo các Category thực tế cho quán Cơm Tấm
+            List<Category> existingCats = categoryRepository.findByRestaurantId(r1.getId());
+            Category catComTam = null;
+            for (Category c : existingCats) {
+                if (c.getName().equalsIgnoreCase("Món Chính") || c.getName().equalsIgnoreCase("Cơm Tấm Đặc Biệt") || c.getName().equalsIgnoreCase("Cơm Tấm")) {
+                    c.setName("Cơm Tấm Đặc Biệt");
+                    catComTam = categoryRepository.save(c);
+                    break;
+                }
+            }
+            if (catComTam == null) {
+                catComTam = new Category();
+                catComTam.setName("Cơm Tấm Đặc Biệt");
+                catComTam.setRestaurant(r1);
+                catComTam = categoryRepository.save(catComTam);
+            }
+
+            Category catMonThem = existingCats.stream().filter(c -> c.getName().equalsIgnoreCase("Món Gọi Thêm") || c.getName().equalsIgnoreCase("Món Thêm")).findFirst().orElse(null);
+            if (catMonThem == null) {
+                catMonThem = new Category();
+                catMonThem.setName("Món Gọi Thêm");
+                catMonThem.setRestaurant(r1);
+                catMonThem = categoryRepository.save(catMonThem);
+            }
+
+            Category catCanh = existingCats.stream().filter(c -> c.getName().equalsIgnoreCase("Canh Nóng") || c.getName().equalsIgnoreCase("Canh")).findFirst().orElse(null);
+            if (catCanh == null) {
+                catCanh = new Category();
+                catCanh.setName("Canh Nóng");
+                catCanh.setRestaurant(r1);
+                catCanh = categoryRepository.save(catCanh);
+            }
+
+            Category catNuoc = existingCats.stream().filter(c -> c.getName().equalsIgnoreCase("Nước Giải Khát") || c.getName().equalsIgnoreCase("Đồ Uống")).findFirst().orElse(null);
+            if (catNuoc == null) {
+                catNuoc = new Category();
+                catNuoc.setName("Nước Giải Khát");
+                catNuoc.setRestaurant(r1);
+                catNuoc = categoryRepository.save(catNuoc);
+            }
+
+            // Cập nhật món Cơm Sườn Bì Chả cũ sang catComTam
+            List<Food> existingFoods = foodRepository.findByRestaurantId(r1.getId());
+            for (Food f : existingFoods) {
+                if (f.getName().toLowerCase().contains("sườn") || f.getFoodCategory() == null || f.getFoodCategory().getName().equalsIgnoreCase("Món Chính")) {
+                    f.setFoodCategory(catComTam);
+                    foodRepository.save(f);
+                }
+            }
+
+            // Tạo thêm các món ăn hấp dẫn chuẩn quán cơm tấm nếu chưa có
+            List<Map<String, Object>> newFoods = Arrays.asList(
+                createFoodMap("Cơm Sườn Cây Nướng Mật Ong", "Sườn cây ướp sốt mật ong thơm lừng, thịt mềm ngọt đậm vị", 55000L, "Cơm Tấm Đặc Biệt", "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500"),
+                createFoodMap("Cơm Tấm Ba Rọi Nướng Giòn", "Thịt ba chỉ heo ướp sả ớt nướng than hoa da giòn béo ngậy", 48000L, "Cơm Tấm Đặc Biệt", "https://images.unsplash.com/photo-1544025162-d76694265947?w=500"),
+                createFoodMap("Chả Trứng Cua Hấp", "Chả trứng thịt cua béo bùi, vàng óng lòng đỏ trứng muối", 15000L, "Món Gọi Thêm", "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=500"),
+                createFoodMap("Trứng Ốp La Lòng Đào", "Trứng gà ta chiên viền giòn lòng đào béo ngậy", 8000L, "Món Gọi Thêm", "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=500"),
+                createFoodMap("Đùi Gà Nướng Mật Ong", "Đùi gà góc tư tẩm ướp đậm đà, da nâu bóng thơm lừng", 32000L, "Món Gọi Thêm", "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=500"),
+                createFoodMap("Canh Khổ Qua Dồn Thịt", "Canh khổ qua nhồi thịt nạc băm thanh mát giải ngấy", 18000L, "Canh Nóng", "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=500"),
+                createFoodMap("Canh Cải Chua Nấu Sườn", "Canh dưa cải chua nấu sườn non chua ngọt đậm đà", 18000L, "Canh Nóng", "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=500"),
+                createFoodMap("Trà Đá Đường Phèn", "Trà lài thơm mát đá lạnh giải nhiệt thanh mát", 5000L, "Nước Giải Khát", "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=500"),
+                createFoodMap("Nước Mía Tươi Tắc", "Nước mía nguyên chất ép kèm trái tắc thơm dịu mát lạnh", 12000L, "Nước Giải Khát", "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500")
+            );
+
+            int addedCount = 0;
+            for (Map<String, Object> fMap : newFoods) {
+                String fName = (String) fMap.get("name");
+                boolean exists = existingFoods.stream().anyMatch(f -> f.getName().equalsIgnoreCase(fName));
+                if (!exists) {
+                    String cName = (String) fMap.get("category");
+                    Category assignedCat = catComTam;
+                    if (cName.equals("Món Gọi Thêm")) assignedCat = catMonThem;
+                    else if (cName.equals("Canh Nóng")) assignedCat = catCanh;
+                    else if (cName.equals("Nước Giải Khát")) assignedCat = catNuoc;
+
+                    Food food = new Food();
+                    food.setName(fName);
+                    food.setDescription((String) fMap.get("description"));
+                    food.setPrice((Long) fMap.get("price"));
+                    food.setFoodCategory(assignedCat);
+                    food.setImages(Arrays.asList((String) fMap.get("imageUrl")));
+                    food.setAvailable(true);
+                    food.setRestaurant(r1);
+                    food.setVegetarian(false);
+                    food.setSeasonal(false);
+                    food.setCreationDate(new Date());
+
+                    foodRepository.save(food);
+                    addedCount++;
+                }
+            }
+
+            return ResponseEntity.ok(String.format("Đã cập nhật danh mục thực tế cho quán %s: đổi 'Món Chính' thành 'Cơm Tấm Đặc Biệt' và thêm %d món ăn mới!", r1.getName(), addedCount));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Lỗi: " + e.getMessage());
+        }
+    }
+
     @GetMapping("/seed-extra")
     public ResponseEntity<String> seedOrdersAndReviews() {
         try {
@@ -633,6 +752,715 @@ public class SeedController {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Lỗi khi nạp dữ liệu đơn hàng và đánh giá: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/seed-photos-and-reviews")
+    public ResponseEntity<String> seedPhotosAndReviews() {
+        try {
+            Random rand = new Random();
+
+            // 1. Tạo hoặc lấy khách hàng mẫu
+            List<User> customers = userRepository.findAll().stream()
+                .filter(u -> u.getRole() == com.anh.model.USER_ROLE.ROLE_CUSTOMER)
+                .collect(java.util.stream.Collectors.toList());
+
+            if (customers.isEmpty()) {
+                User c1 = new User();
+                c1.setEmail("khachhang1@gmail.com");
+                c1.setFullName("Lê Minh Khang");
+                c1.setRole(com.anh.model.USER_ROLE.ROLE_CUSTOMER);
+                c1.setPassword(new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode("123456"));
+                customers.add(userRepository.save(c1));
+
+                User c2 = new User();
+                c2.setEmail("khachhang2@gmail.com");
+                c2.setFullName("Nguyễn Thảo Vy");
+                c2.setRole(com.anh.model.USER_ROLE.ROLE_CUSTOMER);
+                c2.setPassword(new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode("123456"));
+                customers.add(userRepository.save(c2));
+            }
+
+            // 2. Cập nhật nhiều ảnh cho từng nhà hàng
+            List<Restaurant> allRestaurants = restaurantRepository.findAll();
+            int restUpdated = 0;
+            String[] extraRestImages = {
+                "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200",
+                "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1200",
+                "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=1200",
+                "https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?w=1200"
+            };
+
+            for (Restaurant r : allRestaurants) {
+                List<String> rImgs = new ArrayList<>();
+                if (r.getImages() != null && !r.getImages().isEmpty()) {
+                    rImgs.add(r.getImages().get(0));
+                } else {
+                    rImgs.add("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1200");
+                }
+                for (String extra : extraRestImages) {
+                    if (!rImgs.contains(extra) && rImgs.size() < 4) {
+                        rImgs.add(extra);
+                    }
+                }
+                r.setImages(rImgs);
+                restaurantRepository.save(r);
+                restUpdated++;
+            }
+
+            // 3. Cập nhật nhiều ảnh cho từng món ăn + tạo nhận xét chi tiết cho từng món
+            List<Food> allFoods = foodRepository.findAll();
+            int foodUpdated = 0;
+            int reviewsCreated = 0;
+
+            String[] extraFoodImages = {
+                "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800",
+                "https://images.unsplash.com/photo-1544025162-d76694265947?w=800",
+                "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=800",
+                "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=800"
+            };
+
+            String[] foodPosComments = {
+                "Món này ngon xuất sắc, vị ướp rất vừa miệng, thịt mềm mọng nước!",
+                "Đồ ăn giao tới còn bốc khói nóng hổi, phần ăn đầy đặn hơn mong đợi.",
+                "Gia vị đậm đà thơm nức mũi, đóng gói cẩn thận sạch sẽ. Rất đáng tiền!",
+                "Thơm ngon chuẩn vị! Cả nhà mình ai ăn cũng khen nức nở. Sẽ tiếp tục đặt lại.",
+                "Chất lượng đồ ăn 10/10, nước chấm pha rất đỉnh, cho quán 5 sao tuyệt đối!"
+            };
+
+            for (Food f : allFoods) {
+                List<String> fImgs = new ArrayList<>();
+                if (f.getImages() != null && !f.getImages().isEmpty()) {
+                    fImgs.add(f.getImages().get(0));
+                } else {
+                    fImgs.add("https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800");
+                }
+                for (String extra : extraFoodImages) {
+                    if (!fImgs.contains(extra) && fImgs.size() < 3) {
+                        fImgs.add(extra);
+                    }
+                }
+                f.setImages(fImgs);
+                foodRepository.save(f);
+                foodUpdated++;
+
+                // Tạo 1-2 nhận xét cho mỗi món ăn nếu chưa có nhận xét
+                List<Review> existingReviews = reviewRepository.findByFoodIdOrderByCreatedAtDesc(f.getId());
+                if (existingReviews.isEmpty() && !customers.isEmpty()) {
+                    int numReviews = 1 + rand.nextInt(2);
+                    for (int i = 0; i < numReviews; i++) {
+                        User reviewer = customers.get(rand.nextInt(customers.size()));
+                        Review r = new Review();
+                        r.setCustomer(reviewer);
+                        r.setRestaurant(f.getRestaurant());
+                        r.setFood(f);
+                        r.setRating(rand.nextBoolean() ? 5.0 : 4.5);
+                        r.setComment(foodPosComments[rand.nextInt(foodPosComments.length)]);
+                        Calendar cal = Calendar.getInstance();
+                        cal.add(Calendar.DAY_OF_YEAR, -rand.nextInt(5));
+                        r.setCreatedAt(LocalDateTime.ofInstant(cal.toInstant(), cal.getTimeZone().toZoneId()));
+                        reviewRepository.save(r);
+                        reviewsCreated++;
+                    }
+                }
+            }
+
+            return ResponseEntity.ok(String.format(
+                "Đã nạp thành công bộ sưu tập nhiều ảnh và nhận xét từng món ăn!\n" +
+                "- Số nhà hàng được cập nhật album ảnh: %d\n" +
+                "- Số món ăn được cập nhật nhiều góc chụp: %d\n" +
+                "- Số nhận xét chi tiết từng món đã tạo: %d",
+                restUpdated, foodUpdated, reviewsCreated
+            ));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Lỗi: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/user-stats")
+    public ResponseEntity<?> getUserStats() {
+        try {
+            List<User> allUsers = userRepository.findAll();
+            long customers = allUsers.stream().filter(u -> u.getRole() == com.anh.model.USER_ROLE.ROLE_CUSTOMER).count();
+            long owners = allUsers.stream().filter(u -> u.getRole() == com.anh.model.USER_ROLE.ROLE_RESTAURANT_OWNER).count();
+            long admins = allUsers.stream().filter(u -> u.getRole() == com.anh.model.USER_ROLE.ROLE_ADMIN).count();
+
+            List<Map<String, Object>> ownerList = allUsers.stream()
+                .filter(u -> u.getRole() == com.anh.model.USER_ROLE.ROLE_RESTAURANT_OWNER)
+                .map(u -> {
+                    Map<String, Object> m = new HashMap<>();
+                    m.put("id", u.getId());
+                    m.put("email", u.getEmail());
+                    m.put("fullName", u.getFullName());
+                    return m;
+                })
+                .collect(java.util.stream.Collectors.toList());
+
+            List<Map<String, Object>> customerList = allUsers.stream()
+                .filter(u -> u.getRole() == com.anh.model.USER_ROLE.ROLE_CUSTOMER)
+                .map(u -> {
+                    Map<String, Object> m = new HashMap<>();
+                    m.put("id", u.getId());
+                    m.put("email", u.getEmail());
+                    m.put("fullName", u.getFullName());
+                    return m;
+                })
+                .collect(java.util.stream.Collectors.toList());
+
+            Map<String, Object> res = new HashMap<>();
+            res.put("totalUsers", allUsers.size());
+            res.put("customerCount", customers);
+            res.put("ownerCount", owners);
+            res.put("adminCount", admins);
+            res.put("owners", ownerList);
+            res.put("customers", customerList);
+
+            return ResponseEntity.ok(res);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Lỗi: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/optimize-thesis-data")
+    public ResponseEntity<String> optimizeThesisData() {
+        try {
+            Random rand = new Random();
+
+            // 1. TỐI ƯU CÁC TÀI KHOẢN CHỦ QUÁN VÀ NHÀ HÀNG TEST
+            Map<String, String[]> merchantUpgrades = new HashMap<>();
+            // email -> [ownerName, restaurantName, cuisineType, description, street, city, img1, img2, img3]
+            merchantUpgrades.put("chunhahang@gmail.com", new String[]{
+                "Nguyễn Hoàng Long",
+                "Trà Sữa Phê La - Đậm Vị Ô Long",
+                "Trà Sữa & Đồ Uống",
+                "Thương hiệu trà sữa và đồ uống Oolong đặc sản Đà Lạt đậm vị, thơm lừng và tươi mới.",
+                "24 Hàng Cót, Hàng Mã, Hoàn Kiếm",
+                "Hà Nội",
+                "https://images.unsplash.com/photo-1558857563-b371033873b8?w=1200",
+                "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=1200",
+                "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=1200"
+            });
+            merchantUpgrades.put("nva@gmail.com", new String[]{
+                "Đỗ Thị Bích Hạnh",
+                "Bún Bò Huế Ngự Uyển",
+                "Bún Bò & Đặc Sản Huế",
+                "Bún bò chuẩn vị cố đô Huế với nước dùng ngọt xương thơm mùi sả ruốc, thịt bắp bò hoa giòn sần sật và chả cua béo ngậy.",
+                "32 Lĩnh Nam, Mai Động, Hoàng Mai",
+                "Hà Nội",
+                "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=1200",
+                "https://images.unsplash.com/photo-1596797038530-2c107229654b?w=1200",
+                "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=1200"
+            });
+            merchantUpgrades.put("cnh@gmail.com", new String[]{
+                "Võ Thành Trung",
+                "Gà Rán Jollibee - Vincom Center",
+                "Gà Rán & Fastfood",
+                "Gà Giòn Vui Vẻ số 1 Philippines với lớp vỏ giòn rụm, thịt mọng nước chấm cùng sốt tiêu ớt độc quyền thơm ngon khó cưỡng.",
+                "191 Bà Triệu, Lê Đại Hành, Hai Bà Trưng",
+                "Hà Nội",
+                "https://images.unsplash.com/photo-1562967914-608f82629710?w=1200",
+                "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1200",
+                "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=1200"
+            });
+            merchantUpgrades.put("anhquan.camluong@gmail.com", new String[]{
+                "Lê Văn Quân",
+                "The Coffee House - Cà Phê & Trà",
+                "Cà Phê & Bánh",
+                "Ngôi nhà cà phê ấm cúng với những tách Cà Phê Sữa Đá, Trà Đào Cam Sả thơm lừng và bánh ngọt tươi mới mỗi ngày.",
+                "56 Bà Triệu, Hàng Bài, Hoàn Kiếm",
+                "Hà Nội",
+                "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=1200",
+                "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=1200",
+                "https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=1200"
+            });
+
+            for (Map.Entry<String, String[]> entry : merchantUpgrades.entrySet()) {
+                String email = entry.getKey();
+                String[] info = entry.getValue();
+                User user = userRepository.findByEmail(email);
+                if (user != null) {
+                    user.setFullName(info[0]);
+                    userRepository.save(user);
+
+                    Restaurant rest = restaurantRepository.findByOwnerId(user.getId());
+                    if (rest == null) {
+                        rest = new Restaurant();
+                        rest.setOwner(user);
+                        rest.setName(info[1]);
+                        rest.setCuisineType(info[2]);
+                        rest.setDescription(info[3]);
+                        rest.setOpeningHours("08:00 - 22:00");
+                        rest.setRegistrationDate(LocalDateTime.now());
+                        rest.setOpen(true);
+                        Address addr = new Address();
+                        addr.setStreetAddress(info[4]);
+                        addr.setCity(info[5]);
+                        addr.setStateProvince(info[5]);
+                        addr.setCountry("Vietnam");
+                        addr = addressRepository.save(addr);
+                        rest.setAddress(addr);
+                        ContactInformation ci = new ContactInformation();
+                        ci.setEmail(user.getEmail());
+                        ci.setMobile("0988123456");
+                        rest.setContactInformation(ci);
+                        rest.setImages(new ArrayList<>(Arrays.asList(info[6], info[7], info[8])));
+                        rest = restaurantRepository.save(rest);
+                    } else {
+                        rest.setName(info[1]);
+                        rest.setCuisineType(info[2]);
+                        rest.setDescription(info[3]);
+                        if (rest.getAddress() != null) {
+                            rest.getAddress().setStreetAddress(info[4]);
+                            rest.getAddress().setCity(info[5]);
+                            addressRepository.save(rest.getAddress());
+                        }
+                        List<String> imgs = new ArrayList<>(Arrays.asList(info[6], info[7], info[8]));
+                        rest.setImages(imgs);
+                        rest = restaurantRepository.save(rest);
+                    }
+
+                    // Thêm thực đơn món ăn đặc trưng thơm ngon cho các quán này
+                    if (email.equals("chunhahang@gmail.com")) {
+                        Category catOlong = addCategoryIfNotExist(rest, "Ô Long Đặc Sản");
+                        Category catTropical = addCategoryIfNotExist(rest, "Ô Long Nhiệt Đới");
+                        Category catBakery = addCategoryIfNotExist(rest, "Bánh Nướng Phép Màu");
+                        addFoodIfNotExist(rest, "Ô Long Sữa Phê La Trân Châu", "Trà ô long đặc sản Bảo Lộc pha sữa tươi thanh béo, đậm hậu vị trà, kèm trân châu ô long dẻo thơm.", 55000L, catOlong, "https://images.unsplash.com/photo-1558857563-b371033873b8?w=800", "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=800", "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=800");
+                        addFoodIfNotExist(rest, "Gấm Ô Long Nhiệt Đới", "Hương hoa quả tươi mát hòa quyện cùng cốt trà Ô Long đậm đà giải nhiệt sảng khoái.", 50000L, catTropical, "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=800", "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=800");
+                        addFoodIfNotExist(rest, "Khói B'lao Kem Cheese", "Hương khói mộc mạc đặc trưng của núi rừng B'lao phủ lớp kem phô mai béo ngậy mằn mặn.", 55000L, catOlong, "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=800", "https://images.unsplash.com/photo-1558857563-b371033873b8?w=800");
+                        addFoodIfNotExist(rest, "Bánh Croissant Nướng Bơ Pháp", "Bánh sừng bò ngàn lớp thơm lừng bơ Pháp, vỏ giòn xốp ruột mềm thơm.", 35000L, catBakery, "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=800", "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800");
+                    } else if (email.equals("nva@gmail.com")) {
+                        Category catBunBo = addCategoryIfNotExist(rest, "Bún Bò Huế");
+                        Category catKhaiVi = addCategoryIfNotExist(rest, "Đặc Sản Huế");
+                        Category catNuoc = addCategoryIfNotExist(rest, "Nước Giải Khát");
+                        addFoodIfNotExist(rest, "Bún Bò Huế Đặc Biệt Bắp Bò Chả Cua", "Tô bún đầy đặn bắp hoa bò giòn sần sật, chả cua Huế thơm bùi, nước dùng cay nồng thơm lừng ruốc sả.", 65000L, catBunBo, "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=800", "https://images.unsplash.com/photo-1596797038530-2c107229654b?w=800", "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=800");
+                        addFoodIfNotExist(rest, "Bún Bò Nạm Giò Heo", "Thịt nạm bò mềm ngậy kèm khoanh giò heo ninh nhừ thơm phức đậm đà.", 55000L, catBunBo, "https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=800", "https://images.unsplash.com/photo-1596797038530-2c107229654b?w=800");
+                        addFoodIfNotExist(rest, "Bánh Bột Lọc Tôm Thịt Cố Đô", "Đĩa 10 chiếc bánh bột lọc trong suốt nhân tôm thịt đậm vị chấm nước mắm ớt cay xè.", 35000L, catKhaiVi, "https://images.unsplash.com/photo-1544025162-d76694265947?w=800", "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=800");
+                        addFoodIfNotExist(rest, "Trà Cung Đình Huế Mát Lạnh", "Trà thảo mộc cung đình thanh nhiệt giải độc thơm dịu ngọt hậu.", 15000L, catNuoc, "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800", "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=800");
+                    } else if (email.equals("cnh@gmail.com")) {
+                        Category catGa = addCategoryIfNotExist(rest, "Gà Giòn Vui Vẻ");
+                        Category catMy = addCategoryIfNotExist(rest, "Mỳ Ý & Burger");
+                        Category catKem = addCategoryIfNotExist(rest, "Tráng Miệng & Đồ Uống");
+                        addFoodIfNotExist(rest, "Combo 2 Miếng Gà Giòn Vui Vẻ", "2 miếng gà rán da giòn rụm, thịt mọng nước kèm khoai tây chiên và nước ngọt mát lạnh.", 85000L, catGa, "https://images.unsplash.com/photo-1562967914-608f82629710?w=800", "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800");
+                        addFoodIfNotExist(rest, "Mỳ Ý Sốt Bò Bằm Jollibee", "Mỳ Ý sốt cà chua thịt bò bằm ngọt dịu phủ phô mai bào béo ngậy được trẻ nhỏ yêu thích.", 45000L, catMy, "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800", "https://images.unsplash.com/photo-1563245372-f21724e3856d?w=800");
+                        addFoodIfNotExist(rest, "Khoai Tây Lắc Phô Mai", "Khoai tây chiên vàng giòn lắc bột phô mai béo mặn thơm lừng.", 28000L, catKem, "https://images.unsplash.com/photo-1576107232684-1279f3908594?w=800", "https://images.unsplash.com/photo-1562967914-608f82629710?w=800");
+                        addFoodIfNotExist(rest, "Bánh Pie Xoài Đào Giòn Rụm", "Vỏ bánh giòn tan bọc lớp nhân mứt xoài đào nóng sốt chua ngọt hấp dẫn.", 20000L, catKem, "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800", "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=800");
+                    } else if (email.equals("anhquan.camluong@gmail.com")) {
+                        Category catTra = addCategoryIfNotExist(rest, "Trà Trái Cây & Macchiato");
+                        Category catCafe = addCategoryIfNotExist(rest, "Cà Phê Truyền Thống");
+                        Category catBanh = addCategoryIfNotExist(rest, "Bánh Ngọt Mỗi Ngày");
+                        addFoodIfNotExist(rest, "Trà Đào Cam Sả Trứ Danh", "Vị trà thanh tao quyện cùng vị ngọt của đào tươi, hương thơm ấm nồng của sả và chua nhẹ của cam vàng.", 52000L, catTra, "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=800", "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=800");
+                        addFoodIfNotExist(rest, "Cà Phê Sữa Đá Đậm Đà", "Hạt cà phê Robusta & Arabica phối trộn cân bằng, pha phin truyền thống thơm nồng quyện sữa đặc béo ngậy.", 39000L, catCafe, "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=800", "https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=800");
+                        addFoodIfNotExist(rest, "Trà Sữa Mắc Ca Trân Châu Trắng", "Trà sữa mắc ca thơm bùi béo ngọt nhẹ, kết hợp trân châu trắng giòn sần sật.", 55000L, catTra, "https://images.unsplash.com/photo-1558857563-b371033873b8?w=800", "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=800");
+                        addFoodIfNotExist(rest, "Bánh Mousse Tiramisu Cacao", "Lớp bánh mềm ẩm quyện phô mai mascarpone và hương cà phê cacao thơm ngát.", 39000L, catBanh, "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=800", "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=800");
+                    }
+                }
+            }
+
+            // Đảm bảo Tiệm Cơm Tấm Sài Gòn của chuquan@gmail.com có tên và địa chỉ tuyệt đẹp
+            User chuQuan = userRepository.findByEmail("chuquan@gmail.com");
+            if (chuQuan != null) {
+                chuQuan.setFullName("Chủ Quán Quốc Anh");
+                userRepository.save(chuQuan);
+                Restaurant restComTam = restaurantRepository.findByOwnerId(chuQuan.getId());
+                if (restComTam != null) {
+                    restComTam.setName("Tiệm Cơm Tấm Sài Gòn - Đặc Biệt");
+                    restComTam.setCuisineType("Cơm Tấm Truyền Thống");
+                    restComTam.setDescription("Sườn nướng than hoa thơm lừng đậm đà, chả trứng cua béo ngậy, bì giòn chuẩn vị Chợ Lớn Sài Gòn.");
+                    if (restComTam.getAddress() != null) {
+                        restComTam.getAddress().setStreetAddress("Số 1, Phố Chùa Láng, Láng Thượng, Đống Đa");
+                        restComTam.getAddress().setCity("Hà Nội");
+                        addressRepository.save(restComTam.getAddress());
+                    }
+                    restaurantRepository.save(restComTam);
+                }
+            }
+
+            // 2. TẠO HOẶC CẬP NHẬT 30 TÀI KHOẢN KHÁCH HÀNG THỰC TẾ
+            String[][] customerData = {
+                {"lequocanh14012005@gmail.com", "Lê Quốc Anh"},
+                {"nam.nguyen@gmail.com", "Nguyễn Hoàng Nam"},
+                {"thao.tran@gmail.com", "Trần Phương Thảo"},
+                {"tuan.pham@gmail.com", "Phạm Minh Tuấn"},
+                {"ha.do@gmail.com", "Đỗ Thu Hà"},
+                {"khang.vu@gmail.com", "Vũ Đình Khang"},
+                {"maianh.hoang@gmail.com", "Hoàng Mai Anh"},
+                {"huy.bui@gmail.com", "Bùi Quang Huy"},
+                {"thanhtruc.dang@gmail.com", "Đặng Thanh Trúc"},
+                {"bao.ngo@gmail.com", "Ngô Quốc Bảo"},
+                {"ngocanh.duong@gmail.com", "Dương Ngọc Ánh"},
+                {"congminh.trinh@gmail.com", "Trịnh Công Minh"},
+                {"myduyen.phan@gmail.com", "Phan Mỹ Duyên"},
+                {"duc.mai@gmail.com", "Mai Văn Đức"},
+                {"thuylinh.cao@gmail.com", "Cao Thùy Linh"},
+                {"giahuy.dinh@gmail.com", "Đinh Gia Huy"},
+                {"khanhvy.lam@gmail.com", "Lâm Khánh Vy"},
+                {"quangthang.ta@gmail.com", "Tạ Quang Thắng"},
+                {"haidang.chau@gmail.com", "Châu Hải Đăng"},
+                {"kieutrang.ha@gmail.com", "Hà Kiều Trang"},
+                {"giabao.luong@gmail.com", "Lương Gia Bảo"},
+                {"nhatminh.doan@gmail.com", "Đoàn Nhật Minh"},
+                {"dieuhoa.truong@gmail.com", "Trương Diệu Hoa"},
+                {"customer1@gmail.com", "Nguyễn Văn Minh"},
+                {"customer2@gmail.com", "Trần Thị Lan"},
+                {"customer3@gmail.com", "Lê Hoàng Nam"},
+                {"customer4@gmail.com", "Phạm Hồng Ngọc"},
+                {"customer5@gmail.com", "Vũ Văn Hùng"},
+                {"anguyen@gmail.com", "Nguyễn Văn An"},
+                {"demo_facebook_8744@gmail.com", "Khách Hàng Facebook"}
+            };
+
+            List<User> customers = new ArrayList<>();
+            String encodedPass = passwordEncoder.encode("123456");
+
+            for (String[] cd : customerData) {
+                User u = userRepository.findByEmail(cd[0]);
+                if (u == null) {
+                    u = new User();
+                    u.setEmail(cd[0]);
+                    u.setFullName(cd[1]);
+                    u.setPassword(encodedPass);
+                    u.setRole(com.anh.model.USER_ROLE.ROLE_CUSTOMER);
+                    u = userRepository.save(u);
+                } else {
+                    u.setFullName(cd[1]);
+                    u.setRole(com.anh.model.USER_ROLE.ROLE_CUSTOMER);
+                    u = userRepository.save(u);
+                }
+                customers.add(u);
+            }
+
+            // 3. TẠO CÁC ĐƠN HÀNG VÀ ĐÁNH GIÁ CHÂN THỰC CHO TẤT CẢ KHÁCH HÀNG
+            List<Restaurant> allRestaurants = restaurantRepository.findAll();
+            int newOrdersCreated = 0;
+            int newReviewsCreated = 0;
+
+            String[] deliveryAddresses = {
+                "144 Xuân Thủy, Dịch Vọng Hậu, Cầu Giấy, Hà Nội (ĐH Công Nghệ - ĐHQGHN)",
+                "Ký túc xá Mễ Trì, 182 Lương Thế Vinh, Thanh Xuân, Hà Nội",
+                "Số 1 Đại Cồ Việt, Bách Khoa, Hai Bà Trưng, Hà Nội",
+                "Tòa nhà Keangnam Landmark 72, Phạm Hùng, Mễ Trì, Nam Từ Liêm, Hà Nội",
+                "Số 8 Tôn Thất Thuyết, Mỹ Đình 2, Nam Từ Liêm, Hà Nội",
+                "Chung cư D'Capitale, 119 Trần Duy Hưng, Trung Hòa, Cầu Giấy, Hà Nội",
+                "227 Nguyễn Văn Cừ, Phường 4, Quận 5, TP. Hồ Chí Minh"
+            };
+
+            String[] foodieComments = {
+                "Đồ ăn nóng hổi, giao hàng rất nhanh và đóng gói chỉn chu, sạch sẽ 10/10!",
+                "Sườn nướng than hoa mềm thơm đậm đà, hạt cơm tấm tơi xốp, nước mắm kẹo sền sệt siêu ngon!",
+                "Vị ướp rất vừa miệng, thịt tươi ngọt không bị khô, phần ăn đầy đặn no căng bụng.",
+                "Trà thơm đậm vị đặc sản, trân châu dẻo bùi nhai rất thích, độ ngọt vừa vặn thanh mát.",
+                "Pizza nướng củi thơm phức giòn rụm, phô mai béo ngậy rưới mật ong ăn đỉnh thật sự!",
+                "Nước dùng thanh ngọt tự nhiên từ xương ống, thịt bò tái mềm ngọt, bánh phở tươi ngon.",
+                "Gà rán da giòn rụm ráo dầu, bên trong thịt vẫn mọng nước chấm cùng sốt tiêu thơm lừng.",
+                "Bánh mì giòn tan, pate thơm ngậy quyện sốt bơ trứng đặc trưng đúng chuẩn Hội An.",
+                "Chất lượng vượt xa mong đợi, shipper lịch sự và cẩn thận, chắc chắn sẽ tiếp tục ủng hộ quán!",
+                "Cả nhà mình ai ăn cũng khen tấm tắc, giá cả hoàn toàn xứng đáng với chất lượng 5 sao!"
+            };
+
+            // Đảm bảo riêng tài khoản chính của Lê Quốc Anh có 4 đơn hàng đa dạng trạng thái để demo
+            User mainUser = userRepository.findByEmail("lequocanh14012005@gmail.com");
+            if (mainUser != null && !allRestaurants.isEmpty()) {
+                Restaurant rComTam = allRestaurants.stream().filter(r -> r.getName().contains("Cơm Tấm")).findFirst().orElse(allRestaurants.get(0));
+                Restaurant rPizza = allRestaurants.stream().filter(r -> r.getName().contains("Pizza")).findFirst().orElse(allRestaurants.get(0));
+                Restaurant rDrink = allRestaurants.stream().filter(r -> r.getName().contains("Phê La") || r.getName().contains("Coffee")).findFirst().orElse(allRestaurants.get(0));
+                Restaurant rPho = allRestaurants.stream().filter(r -> r.getName().contains("Phở") || r.getName().contains("Bún")).findFirst().orElse(allRestaurants.get(0));
+
+                createSingleOrderWithReview(mainUser, rComTam, "COMPLETED", 2, "Sườn nướng thơm phức đậm đà, chả trứng béo ngậy, canh nóng hổi. Rất ngon miệng!", true);
+                createSingleOrderWithReview(mainUser, rPizza, "COMPLETED", 5, "Pizza phô mai béo ngậy rưới mật ong thơm lừng, mỳ Ý kem cua đậm đà xuất sắc!", true);
+                createSingleOrderWithReview(mainUser, rDrink, "DELIVERING", 0, null, false);
+                createSingleOrderWithReview(mainUser, rPho, "PENDING", 0, null, false);
+                newOrdersCreated += 4;
+                newReviewsCreated += 2;
+            }
+
+            // Tạo thêm 2-3 đơn hàng và đánh giá cho từng khách hàng còn lại
+            for (User cust : customers) {
+                if (cust.getEmail().equals("lequocanh14012005@gmail.com")) continue;
+
+                int ordersForCust = 2 + rand.nextInt(2);
+                for (int o = 0; o < ordersForCust; o++) {
+                    Restaurant rest = allRestaurants.get(rand.nextInt(allRestaurants.size()));
+                    List<Food> foods = foodRepository.findByRestaurantId(rest.getId());
+                    if (foods == null || foods.isEmpty()) continue;
+
+                    Order order = new Order();
+                    order.setCustomer(cust);
+                    order.setRestaurant(rest);
+
+                    Address addr = new Address();
+                    addr.setStreetAddress(deliveryAddresses[rand.nextInt(deliveryAddresses.length)]);
+                    addr.setCity("Hà Nội");
+                    addr.setStateProvince("Hà Nội");
+                    addr.setPostalCode("100000");
+                    addr.setCountry("Việt Nam");
+                    addr = addressRepository.save(addr);
+                    order.setDeliveryAddress(addr);
+
+                    int daysAgo = rand.nextInt(28);
+                    Calendar cal = Calendar.getInstance();
+                    cal.add(Calendar.DAY_OF_YEAR, -daysAgo);
+                    cal.add(Calendar.HOUR_OF_DAY, -rand.nextInt(12));
+                    order.setCreatedAt(cal.getTime());
+
+                    // Đa số đơn hàng là COMPLETED để có doanh thu và nhận xét
+                    String st = rand.nextInt(100) < 80 ? "COMPLETED" : (rand.nextBoolean() ? "DELIVERING" : "PENDING");
+                    order.setOrderStatus(st);
+                    order.setPaymentMethod(rand.nextBoolean() ? "COD" : "STRIPE");
+
+                    int numFoods = 1 + rand.nextInt(2);
+                    List<OrderItem> items = new ArrayList<>();
+                    long totalAmt = 0;
+                    int totalQty = 0;
+
+                    for (int fIdx = 0; fIdx < numFoods; fIdx++) {
+                        Food f = foods.get(rand.nextInt(foods.size()));
+                        int q = 1 + rand.nextInt(2);
+                        OrderItem oi = new OrderItem();
+                        oi.setFood(f);
+                        oi.setQuantity(q);
+                        oi.setTotalPrice(f.getPrice() * q);
+                        oi = orderItemRepository.save(oi);
+                        items.add(oi);
+                        totalAmt += oi.getTotalPrice();
+                        totalQty += q;
+                    }
+
+                    order.setItems(items);
+                    order.setTotalPrice(totalAmt);
+                    order.setTotalAmount(totalAmt);
+                    order.setTotalItem(totalQty);
+                    order = orderRepository.save(order);
+                    newOrdersCreated++;
+
+                    // Nếu đơn COMPLETED, tự động tạo nhận xét chân thực cho nhà hàng và món ăn
+                    if ("COMPLETED".equals(st)) {
+                        Review restRev = new Review();
+                        restRev.setCustomer(cust);
+                        restRev.setRestaurant(rest);
+                        restRev.setRating(rand.nextBoolean() ? 5.0 : 4.5);
+                        restRev.setComment(foodieComments[rand.nextInt(foodieComments.length)]);
+                        restRev.setCreatedAt(LocalDateTime.ofInstant(cal.toInstant(), cal.getTimeZone().toZoneId()));
+                        reviewRepository.save(restRev);
+                        newReviewsCreated++;
+
+                        // Nhận xét cho món ăn cụ thể trong đơn
+                        if (!items.isEmpty() && items.get(0).getFood() != null) {
+                            Review foodRev = new Review();
+                            foodRev.setCustomer(cust);
+                            foodRev.setRestaurant(rest);
+                            foodRev.setFood(items.get(0).getFood());
+                            foodRev.setRating(rand.nextBoolean() ? 5.0 : 4.5);
+                            foodRev.setComment(foodieComments[rand.nextInt(foodieComments.length)]);
+                            foodRev.setCreatedAt(LocalDateTime.ofInstant(cal.toInstant(), cal.getTimeZone().toZoneId()));
+                            reviewRepository.save(foodRev);
+                            newReviewsCreated++;
+                        }
+                    }
+                }
+            }
+
+            // 5. ĐẢM BẢO DỮ LIỆU THỰC CHIẾN CHO 2 TÁC TỬ AI (AGENTIC AI DEMO)
+            // 5.1. Tạo 1 Đánh giá vi phạm tiêu chuẩn cộng đồng để demo "AI Content Moderation Sentinel" của Super Admin
+            boolean hasToxicReview = reviewRepository.findAll().stream().anyMatch(r -> 
+                r.getComment() != null && (r.getComment().contains("rác rưởi") || r.getComment().contains("mất dạy")));
+            if (!hasToxicReview) {
+                User toxicUser = customers.stream().filter(u -> "Trần Quốc Bảo".equals(u.getFullName())).findFirst().orElse(!customers.isEmpty() ? customers.get(0) : null);
+                Restaurant comTamRest = restaurantRepository.findAll().stream().filter(r -> r.getName() != null && r.getName().contains("Cơm Tấm")).findFirst().orElse(null);
+                if (comTamRest == null) {
+                    List<Restaurant> allRests = restaurantRepository.findAll();
+                    if (!allRests.isEmpty()) comTamRest = allRests.get(0);
+                }
+                if (toxicUser != null && comTamRest != null) {
+                    Review tr = new Review();
+                    tr.setCustomer(toxicUser);
+                    tr.setRestaurant(comTamRest);
+                    tr.setRating(1.0);
+                    tr.setComment("Đồ ăn như rác rưởi, sườn thiu thối mà vẫn đem bán, nhân viên thì mất dạy thách thức khách! Đề nghị tẩy chay quán lừa đảo này ngay lập tức!!!");
+                    tr.setCreatedAt(LocalDateTime.now().minusDays(1));
+                    reviewRepository.save(tr);
+                    newReviewsCreated++;
+                }
+            }
+
+            // 5.2. Cấu hình nguyên liệu cạn kho cho Tiệm Cơm Tấm Sài Gòn để demo "Smart Inventory Agent" của Chủ quán
+            Restaurant comTam = restaurantRepository.findAll().stream().filter(r -> r.getName() != null && r.getName().contains("Cơm Tấm")).findFirst().orElse(null);
+            if (comTam != null) {
+                IngredientCategory catThit = ingredientCategoryRepository.findByRestaurantId(comTam.getId()).stream().filter(c -> c.getName().equalsIgnoreCase("Thịt Tươi Sống") || c.getName().equalsIgnoreCase("Thịt")).findFirst().orElse(null);
+                if (catThit == null) {
+                    catThit = new IngredientCategory();
+                    catThit.setName("Thịt Tươi Sống");
+                    catThit.setRestaurant(comTam);
+                    catThit = ingredientCategoryRepository.save(catThit);
+                }
+                IngredientCategory catTopping = ingredientCategoryRepository.findByRestaurantId(comTam.getId()).stream().filter(c -> c.getName().equalsIgnoreCase("Topping")).findFirst().orElse(null);
+                if (catTopping == null) {
+                    catTopping = new IngredientCategory();
+                    catTopping.setName("Topping");
+                    catTopping.setRestaurant(comTam);
+                    catTopping = ingredientCategoryRepository.save(catTopping);
+                }
+
+                // Sườn cây tươi - ĐÃ CẠN KHO (0 kg)
+                IngredientsItem suonCay = ingredientItemRepository.findByRestaurantId(comTam.getId()).stream().filter(i -> i.getName().equalsIgnoreCase("Sườn cây tươi")).findFirst().orElse(null);
+                if (suonCay == null) {
+                    suonCay = new IngredientsItem();
+                    suonCay.setName("Sườn cây tươi");
+                    suonCay.setCategory(catThit);
+                    suonCay.setRestaurant(comTam);
+                }
+                suonCay.setQuantity(0.0);
+                suonCay.setUnit("kg");
+                suonCay.setMinThreshold(10.0);
+                suonCay.setInStock(false);
+                suonCay = ingredientItemRepository.save(suonCay);
+
+                // Trứng gà ta - SẮP HẾT (2 quả)
+                IngredientsItem trungGa = ingredientItemRepository.findByRestaurantId(comTam.getId()).stream().filter(i -> i.getName().equalsIgnoreCase("Trứng gà ta")).findFirst().orElse(null);
+                if (trungGa == null) {
+                    trungGa = new IngredientsItem();
+                    trungGa.setName("Trứng gà ta");
+                    trungGa.setCategory(catTopping);
+                    trungGa.setRestaurant(comTam);
+                }
+                trungGa.setQuantity(2.0);
+                trungGa.setUnit("quả");
+                trungGa.setMinThreshold(10.0);
+                trungGa.setInStock(true);
+                trungGa = ingredientItemRepository.save(trungGa);
+
+                // Gắn nguyên liệu vào món Cơm Sườn Cây Nướng Mật Ong
+                List<Food> comTamFoods = foodRepository.findByRestaurantId(comTam.getId());
+                for (Food f : comTamFoods) {
+                    if (f.getName().contains("Sườn Cây")) {
+                        if (!f.getIngredients().contains(suonCay)) {
+                            f.getIngredients().add(suonCay);
+                        }
+                        if (!f.getIngredients().contains(trungGa)) {
+                            f.getIngredients().add(trungGa);
+                        }
+                        foodRepository.save(f);
+                    }
+                }
+            }
+
+            return ResponseEntity.ok(String.format(
+                "Đã tối ưu hóa toàn bộ hệ thống F&B cho buổi bảo vệ khóa luận thành công!\n" +
+                "- 15 nhà hàng đều có danh mục món thực tế, ảnh đẹp nhiều góc chụp.\n" +
+                "- 30 khách hàng thực tế (ROLE_CUSTOMER) có đầy đủ họ tên tiếng Việt và mật khẩu: 123456\n" +
+                "- Đã tạo thêm %d đơn hàng thực tế rải đều 30 ngày qua (đủ các trạng thái Hoàn thành, Đang giao, Đang chuẩn bị).\n" +
+                "- Đã tạo thêm %d nhận xét & đánh giá chân thực cho cả nhà hàng lẫn từng món ăn.\n" +
+                "- Tài khoản chính của bạn (lequocanh14012005@gmail.com) đã có sẵn 4 đơn hàng đẹp mắt để demo trực tiếp!",
+                newOrdersCreated, newReviewsCreated
+            ));
+        } catch (Exception e) {
+            e.printStackTrace();
+            String trace = e.getStackTrace().length > 0 ? e.getStackTrace()[0].toString() : "";
+            return ResponseEntity.status(500).body("Lỗi tối ưu dữ liệu: " + e.toString() + " at " + trace);
+        }
+    }
+
+    private void createSingleOrderWithReview(User customer, Restaurant rest, String status, int daysAgo, String comment, boolean addReview) {
+        try {
+            List<Food> foods = foodRepository.findByRestaurantId(rest.getId());
+            if (foods == null || foods.isEmpty()) return;
+
+            Order order = new Order();
+            order.setCustomer(customer);
+            order.setRestaurant(rest);
+
+            Address addr = new Address();
+            addr.setStreetAddress("144 Xuân Thủy, Dịch Vọng Hậu, Cầu Giấy, Hà Nội (ĐH Công Nghệ - ĐHQGHN)");
+            addr.setCity("Hà Nội");
+            addr.setStateProvince("Hà Nội");
+            addr.setPostalCode("100000");
+            addr.setCountry("Việt Nam");
+            addr = addressRepository.save(addr);
+            order.setDeliveryAddress(addr);
+
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.DAY_OF_YEAR, -daysAgo);
+            order.setCreatedAt(cal.getTime());
+            order.setOrderStatus(status);
+            order.setPaymentMethod("STRIPE");
+
+            List<OrderItem> items = new ArrayList<>();
+            long total = 0;
+            int count = 0;
+            int numItems = Math.min(2, foods.size());
+            for (int i = 0; i < numItems; i++) {
+                Food f = foods.get(i);
+                OrderItem oi = new OrderItem();
+                oi.setFood(f);
+                oi.setQuantity(1);
+                oi.setTotalPrice(f.getPrice());
+                oi = orderItemRepository.save(oi);
+                items.add(oi);
+                total += f.getPrice();
+                count++;
+            }
+            order.setItems(items);
+            order.setTotalPrice(total);
+            order.setTotalAmount(total);
+            order.setTotalItem(count);
+            order = orderRepository.save(order);
+
+            if (addReview && "COMPLETED".equals(status)) {
+                Review r = new Review();
+                r.setCustomer(customer);
+                r.setRestaurant(rest);
+                r.setRating(5.0);
+                r.setComment(comment != null ? comment : "Đồ ăn rất ngon, đóng gói sạch sẽ và phục vụ chuyên nghiệp!");
+                r.setCreatedAt(LocalDateTime.ofInstant(cal.toInstant(), cal.getTimeZone().toZoneId()));
+                reviewRepository.save(r);
+
+                if (!items.isEmpty()) {
+                    Review fr = new Review();
+                    fr.setCustomer(customer);
+                    fr.setRestaurant(rest);
+                    fr.setFood(items.get(0).getFood());
+                    fr.setRating(5.0);
+                    fr.setComment(comment != null ? comment : "Món ăn nóng hổi, thơm ngon chuẩn vị!");
+                    fr.setCreatedAt(LocalDateTime.ofInstant(cal.toInstant(), cal.getTimeZone().toZoneId()));
+                    reviewRepository.save(fr);
+                }
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private Food addFoodIfNotExist(Restaurant rest, String name, String desc, Long price, Category cat, String... imageUrls) {
+        List<Food> existing = foodRepository.findByRestaurantId(rest.getId());
+        for (Food f : existing) {
+            if (f.getName().equalsIgnoreCase(name)) {
+                return f;
+            }
+        }
+        Food food = new Food();
+        food.setName(name);
+        food.setDescription(desc);
+        food.setPrice(price);
+        food.setRestaurant(rest);
+        food.setFoodCategory(cat);
+        food.setAvailable(true);
+        food.setCreationDate(new Date());
+        food.setVegetarian(false);
+        food.setSeasonal(false);
+        food.setImages(new ArrayList<>(Arrays.asList(imageUrls)));
+        return foodRepository.save(food);
+    }
+
+    private Category addCategoryIfNotExist(Restaurant rest, String catName) {
+        List<Category> existing = categoryRepository.findByRestaurantId(rest.getId());
+        for (Category c : existing) {
+            if (c.getName().equalsIgnoreCase(catName)) {
+                return c;
+            }
+        }
+        Category c = new Category();
+        c.setName(catName);
+        c.setRestaurant(rest);
+        return categoryRepository.save(c);
     }
 
     private Map<String, Object> createFoodMap(String name, String desc, Long price, String category, String imageUrl) {

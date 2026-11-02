@@ -11,7 +11,7 @@ import { getIngredientsOfRestaurant } from '../../State/Ingredients/Action';
 import { getRestaurantsCategory } from '../../State/Restaurant/Action';
 
 const initialValues = {
-    name: "", description: "", price: "", category: "", ingredients: [], seasonal: false, vegetarian: false,
+    name: "", description: "", price: "", category: "", ingredients: []
 };
 
 export const CreateMenuForm = () => {
@@ -45,8 +45,8 @@ export const CreateMenuForm = () => {
                 price: Number(values.price), // Ép chuẩn định dạng số cho Java
                 category: selectedCategory, // Gửi nguyên Object danh mục xuống
                 ingredients: values.ingredients,
-                seasonal: values.seasonal,
-                vegetarian: values.vegetarian,
+                seasonal: false,
+                vegetarian: false,
                 images: images,
                 restaurantId: restaurant.usersRestaurant?.id
             };
@@ -107,33 +107,14 @@ export const CreateMenuForm = () => {
                             <TextField fullWidth label="Giá tiền (VND)" name="price" type="number" value={formik.values.price} onChange={formik.handleChange} required />
                         </div>
 
-                        {/* Danh mục */}
-                        <div>
+                        {/* Danh mục món ăn do quán tự quản lý */}
+                        <div className='md:col-span-2'>
                             <FormControl fullWidth required>
                                 <InputLabel id="category-select-label">Danh mục món ăn</InputLabel>
                                 <Select labelId="category-select-label" name="category" value={formik.values.category} label="Danh mục món ăn" onChange={formik.handleChange}>
                                     {restaurant.categories?.map((item) => (
                                         <MenuItem key={item.id} value={item.name}>{item.name}</MenuItem>
                                     ))}
-                                </Select>
-                            </FormControl>
-                        </div>
-
-                        {/* Món chay & Món theo mùa chia đôi 1 cột */}
-                        <div className='grid grid-cols-2 gap-4'>
-                            <FormControl fullWidth>
-                                <InputLabel id="vegetarian-label">Món chay?</InputLabel>
-                                <Select labelId="vegetarian-label" name="vegetarian" value={formik.values.vegetarian} label="Món chay?" onChange={formik.handleChange}>
-                                    <MenuItem value={true}>Phải (Món Chay)</MenuItem>
-                                    <MenuItem value={false}>Không (Món Mặn)</MenuItem>
-                                </Select>
-                            </FormControl>
-
-                            <FormControl fullWidth>
-                                <InputLabel id="seasonal-label">Món theo mùa?</InputLabel>
-                                <Select labelId="seasonal-label" name="seasonal" value={formik.values.seasonal} label="Món theo mùa?" onChange={formik.handleChange}>
-                                    <MenuItem value={true}>Phải (Theo mùa)</MenuItem>
-                                    <MenuItem value={false}>Không (Quanh năm)</MenuItem>
                                 </Select>
                             </FormControl>
                         </div>

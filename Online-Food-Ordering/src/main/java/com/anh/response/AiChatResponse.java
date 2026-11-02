@@ -15,10 +15,20 @@ public class AiChatResponse {
     private Map<String, Object> metricsSummary;
     private List<String> suggestedPrompts;
 
+    private Map<String, Object> agentAction;
+
     public AiChatResponse(String reply, Instant timestamp, Map<String, Object> metricsSummary, List<String> suggestedPrompts) {
         this.reply = reply;
         this.timestamp = timestamp;
         this.metricsSummary = metricsSummary;
         this.suggestedPrompts = suggestedPrompts;
+    }
+
+    public AiChatResponse(String reply, Instant timestamp, Map<String, Object> metricsSummary, List<String> suggestedPrompts, Map<String, Object> agentAction) {
+        this.reply = reply;
+        this.timestamp = timestamp;
+        this.metricsSummary = metricsSummary;
+        this.suggestedPrompts = suggestedPrompts;
+        this.agentAction = agentAction;
     }
 }

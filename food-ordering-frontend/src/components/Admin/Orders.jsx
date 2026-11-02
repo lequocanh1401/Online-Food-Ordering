@@ -6,7 +6,8 @@ const orderStatus = [
     { label: "Tất cả", value: "ALL" },
     { label: "Chờ xử lý", value: "PENDING" },
     { label: "Đang giao", value: "OUT_FOR_DELIVERY" },
-    { label: "Hoàn thành", value: "COMPLETED" }
+    { label: "Hoàn thành", value: "COMPLETED" },
+    { label: "Đã hủy", value: "CANCELLED" }
 ];
 
 export const Orders = () => {

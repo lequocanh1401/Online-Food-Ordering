@@ -41,4 +41,5 @@ public class Order {
     
     private String couponCode;
     private Long discountAmount;
+    private String paymentMethod;
 }

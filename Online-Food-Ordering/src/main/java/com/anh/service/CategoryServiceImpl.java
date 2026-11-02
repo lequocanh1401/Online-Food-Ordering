@@ -26,8 +26,18 @@ public class CategoryServiceImpl implements CategoryService {
         if (restaurant == null) {
             throw new Exception("Restaurant not found with owner id " + userId);
         }
+        String trimmedName = name != null ? name.trim() : "";
+        if (trimmedName.isEmpty()) {
+            throw new Exception("Tên danh mục không được để trống.");
+        }
+        List<Category> existing = categoryRepository.findByRestaurantId(restaurant.getId());
+        for (Category c : existing) {
+            if (c.getName() != null && c.getName().trim().equalsIgnoreCase(trimmedName)) {
+                throw new Exception("Nhà hàng đã có danh mục '" + trimmedName + "' rồi!");
+            }
+        }
         Category category = new Category();
-        category.setName(name);
+        category.setName(trimmedName);
         category.setRestaurant(restaurant);
         return categoryRepository.save(category);
     }

@@ -8,4 +8,5 @@ public class CreateOrderRequest {
     private Long restaurantId;
     private Address deliveryAddress;
     private String couponCode;
+    private String paymentMethod;
 }

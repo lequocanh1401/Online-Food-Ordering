@@ -32,9 +32,18 @@ cd /d "%~dp0food-ordering-frontend"
 start "REACT FRONTEND [Port 5173]" cmd /k "chcp 65001 >nul && echo Dang khoi dong Frontend Vite... && npm run dev"
 
 echo.
-echo [4/4] Dang cho Backend va Frontend san sang (khoang 8 giay)...
-timeout /t 8 /nobreak >nul
-
+echo [4/4] Dang cho Backend Spring Boot san sang (thuong mat 12 - 15 giay)...
+:WAIT_BACKEND
+timeout /t 2 /nobreak >nul
+netstat -aon | findstr :5454 | findstr LISTENING >nul 2>&1
+if errorlevel 1 (
+    echo     -> Backend dang nap Spring context va co so du lieu, vui long doi...
+    goto WAIT_BACKEND
+)
+echo     [OK] Backend Spring Boot da san sang 100%%!
+echo     -> Dang dong bo du lieu he thong va kich hoat cac tac tu AI (Agentic AI Seed Data)...
+curl.exe -s http://localhost:5454/public/optimize-thesis-data >nul 2>&1
+echo     [OK] Du lieu nghien cuu va cac tac tu AI da san sang phuc vu buoi bao ve!
 echo.
 echo ==============================================================================
 echo    HE THONG DA KHOI DONG THANH CONG!

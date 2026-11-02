@@ -22,6 +22,7 @@ export const createMenuItem = ({ menu, jwt }) => async (dispatch) => {
 export const getMenuItemsByRestaurantId = (reqData) => async (dispatch) => {
     dispatch({ type: GET_MENU_ITEMS_BY_RESTAURANT_ID_REQUEST });
     try {
+        const headers = reqData.jwt ? { Authorization: `Bearer ${reqData.jwt}` } : {};
         const { data } = await axios.get(`${API_URL}/api/food/restaurant/${reqData.restaurantId}`, {
             params: {
                 vegetarian: reqData.vegetarian,
@@ -29,7 +30,7 @@ export const getMenuItemsByRestaurantId = (reqData) => async (dispatch) => {
                 seasonal: reqData.seasonal,
                 food_category: reqData.foodCategory
             },
-            headers: { Authorization: `Bearer ${reqData.jwt}` },
+            headers
         });
         dispatch({ type: GET_MENU_ITEMS_BY_RESTAURANT_ID_SUCCESS, payload: data });
     } catch (error) {

@@ -79,6 +79,9 @@ public class OrderServiceImpl implements OrderService {
         createdOrder.setOrderStatus("PENDING");
         createdOrder.setDeliveryAddress(savedAddress);
         createdOrder.setRestaurant(restaurant);
+        createdOrder.setPaymentMethod(orderReq.getPaymentMethod() != null && !orderReq.getPaymentMethod().trim().isEmpty() 
+                ? orderReq.getPaymentMethod().trim().toUpperCase() 
+                : "STRIPE");
 
         // Sẽ được thiết lập cùng với totalPrice sau khi tính toán xong
 
@@ -209,12 +212,43 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order updateOrder(Long orderId, String orderStatus) throws Exception {
         Order order = findOrderById(orderId);
+        String currentStatus = order.getOrderStatus();
+
+        // 1. Chặn nếu đơn đã ở trạng thái kết thúc (Terminal State)
+        if ("CANCELLED".equalsIgnoreCase(currentStatus) || "CANCELED".equalsIgnoreCase(currentStatus)) {
+            throw new Exception("Đơn hàng này đã bị hủy, không thể thay đổi trạng thái!");
+        }
+        if ("COMPLETED".equalsIgnoreCase(currentStatus) || "DELIVERED".equalsIgnoreCase(currentStatus)) {
+            throw new Exception("Đơn hàng này đã hoàn thành, không thể thay đổi trạng thái!");
+        }
+
+        // 2. Chặn quán tự ý chuyển đơn Stripe PENDING thành PAID/làm món khi khách chưa quẹt thẻ
+        if ("STRIPE".equalsIgnoreCase(order.getPaymentMethod()) && "PENDING".equalsIgnoreCase(currentStatus)) {
+            if (!"CANCELLED".equalsIgnoreCase(orderStatus) && !"CANCELED".equalsIgnoreCase(orderStatus)) {
+                throw new Exception("Đơn hàng đang chờ khách quẹt thẻ Stripe. Quán chỉ có thể hủy đơn nếu khách không thanh toán.");
+            }
+        }
+
         if(orderStatus.equals("OUT_FOR_DELIVERY") ||
                 orderStatus.equals("DELIVERED") ||
                 orderStatus.equals("COMPLETED") ||
                 orderStatus.equals("PENDING") ||
+                orderStatus.equals("CANCELLED") ||
+                orderStatus.equals("CANCELED") ||
                 orderStatus.equals("PAID")) {
+
+            if ("CANCELLED".equalsIgnoreCase(orderStatus) || "CANCELED".equalsIgnoreCase(orderStatus)) {
+                try {
+                    ingredientsService.restoreStockForOrder(order);
+                } catch (Exception e) {
+                    System.err.println("Lỗi hoàn kho khi quán hủy đơn: " + e.getMessage());
+                }
+            }
+
             order.setOrderStatus(orderStatus);
+            if ("PAID".equalsIgnoreCase(orderStatus) && order.getPaymentMethod() == null) {
+                order.setPaymentMethod("STRIPE");
+            }
             Order updated = orderRepository.save(order);
 
             // Step 3: Phát sóng thay đổi trạng thái đơn qua WebSocket

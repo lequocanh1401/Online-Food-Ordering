@@ -14,6 +14,7 @@ import { api } from '../../config/api';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
+import PaymentsIcon from '@mui/icons-material/Payments';
 import ReplayIcon from '@mui/icons-material/Replay';
 import StarIcon from '@mui/icons-material/Star';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -32,29 +33,49 @@ export const OrderCard = ({ order }) => {
 
     const [openConfirm, setOpenConfirm] = useState(false);
     const [openReviewModal, setOpenReviewModal] = useState(false);
+    const [selectedFoodForReview, setSelectedFoodForReview] = useState(null);
     const [isReordering, setIsReordering] = useState(false);
     const [isPaying, setIsPaying] = useState(false);
     const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
     if (!order) return null;
 
-    const isUnpaid = order.orderStatus === 'PENDING';
+    // Nhận diện phương thức thanh toán chính xác
+    const rawMethod = order.paymentMethod || (order.orderStatus === 'PAID' ? 'STRIPE' : 'COD');
+    const isCod = rawMethod.toUpperCase() === 'COD';
+    const isStripe = rawMethod.toUpperCase() === 'STRIPE';
+
+    const isPending = order.orderStatus === 'PENDING';
+    const isCancelled = order.orderStatus === 'CANCELLED' || order.orderStatus === 'CANCELED';
     const isCompleted = order.orderStatus === 'COMPLETED' || order.orderStatus === 'DELIVERED';
     const isDelivering = order.orderStatus === 'OUT_FOR_DELIVERY';
     const isPreparing = order.orderStatus === 'PAID';
 
-    const statusText = isUnpaid ? 'Chờ thanh toán' :
-                       order.orderStatus === 'PAID' ? 'Đang chuẩn bị' :
-                       order.orderStatus === 'OUT_FOR_DELIVERY' ? 'Đang giao hàng' :
-                       isCompleted ? 'Hoàn thành' : order.orderStatus || 'PENDING';
+    // Xác định trạng thái hiển thị
+    let statusText = 'Đang xử lý';
+    let statusColor = '#9ca3af';
 
-    const getStatusColor = () => {
-        if (isUnpaid) return '#f43f5e'; // Red-pink
-        if (order.orderStatus === 'PAID') return '#10b981'; // Green
-        if (order.orderStatus === 'OUT_FOR_DELIVERY') return '#3b82f6'; // Blue
-        if (isCompleted) return '#059669'; // Emerald
-        return '#9ca3af'; // Gray
-    };
+    if (isCancelled) {
+        statusText = 'Đã hủy';
+        statusColor = '#ef4444';
+    } else if (isCompleted) {
+        statusText = 'Hoàn thành';
+        statusColor = '#059669';
+    } else if (isDelivering) {
+        statusText = 'Đang giao hàng';
+        statusColor = '#3b82f6';
+    } else if (isPreparing) {
+        statusText = 'Đang chuẩn bị món';
+        statusColor = '#10b981';
+    } else if (isPending) {
+        if (isCod) {
+            statusText = 'Chờ quán nhận đơn (COD)';
+            statusColor = '#f59e0b';
+        } else {
+            statusText = 'Chờ thanh toán Stripe';
+            statusColor = '#f43f5e';
+        }
+    }
 
     // Xác định bước của tiến trình giao hàng (1: Đặt đơn, 2: Chuẩn bị món, 3: Đang giao, 4: Hoàn thành)
     const getActiveStep = () => {
@@ -162,17 +183,51 @@ export const OrderCard = ({ order }) => {
                     </div>
                 </div>
                 
-                <Chip 
-                    label={statusText} 
-                    sx={{
-                        color: 'white',
-                        bgcolor: getStatusColor(),
-                        fontWeight: 'bold',
-                        fontSize: '0.75rem',
-                        borderRadius: '8px',
-                        px: 0.5
-                    }}
-                />
+                <div className="flex items-center gap-2 flex-wrap">
+                    {/* Badge phương thức thanh toán */}
+                    {isCod ? (
+                        <Chip
+                            icon={<PaymentsIcon sx={{ fontSize: '0.95rem !important', color: '#38bdf8' }} />}
+                            label="Tiền mặt (COD)"
+                            sx={{
+                                bgcolor: 'rgba(56, 189, 248, 0.1)',
+                                color: '#38bdf8',
+                                border: '1px solid rgba(56, 189, 248, 0.3)',
+                                fontWeight: 600,
+                                fontSize: '0.75rem',
+                                borderRadius: '8px',
+                                px: 0.5
+                            }}
+                        />
+                    ) : (
+                        <Chip
+                            icon={<CreditCardIcon sx={{ fontSize: '0.95rem !important', color: '#a78bfa' }} />}
+                            label={isPreparing || isCompleted || isDelivering ? "Đã thanh toán (Stripe)" : "Thanh toán Stripe"}
+                            sx={{
+                                bgcolor: 'rgba(167, 139, 250, 0.1)',
+                                color: '#a78bfa',
+                                border: '1px solid rgba(167, 139, 250, 0.3)',
+                                fontWeight: 600,
+                                fontSize: '0.75rem',
+                                borderRadius: '8px',
+                                px: 0.5
+                            }}
+                        />
+                    )}
+
+                    {/* Chip trạng thái đơn hàng */}
+                    <Chip 
+                        label={statusText} 
+                        sx={{
+                            color: 'white',
+                            bgcolor: statusColor,
+                            fontWeight: 'bold',
+                            fontSize: '0.75rem',
+                            borderRadius: '8px',
+                            px: 0.5
+                        }}
+                    />
+                </div>
             </div>
 
             {/* DÒNG THỜI GIAN TIẾN TRÌNH ĐƠN HÀNG TRỰC QUAN (PROGRESS STEPPER) */}
@@ -272,9 +327,24 @@ export const OrderCard = ({ order }) => {
                                 )}
                             </div>
                         </div>
-                        <span className="font-semibold text-gray-300">
-                            {(item.totalPrice)?.toLocaleString()} đ
-                        </span>
+                        <div className="flex items-center gap-2">
+                            <span className="font-semibold text-gray-300">
+                                {(item.totalPrice)?.toLocaleString()} đ
+                            </span>
+                            {isCompleted && item.food && (
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setSelectedFoodForReview(item.food);
+                                        setOpenReviewModal(true);
+                                    }}
+                                    className="text-[11px] text-amber-400 hover:text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 px-2 py-0.5 rounded-md border border-amber-500/30 transition-colors flex items-center gap-0.5 font-medium"
+                                    title="Đánh giá món ăn này"
+                                >
+                                    ⭐ Đánh giá
+                                </button>
+                            )}
+                        </div>
                     </div>
                 ))}
             </div>
@@ -308,53 +378,57 @@ export const OrderCard = ({ order }) => {
 
             {/* THANH NÚT HÀNH ĐỘNG THÔNG MINH */}
             <div className="flex flex-wrap items-center justify-end gap-2.5 pt-2 border-t border-gray-800">
-                {/* 1. Nếu đơn chưa thanh toán: Có nút Thanh toán ngay + Nút Hủy */}
-                {isUnpaid && (
-                    <>
-                        <Button
-                            variant="outlined"
-                            onClick={() => setOpenConfirm(true)}
-                            sx={{
-                                color: '#f87171',
-                                borderColor: 'rgba(239, 68, 68, 0.4)',
-                                '&:hover': { bgcolor: 'rgba(239, 68, 68, 0.1)', borderColor: '#ef4444' },
-                                fontWeight: 600,
-                                borderRadius: '10px',
-                                px: 2.5,
-                                fontSize: '0.8rem',
-                                textTransform: 'none'
-                            }}
-                        >
-                            Hủy đơn
-                        </Button>
-
-                        <Button
-                            variant="contained"
-                            disabled={isPaying}
-                            onClick={handlePayNow}
-                            startIcon={isPaying ? <CircularProgress size={14} color="inherit" /> : <CreditCardIcon />}
-                            sx={{
-                                bgcolor: '#e11d48',
-                                '&:hover': { bgcolor: '#be123c' },
-                                color: 'white',
-                                fontWeight: 'bold',
-                                borderRadius: '10px',
-                                px: 3,
-                                fontSize: '0.825rem',
-                                textTransform: 'none'
-                            }}
-                        >
-                            {isPaying ? 'Đang tạo link...' : 'Thanh toán ngay'}
-                        </Button>
-                    </>
+                {/* 1. Nếu đơn đang PENDING: Cho phép khách hàng Hủy đơn nếu đổi ý */}
+                {isPending && (
+                    <Button
+                        variant="outlined"
+                        onClick={() => setOpenConfirm(true)}
+                        sx={{
+                            color: '#f87171',
+                            borderColor: 'rgba(239, 68, 68, 0.4)',
+                            '&:hover': { bgcolor: 'rgba(239, 68, 68, 0.1)', borderColor: '#ef4444' },
+                            fontWeight: 600,
+                            borderRadius: '10px',
+                            px: 2.5,
+                            fontSize: '0.8rem',
+                            textTransform: 'none'
+                        }}
+                    >
+                        Hủy đơn
+                    </Button>
                 )}
 
-                {/* 2. Nếu đơn đã hoàn thành: Có nút Đánh giá + Nút Đặt lại đơn */}
+                {/* 2. Nếu đơn Stripe đang chờ thanh toán: Hiển thị nút Thanh toán ngay qua Stripe */}
+                {isPending && isStripe && (
+                    <Button
+                        variant="contained"
+                        disabled={isPaying}
+                        onClick={handlePayNow}
+                        startIcon={isPaying ? <CircularProgress size={14} color="inherit" /> : <CreditCardIcon />}
+                        sx={{
+                            bgcolor: '#e11d48',
+                            '&:hover': { bgcolor: '#be123c' },
+                            color: 'white',
+                            fontWeight: 'bold',
+                            borderRadius: '10px',
+                            px: 3,
+                            fontSize: '0.825rem',
+                            textTransform: 'none'
+                        }}
+                    >
+                        {isPaying ? 'Đang tạo link...' : 'Thanh toán ngay'}
+                    </Button>
+                )}
+
+                {/* 3. Nếu đơn đã hoàn thành: Có nút Đánh giá + Nút Đặt lại đơn */}
                 {isCompleted && (
                     <>
                         <Button
                             variant="outlined"
-                            onClick={() => setOpenReviewModal(true)}
+                            onClick={() => {
+                                setSelectedFoodForReview(null);
+                                setOpenReviewModal(true);
+                            }}
                             startIcon={<StarIcon sx={{ color: '#facc15' }} />}
                             sx={{
                                 color: '#fef08a',
@@ -392,7 +466,7 @@ export const OrderCard = ({ order }) => {
                     </>
                 )}
 
-                {/* 3. Nếu đơn đang giao hoặc đang chuẩn bị: Nút xem quán ăn */}
+                {/* 4. Nếu đơn đang giao hoặc đang chuẩn bị: Nút xem quán ăn */}
                 {(isPreparing || isDelivering) && (
                     <Button
                         variant="outlined"
@@ -417,10 +491,14 @@ export const OrderCard = ({ order }) => {
             {/* Modal Đánh Giá Nhà Hàng / Món Ăn */}
             <ReviewModal
                 open={openReviewModal}
-                handleClose={() => setOpenReviewModal(false)}
+                handleClose={() => {
+                    setOpenReviewModal(false);
+                    setSelectedFoodForReview(null);
+                }}
                 restaurantId={order.restaurant?.id}
-                foodId={order.items?.[0]?.food?.id}
-                foodName={order.items?.[0]?.food?.name}
+                foodId={selectedFoodForReview?.id}
+                foodName={selectedFoodForReview?.name}
+                items={order.items}
                 onSuccess={() => {
                     setSnackbar({ open: true, message: 'Đã gửi đánh giá thành công! Cảm ơn bạn đã phản hồi.', severity: 'success' });
                 }}

@@ -35,9 +35,7 @@ public class FoodController {
             @RequestParam(required = false) boolean seasonal,
             @RequestParam(required = false) boolean nonveg,
             @RequestParam(required = false) String food_category,
-            @PathVariable Long restaurantId,
-            @RequestHeader("Authorization") String jwt) throws Exception {
-        User user = userService.findUserByJwtToken(jwt);
+            @PathVariable Long restaurantId) throws Exception {
         List<Food> foods = foodService.getRestaurantsFood(restaurantId, vegetarian, nonveg, seasonal, food_category);
         return new ResponseEntity<>(foods, HttpStatus.OK);
     }

@@ -104,8 +104,8 @@ export const MenuTable = () => {
             price: Number(editForm.price),
             category: selectedCategory,
             ingredients: editForm.ingredients,
-            seasonal: editForm.seasonal,
-            vegetarian: editForm.vegetarian,
+            seasonal: false,
+            vegetarian: false,
             images: editForm.image ? [editForm.image] : [],
             restaurantId: restaurant.usersRestaurant?.id
         };
@@ -161,12 +161,27 @@ export const MenuTable = () => {
                                     <TableCell align="right">
                                         <Button
                                             size="small"
+                                            variant="outlined"
                                             onClick={() => handleUpdateAvailability(item.id)}
-                                            color={item.available ? "success" : "error"}
-                                            sx={{ fontWeight: 'bold' }}
-                                            title="Bấm để đổi trạng thái Còn hàng / Hết hàng"
+                                            sx={{
+                                                textTransform: 'none',
+                                                fontWeight: 'bold',
+                                                borderRadius: '20px',
+                                                fontSize: '0.75rem',
+                                                py: 0.3,
+                                                px: 1.5,
+                                                bgcolor: item.available ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.12)',
+                                                color: item.available ? '#34d399' : '#f87171',
+                                                borderColor: item.available ? 'rgba(16, 185, 129, 0.35)' : 'rgba(239, 68, 68, 0.35)',
+                                                '&:hover': {
+                                                    bgcolor: item.available ? 'rgba(239, 68, 68, 0.18)' : 'rgba(16, 185, 129, 0.18)',
+                                                    borderColor: item.available ? '#ef4444' : '#10b981',
+                                                    color: item.available ? '#fca5a5' : '#6ee7b7'
+                                                }
+                                            }}
+                                            title="Bấm 1 chạm để đổi trạng thái Còn hàng / Tạm hết món"
                                         >
-                                            {item.available ? "Có sẵn" : "Hết hàng"}
+                                            {item.available ? "🟢 Đang bán" : "🔴 Tạm hết món"}
                                         </Button>
                                     </TableCell>
                                     <TableCell align="right">
@@ -230,22 +245,6 @@ export const MenuTable = () => {
                                 {ingredients.ingredients?.filter((item) => item.inStoke).map((item) => (
                                     <MenuItem key={item.id} value={item}>{item.name}</MenuItem>
                                 ))}
-                            </Select>
-                        </FormControl>
-
-                        <FormControl fullWidth>
-                            <InputLabel id="edit-vegetarian-label">Món chay?</InputLabel>
-                            <Select labelId="edit-vegetarian-label" name="vegetarian" value={editForm.vegetarian} label="Món chay?" onChange={handleEditChange}>
-                                <MenuItem value={true}>Phải (Món Chay)</MenuItem>
-                                <MenuItem value={false}>Không (Món Mặn)</MenuItem>
-                            </Select>
-                        </FormControl>
-
-                        <FormControl fullWidth>
-                            <InputLabel id="edit-seasonal-label">Món theo mùa?</InputLabel>
-                            <Select labelId="edit-seasonal-label" name="seasonal" value={editForm.seasonal} label="Món theo mùa?" onChange={handleEditChange}>
-                                <MenuItem value={true}>Phải (Theo mùa)</MenuItem>
-                                <MenuItem value={false}>Không (Quanh năm)</MenuItem>
                             </Select>
                         </FormControl>
 

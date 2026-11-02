@@ -213,7 +213,8 @@ export const Cart = () => {
                     country: "Vietnam"
                 },
                 restaurantId: cartItems[0]?.food?.restaurant?.id,
-                couponCode: appliedCoupon ? appliedCoupon.code : null
+                couponCode: appliedCoupon ? appliedCoupon.code : null,
+                paymentMethod: paymentMethod
             };
             console.log("Đang gửi API Đặt Hàng:", reqData);
             dispatch(createOrder({ reqData, jwt, navigate, paymentMethod }));

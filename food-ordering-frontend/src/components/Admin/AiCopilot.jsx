@@ -16,6 +16,9 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CheckIcon from '@mui/icons-material/Check';
+import StorefrontIcon from '@mui/icons-material/Storefront';
+import ShieldIcon from '@mui/icons-material/Shield';
+import BlockIcon from '@mui/icons-material/Block';
 
 import axios from 'axios';
 import { API_URL } from '../../config/api';
@@ -119,12 +122,26 @@ export const AiCopilot = () => {
     const [inputPrompt, setInputPrompt] = useState("");
     const [loading, setLoading] = useState(false);
     const [metrics, setMetrics] = useState(null);
-    const [suggestedPrompts, setSuggestedPrompts] = useState([
-        "📊 Đánh giá tổng quan hiệu quả kinh doanh tuần này",
-        "💡 Đề xuất chiến lược tăng doanh thu & kích cầu món ế",
+    const [executingAction, setExecutingAction] = useState(false);
+    const [executedActionIds, setExecutedActionIds] = useState({});
+
+    const superAdminDefaultPrompts = [
+        "🏢 Đánh giá tổng quan hiệu quả vận hành & GMV toàn sàn F&B",
+        "🛡️ Kiểm duyệt bình luận độc hại & Đánh giá vi phạm tiêu chuẩn sàn",
+        "📈 Top các nhà hàng có doanh số cao nhất và quán có nguy cơ rủi ro",
+        "⭐ Phân tích chất lượng phục vụ và phản hồi khách hàng toàn hệ thống"
+    ];
+
+    const ownerDefaultPrompts = [
+        "📊 Đánh giá tổng quan hiệu quả kinh doanh của quán tuần này",
         "⚠️ Cảnh báo nguyên liệu sắp hết & rủi ro gián đoạn bếp",
+        "💡 Đề xuất chiến lược tăng doanh thu & kích cầu món bán chậm",
         "🎁 Gợi ý chương trình khuyến mãi giờ vàng tối ưu"
-    ]);
+    ];
+
+    const [suggestedPrompts, setSuggestedPrompts] = useState(
+        isSuperAdmin ? superAdminDefaultPrompts : ownerDefaultPrompts
+    );
     const [copiedIndex, setCopiedIndex] = useState(null);
 
     const messagesEndRef = useRef(null);
@@ -159,6 +176,7 @@ export const AiCopilot = () => {
                         {
                             role: 'assistant',
                             content: data.reply,
+                            agentAction: data.agentAction,
                             timestamp: new Date()
                         }
                     ]);
@@ -166,10 +184,16 @@ export const AiCopilot = () => {
             } catch (err) {
                 console.error("Lỗi khởi tạo AI Copilot:", err);
                 // Fallback tin nhắn khởi tạo
+                const fallbackGreeting = isSuperAdmin ? (
+                    `### 🏛️ Chào mừng Ban Quản Trị đến với Trợ Lý Vận Hành Toàn Sàn AI!\n\nTôi là **Platform Executive AI Copilot** hỗ trợ giám sát và điều hành toàn bộ sàn giao dịch F&B trực tuyến.\n\nTôi có thể giúp Ban Quản Trị:\n- **Giám sát Tổng GMV toàn sàn & Khối lượng giao dịch** theo thời gian thực.\n- **Đánh giá sức khỏe mạng lưới đối tác nhà hàng** và tỷ lệ mở cửa hoạt động.\n- **Đo lường chỉ số hài lòng khách hàng (CSAT)** và phát hiện sớm các sự cố dịch vụ.\n- **Tư vấn chiến lược mở rộng thị trường, chính sách chiết khấu hoa hồng & phân bổ ngân sách Voucher toàn sàn**.\n\n*Hãy chọn câu hỏi gợi ý bên dưới hoặc nhập yêu cầu điều hành để bắt đầu!*`
+                ) : (
+                    `### 🤖 Chào mừng bạn đến với Trợ Lý Quản Trị Kinh Doanh AI!\n\nTôi là **F&B AI Business Copilot** được tích hợp sâu vào hệ thống quản lý của quán **${restaurantName}**.\n\nTôi có thể giúp bạn:\n- **Phân tích doanh thu & biên lợi nhuận** theo từng món ăn và thời gian thực.\n- **Cảnh báo tồn kho nguyên vật liệu** sắp cạn để tránh thiếu hụt khi bếp hoạt động.\n- **Đề xuất chiến lược giá, combo và mã giảm giá** vào khung giờ thấp điểm.\n\n*Hãy chọn một câu hỏi gợi ý bên dưới hoặc nhập câu hỏi cụ thể để bắt đầu!*`
+                );
+
                 setMessages([
                     {
                         role: 'assistant',
-                        content: `### 🤖 Chào mừng bạn đến với Trợ Lý Quản Trị Kinh Doanh AI!\n\nTôi là **F&B AI Business Copilot** được tích hợp sâu vào hệ thống quản lý của quán **${restaurantName}**.\n\nTôi có thể giúp bạn:\n- **Phân tích doanh thu & biên lợi nhuận** theo từng món ăn và thời gian thực.\n- **Cảnh báo tồn kho nguyên vật liệu** sắp cạn để tránh thiếu hụt khi bếp hoạt động.\n- **Đề xuất chiến lược giá, combo và mã giảm giá** vào khung giờ thấp điểm.\n\n*Hãy chọn một câu hỏi gợi ý bên dưới hoặc nhập câu hỏi cụ thể để bắt đầu!*`,
+                        content: fallbackGreeting,
                         timestamp: new Date()
                     }
                 ]);
@@ -180,6 +204,29 @@ export const AiCopilot = () => {
 
         fetchInitialInsights();
     }, [restaurantId, jwt, restaurantName]);
+
+    const handleExecuteAgentAction = async (action, msgIndex) => {
+        if (!action || executingAction) return;
+        setExecutingAction(true);
+        try {
+            if (action.type === 'LOCK_FOOD_AVAILABILITY') {
+                await axios.put(`${API_URL}/api/admin/food/${action.foodId}`, {}, {
+                    headers: jwt ? { Authorization: `Bearer ${jwt}` } : {}
+                });
+                setExecutedActionIds(prev => ({ ...prev, [msgIndex]: true }));
+            } else if (action.type === 'MODERATE_REVIEW') {
+                await axios.delete(`${API_URL}/api/reviews/${action.reviewId}`, {
+                    headers: jwt ? { Authorization: `Bearer ${jwt}` } : {}
+                });
+                setExecutedActionIds(prev => ({ ...prev, [msgIndex]: true }));
+            }
+        } catch (err) {
+            console.error("Lỗi thực thi Tác tử AI:", err);
+            alert("Lỗi thực thi hành động: " + (err.response?.data?.message || err.message));
+        } finally {
+            setExecutingAction(false);
+        }
+    };
 
     const handleSendMessage = async (textToSend) => {
         const query = textToSend || inputPrompt;
@@ -217,6 +264,7 @@ export const AiCopilot = () => {
                     {
                         role: 'assistant',
                         content: data.reply,
+                        agentAction: data.agentAction,
                         timestamp: new Date()
                     }
                 ]);
@@ -246,7 +294,9 @@ export const AiCopilot = () => {
         setMessages([
             {
                 role: 'assistant',
-                content: `Cuộc hội thoại đã được làm mới. Tôi sẵn sàng phân tích các vấn đề kinh doanh mới cho **${restaurantName}**!`,
+                content: isSuperAdmin
+                    ? `Cuộc hội thoại điều hành sàn đã được làm mới. Tôi sẵn sàng hỗ trợ Ban Quản Trị phân tích các quyết sách vận hành và phát triển toàn hệ thống!`
+                    : `Cuộc hội thoại đã được làm mới. Tôi sẵn sàng phân tích các vấn đề kinh doanh mới cho **${restaurantName}**!`,
                 timestamp: new Date()
             }
         ]);
@@ -269,15 +319,15 @@ export const AiCopilot = () => {
                     <div>
                         <div className="flex items-center gap-2.5 flex-wrap">
                             <h1 className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-pink-200 to-rose-300 tracking-wide">
-                                TRỢ LÝ QUẢN TRỊ AI (F&B COPILOT)
+                                {isSuperAdmin ? "TRỢ LÝ VẬN HÀNH TOÀN SÀN AI (PLATFORM EXECUTIVE COPILOT)" : "TRỢ LÝ QUẢN TRỊ KINH DOANH AI (RESTAURANT COPILOT)"}
                             </h1>
                             <span className="text-[11px] font-bold bg-gradient-to-r from-pink-600 to-indigo-600 text-white px-2.5 py-0.5 rounded-full shadow-sm">
                                 🤖 Gemini Pro Engine
                             </span>
                         </div>
                         <p className="text-xs text-gray-400 mt-1 flex items-center gap-2">
-                            <span>Quản trị viên:</span>
-                            <span className="text-pink-400 font-semibold">{restaurantName}</span>
+                            <span>{isSuperAdmin ? "Phạm vi quản trị:" : "Quản trị viên:"}</span>
+                            <span className="text-pink-400 font-semibold">{isSuperAdmin ? "Ban Quản Trị Toàn Hệ Thống Sàn F&B" : restaurantName}</span>
                             <span>•</span>
                             <span className="text-emerald-400 font-medium">● Dữ liệu đồng bộ thời gian thực</span>
                         </p>
@@ -306,56 +356,107 @@ export const AiCopilot = () => {
 
             {/* Quick KPI Cards Bar (Chỉ số tức thời từ DB) */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {/* Card 1: Doanh thu / GMV */}
                 <div className="bg-[#111116] border border-gray-800/80 rounded-2xl p-4 flex items-center gap-3.5 hover:border-pink-500/30 transition-all">
                     <div className="w-11 h-11 rounded-xl bg-pink-500/10 border border-pink-500/20 text-pink-400 flex items-center justify-center">
                         <MonetizationOnIcon />
                     </div>
                     <div className="min-w-0">
-                        <span className="text-[11px] text-gray-400 uppercase font-semibold block truncate">Doanh thu tích lũy</span>
+                        <span className="text-[11px] text-gray-400 uppercase font-semibold block truncate">
+                            {isSuperAdmin ? "Tổng GMV toàn sàn" : "Doanh thu tích lũy"}
+                        </span>
                         <span className="text-base font-black text-white truncate block">
                             {metrics ? formatVND(metrics.totalRevenue) : "Đang đồng bộ..."}
                         </span>
                     </div>
                 </div>
 
-                <div className="bg-[#111116] border border-gray-800/80 rounded-2xl p-4 flex items-center gap-3.5 hover:border-indigo-500/30 transition-all">
-                    <div className="w-11 h-11 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center">
-                        <ShoppingBagIcon />
+                {/* Card 2: Đối tác nhà hàng (Super Admin) HOẶC Đơn hoàn thành (Owner) */}
+                {isSuperAdmin ? (
+                    <div className="bg-[#111116] border border-gray-800/80 rounded-2xl p-4 flex items-center gap-3.5 hover:border-indigo-500/30 transition-all">
+                        <div className="w-11 h-11 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center">
+                            <StorefrontIcon />
+                        </div>
+                        <div className="min-w-0">
+                            <span className="text-[11px] text-gray-400 uppercase font-semibold block truncate">Đối tác nhà hàng</span>
+                            <span className="text-base font-black text-white truncate block">
+                                {metrics ? `${metrics.openRestaurants || 0} / ${metrics.totalRestaurants || 0}` : "Đang đồng bộ..."}
+                                <span className="text-xs text-emerald-400 font-normal ml-1">đang mở</span>
+                            </span>
+                        </div>
                     </div>
-                    <div className="min-w-0">
-                        <span className="text-[11px] text-gray-400 uppercase font-semibold block truncate">Đơn hoàn thành</span>
-                        <span className="text-base font-black text-white truncate block">
-                            {metrics ? `${metrics.completedOrders} / ${metrics.totalOrders}` : "Đang đồng bộ..."}
-                            {metrics && <span className="text-xs text-gray-500 font-normal ml-1">({metrics.completionRate}%)</span>}
-                        </span>
+                ) : (
+                    <div className="bg-[#111116] border border-gray-800/80 rounded-2xl p-4 flex items-center gap-3.5 hover:border-indigo-500/30 transition-all">
+                        <div className="w-11 h-11 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center">
+                            <ShoppingBagIcon />
+                        </div>
+                        <div className="min-w-0">
+                            <span className="text-[11px] text-gray-400 uppercase font-semibold block truncate">Đơn hoàn thành</span>
+                            <span className="text-base font-black text-white truncate block">
+                                {metrics ? `${metrics.completedOrders} / ${metrics.totalOrders}` : "Đang đồng bộ..."}
+                                {metrics && <span className="text-xs text-gray-500 font-normal ml-1">({metrics.completionRate}%)</span>}
+                            </span>
+                        </div>
                     </div>
-                </div>
+                )}
 
-                <div className="bg-[#111116] border border-gray-800/80 rounded-2xl p-4 flex items-center gap-3.5 hover:border-yellow-500/30 transition-all">
-                    <div className="w-11 h-11 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 flex items-center justify-center">
-                        <StarIcon />
+                {/* Card 3: Đơn toàn sàn (Super Admin) HOẶC Đánh giá quán (Owner) */}
+                {isSuperAdmin ? (
+                    <div className="bg-[#111116] border border-gray-800/80 rounded-2xl p-4 flex items-center gap-3.5 hover:border-purple-500/30 transition-all">
+                        <div className="w-11 h-11 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center">
+                            <ShoppingBagIcon />
+                        </div>
+                        <div className="min-w-0">
+                            <span className="text-[11px] text-gray-400 uppercase font-semibold block truncate">Đơn toàn hệ thống</span>
+                            <span className="text-base font-black text-white truncate block">
+                                {metrics ? `${metrics.completedOrders} / ${metrics.totalOrders}` : "Đang đồng bộ..."}
+                                {metrics && <span className="text-xs text-gray-500 font-normal ml-1">({metrics.completionRate}%)</span>}
+                            </span>
+                        </div>
                     </div>
-                    <div className="min-w-0">
-                        <span className="text-[11px] text-gray-400 uppercase font-semibold block truncate">Đánh giá trung bình</span>
-                        <span className="text-base font-black text-white truncate block">
-                            {metrics ? `${metrics.averageRating} / 5.0 ⭐` : "5.0 ⭐"}
-                            {metrics && <span className="text-xs text-gray-500 font-normal ml-1">({metrics.totalReviews})</span>}
-                        </span>
+                ) : (
+                    <div className="bg-[#111116] border border-gray-800/80 rounded-2xl p-4 flex items-center gap-3.5 hover:border-yellow-500/30 transition-all">
+                        <div className="w-11 h-11 rounded-xl bg-yellow-500/10 border border-yellow-500/20 text-yellow-400 flex items-center justify-center">
+                            <StarIcon />
+                        </div>
+                        <div className="min-w-0">
+                            <span className="text-[11px] text-gray-400 uppercase font-semibold block truncate">Đánh giá trung bình</span>
+                            <span className="text-base font-black text-white truncate block">
+                                {metrics ? `${metrics.averageRating} / 5.0 ⭐` : "5.0 ⭐"}
+                                {metrics && <span className="text-xs text-gray-500 font-normal ml-1">({metrics.totalReviews})</span>}
+                            </span>
+                        </div>
                     </div>
-                </div>
+                )}
 
-                <div className="bg-[#111116] border border-gray-800/80 rounded-2xl p-4 flex items-center gap-3.5 hover:border-rose-500/30 transition-all">
-                    <div className="w-11 h-11 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center">
-                        <WarningAmberIcon />
+                {/* Card 4: CSAT toàn sàn (Super Admin) HOẶC Nguyên liệu cạn kho (Owner) */}
+                {isSuperAdmin ? (
+                    <div className="bg-[#111116] border border-gray-800/80 rounded-2xl p-4 flex items-center gap-3.5 hover:border-amber-500/30 transition-all">
+                        <div className="w-11 h-11 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center">
+                            <StarIcon />
+                        </div>
+                        <div className="min-w-0">
+                            <span className="text-[11px] text-gray-400 uppercase font-semibold block truncate">Độ hài lòng (CSAT)</span>
+                            <span className="text-base font-black text-amber-400 truncate block">
+                                {metrics ? `${metrics.averageRating} / 5.0 ⭐` : "5.0 ⭐"}
+                                {metrics && <span className="text-xs text-gray-500 font-normal ml-1">({metrics.totalReviews} đánh giá)</span>}
+                            </span>
+                        </div>
                     </div>
-                    <div className="min-w-0">
-                        <span className="text-[11px] text-gray-400 uppercase font-semibold block truncate">Nguyên liệu cạn kho</span>
-                        <span className="text-base font-black text-rose-400 truncate block">
-                            {metrics ? `${metrics.outOfStockIngredients?.length || 0} mục` : "0 mục"}
-                            <span className="text-xs text-gray-400 font-normal ml-1">cần nhập</span>
-                        </span>
+                ) : (
+                    <div className="bg-[#111116] border border-gray-800/80 rounded-2xl p-4 flex items-center gap-3.5 hover:border-rose-500/30 transition-all">
+                        <div className="w-11 h-11 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400 flex items-center justify-center">
+                            <WarningAmberIcon />
+                        </div>
+                        <div className="min-w-0">
+                            <span className="text-[11px] text-gray-400 uppercase font-semibold block truncate">Topping tạm ngưng</span>
+                            <span className="text-base font-black text-rose-400 truncate block">
+                                {metrics ? `${metrics.outOfStockIngredients?.length || 0} mục` : "0 mục"}
+                                <span className="text-xs text-gray-400 font-normal ml-1">đang tắt</span>
+                            </span>
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
 
             {/* Khung Chat Trợ lý AI */}
@@ -383,6 +484,93 @@ export const AiCopilot = () => {
                                     {isAi ? (
                                         <>
                                             <SimpleMarkdown text={msg.content} />
+
+                                            {/* Tác tử AI Hành động (Agentic Action Interactive Card) */}
+                                            {msg.agentAction && (
+                                                <div className="mt-4 p-4 rounded-xl border border-rose-500/40 bg-gradient-to-br from-rose-950/40 via-[#1a1520] to-gray-900 shadow-xl">
+                                                    <div className="flex items-center gap-2 mb-2.5">
+                                                        <span className="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-gradient-to-r from-rose-600 to-pink-600 text-white flex items-center gap-1 shadow-sm">
+                                                            <AutoAwesomeIcon sx={{ fontSize: 13 }} />
+                                                            Tác tử AI Hành Động
+                                                        </span>
+                                                        <span className="text-xs font-bold text-rose-300">{msg.agentAction.title}</span>
+                                                    </div>
+
+                                                    {msg.agentAction.type === 'LOCK_FOOD_AVAILABILITY' && (
+                                                        <div className="space-y-2 text-xs text-gray-300">
+                                                            <div className="p-2.5 rounded-lg bg-black/40 border border-gray-800 flex items-center justify-between">
+                                                                <div>
+                                                                    <span className="text-gray-400 block text-[11px]">Món ăn bị ảnh hưởng tồn kho:</span>
+                                                                    <span className="font-bold text-white text-sm">{msg.agentAction.foodName}</span>
+                                                                </div>
+                                                                <Chip 
+                                                                    size="small" 
+                                                                    label={executedActionIds[index] ? "🔴 Tạm hết món" : (msg.agentAction.currentAvailable ? "🟢 Đang mở bán" : "🔴 Đã tạm khóa")} 
+                                                                    sx={{ 
+                                                                        bgcolor: executedActionIds[index] ? 'rgba(239, 68, 68, 0.2)' : 'rgba(16, 185, 129, 0.2)', 
+                                                                        color: executedActionIds[index] ? '#f87171' : '#34d399', 
+                                                                        fontWeight: 'bold' 
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                            <p className="text-gray-400 italic text-[11px] leading-relaxed">
+                                                                ℹ️ {msg.agentAction.reason}
+                                                            </p>
+                                                            {executedActionIds[index] ? (
+                                                                <div className="mt-2 py-2.5 px-3 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-bold text-xs flex items-center justify-center gap-2">
+                                                                    <CheckIcon sx={{ fontSize: 18 }} />
+                                                                    Tác tử AI đã tạm khóa món thành công! Thực đơn khách hàng đã cập nhật "Tạm hết món".
+                                                                </div>
+                                                            ) : (
+                                                                <button
+                                                                    onClick={() => handleExecuteAgentAction(msg.agentAction, index)}
+                                                                    disabled={executingAction}
+                                                                    className="mt-2 w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-bold text-xs shadow-lg shadow-rose-600/30 flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95 disabled:opacity-50"
+                                                                >
+                                                                    {executingAction ? <CircularProgress size={16} sx={{ color: 'white' }} /> : <BlockIcon sx={{ fontSize: 16 }} />}
+                                                                    {msg.agentAction.buttonLabel}
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    )}
+
+                                                    {msg.agentAction.type === 'MODERATE_REVIEW' && (
+                                                        <div className="space-y-2 text-xs text-gray-300">
+                                                            <div className="p-3 rounded-lg bg-black/40 border border-red-900/50">
+                                                                <div className="flex items-center justify-between mb-1.5">
+                                                                    <span className="font-bold text-rose-300">{msg.agentAction.customerName}</span>
+                                                                    <span className="text-amber-400 font-bold">⭐ {msg.agentAction.rating} / 5.0</span>
+                                                                </div>
+                                                                <blockquote className="border-l-2 border-red-500 pl-2.5 text-xs italic text-gray-300 my-1">
+                                                                    "{msg.agentAction.comment}"
+                                                                </blockquote>
+                                                                <span className="text-[10px] text-gray-400 block mt-1">
+                                                                    Đối tác mục tiêu: <strong className="text-white">{msg.agentAction.restaurantName}</strong>
+                                                                </span>
+                                                            </div>
+                                                            <p className="text-gray-400 italic text-[11px] leading-relaxed">
+                                                                ⚠️ {msg.agentAction.reason}
+                                                            </p>
+                                                            {executedActionIds[index] ? (
+                                                                <div className="mt-2 py-2.5 px-3 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-bold text-xs flex items-center justify-center gap-2">
+                                                                    <CheckIcon sx={{ fontSize: 18 }} />
+                                                                    Đã gỡ bỏ đánh giá vi phạm khỏi sàn! Uy tín đối tác và CSAT sàn đã phục hồi.
+                                                                </div>
+                                                            ) : (
+                                                                <button
+                                                                    onClick={() => handleExecuteAgentAction(msg.agentAction, index)}
+                                                                    disabled={executingAction}
+                                                                    className="mt-2 w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-xs shadow-lg shadow-red-600/30 flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95 disabled:opacity-50"
+                                                                >
+                                                                    {executingAction ? <CircularProgress size={16} sx={{ color: 'white' }} /> : <ShieldIcon sx={{ fontSize: 16 }} />}
+                                                                    {msg.agentAction.buttonLabel}
+                                                                </button>
+                                                            )}
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+
                                             {/* Nút copy câu trả lời */}
                                             <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                                 <Tooltip title={copiedIndex === index ? "Đã sao chép" : "Sao chép phản hồi"}>

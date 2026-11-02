@@ -1,6 +1,5 @@
 import axios from "axios";
-import { api } from "../../config/api";
-import { API_URL } from "/src/config/api.js";
+import { api, API_URL } from "../../config/api";
 import {
     GET_ALL_RESTAURANTS_FAILURE, GET_ALL_RESTAURANTS_REQUEST, GET_ALL_RESTAURANTS_SUCCESS,
     GET_RESTAURANT_BY_ID_FAILURE, GET_RESTAURANT_BY_ID_REQUEST, GET_RESTAURANT_BY_ID_SUCCESS,
@@ -14,7 +13,7 @@ import {
     GET_RESTAURANTS_EVENTS_REQUEST, GET_RESTAURANTS_EVENTS_SUCCESS, GET_RESTAURANTS_EVENTS_FAILURE,
     DELETE_EVENT_REQUEST, DELETE_EVENT_SUCCESS, DELETE_EVENT_FAILURE,
     GET_ALL_EVENTS_REQUEST, GET_ALL_EVENTS_SUCCESS, GET_ALL_EVENTS_FAILURE
-} from "/src/State/Restaurant/ActionType.js";
+} from "./ActionType";
 
 // ================= CÁC HÀM DÀNH CHO KHÁCH HÀNG =================
 export const getAllRestaurantsAction = (token) => async (dispatch) => {
@@ -48,11 +47,8 @@ export const getAllRestaurantsAction = (token) => async (dispatch) => {
 export const getRestaurantById = (reqData) => async (dispatch) => {
     dispatch({ type: GET_RESTAURANT_BY_ID_REQUEST });
     try {
-        const { data } = await axios.get(`${API_URL}/api/restaurants/${reqData.restaurantId}`, {
-            headers: {
-                Authorization: `Bearer ${reqData.jwt}`
-            }
-        });
+        const headers = reqData.jwt ? { Authorization: `Bearer ${reqData.jwt}` } : {};
+        const { data } = await axios.get(`${API_URL}/api/restaurants/${reqData.restaurantId}`, { headers });
         dispatch({ type: GET_RESTAURANT_BY_ID_SUCCESS, payload: data });
     } catch (error) {
         dispatch({ type: GET_RESTAURANT_BY_ID_FAILURE, payload: error.message });
@@ -105,11 +101,8 @@ export const createRestaurant = (reqData) => async (dispatch) => {
 export const getRestaurantsCategory = ({ jwt, restaurantId }) => async (dispatch) => {
     dispatch({ type: GET_RESTAURANTS_CATEGORY_REQUEST });
     try {
-        const { data } = await axios.get(`${API_URL}/api/category/restaurant/${restaurantId}`, {
-            headers: {
-                Authorization: `Bearer ${jwt}`
-            }
-        });
+        const headers = jwt ? { Authorization: `Bearer ${jwt}` } : {};
+        const { data } = await axios.get(`${API_URL}/api/category/restaurant/${restaurantId}`, { headers });
         dispatch({ type: GET_RESTAURANTS_CATEGORY_SUCCESS, payload: data });
     } catch (error) {
         dispatch({ type: GET_RESTAURANTS_CATEGORY_FAILURE, payload: error.message });

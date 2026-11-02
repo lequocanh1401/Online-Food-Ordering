@@ -1,10 +1,10 @@
 import React from 'react';
-import { Box, Button, FormControl, InputLabel, MenuItem, Modal, Select, TextField } from '@mui/material';
+import { Box, Button, FormControl, InputLabel, MenuItem, Modal, Select, TextField, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { createIngredient } from '../../State/Ingredients/Action';
 
-const style = { position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 420, bgcolor: '#1f2937', color: 'white', outline: 'none', boxShadow: 24, p: 4, borderRadius: '12px' };
+const style = { position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 440, bgcolor: '#111827', color: 'white', outline: 'none', boxShadow: 24, p: 4, borderRadius: '16px', border: '1px solid #1f2937' };
 
 export const CreateIngredientForm = ({ open, handleClose }) => {
     const dispatch = useDispatch();
@@ -14,18 +14,15 @@ export const CreateIngredientForm = ({ open, handleClose }) => {
     const formik = useFormik({
         initialValues: { 
             name: "", 
-            categoryId: "",
-            quantity: 50,
-            unit: "phần",
-            minThreshold: 10
+            categoryId: ""
         },
         onSubmit: (values) => {
             const data = {
-                name: values.name,
+                name: values.name.trim(),
                 categoryId: values.categoryId,
-                quantity: Number(values.quantity) || 50,
-                unit: values.unit || "phần",
-                minThreshold: Number(values.minThreshold) || 10,
+                quantity: 100,
+                unit: "phần",
+                minThreshold: 0,
                 restaurantId: restaurant.usersRestaurant?.id
             };
             dispatch(createIngredient({ data, jwt }));
@@ -38,56 +35,77 @@ export const CreateIngredientForm = ({ open, handleClose }) => {
         <Modal open={open} onClose={handleClose}>
             <Box sx={style}>
                 <form onSubmit={formik.handleSubmit}>
-                    <h1 className='text-white font-bold text-center text-xl pb-6'>THÊM NGUYÊN LIỆU MỚI</h1>
-                    <TextField fullWidth id="name" name="name" label="Tên nguyên liệu (VD: Thịt Bò, Bánh Phở...)" variant="outlined" onChange={formik.handleChange} value={formik.values.name} sx={{ mb: 2.5 }} required />
+                    <h2 className='text-white font-black text-center text-xl tracking-wide'>
+                        THÊM TOPPING / NGUYÊN LIỆU MỚI
+                    </h2>
+                    <p className="text-xs text-gray-400 text-center mt-1 mb-6">
+                        Tạo tùy chọn ăn kèm hoặc nguyên liệu để khách tùy biến khi đặt món
+                    </p>
+
+                    <TextField 
+                        fullWidth 
+                        id="name" 
+                        name="name" 
+                        label="Tên Topping / Nguyên liệu (VD: Trứng ốp la, Phô mai, Bò tái...)" 
+                        variant="outlined" 
+                        onChange={formik.handleChange} 
+                        value={formik.values.name} 
+                        sx={{ 
+                            mb: 3,
+                            '& .MuiOutlinedInput-root': { bgcolor: 'rgba(255,255,255,0.03)' }
+                        }} 
+                        required 
+                    />
                     
-                    <FormControl fullWidth sx={{ mb: 2.5 }}>
-                        <InputLabel id="category-label">Danh mục</InputLabel>
-                        <Select labelId="category-label" id="categoryId" name="categoryId" value={formik.values.categoryId} label="Danh mục" onChange={formik.handleChange} required>
-                            {/* Lấy các Danh mục thật vừa tạo đắp vào Menu xổ xuống */}
+                    <FormControl fullWidth sx={{ mb: 3 }}>
+                        <InputLabel id="category-label">Nhóm phân loại</InputLabel>
+                        <Select 
+                            labelId="category-label" 
+                            id="categoryId" 
+                            name="categoryId" 
+                            value={formik.values.categoryId} 
+                            label="Nhóm phân loại" 
+                            onChange={formik.handleChange} 
+                            required
+                            sx={{ bgcolor: 'rgba(255,255,255,0.03)' }}
+                        >
                             {ingredients.category?.map((item) => (
                                 <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
                             ))}
                         </Select>
                     </FormControl>
 
-                    <div className="grid grid-cols-2 gap-3 mb-2.5">
-                        <TextField 
-                            fullWidth 
-                            id="quantity" 
-                            name="quantity" 
-                            label="Số lượng ban đầu" 
-                            type="number" 
-                            variant="outlined" 
-                            onChange={formik.handleChange} 
-                            value={formik.values.quantity} 
-                        />
-                        <TextField 
-                            fullWidth 
-                            id="unit" 
-                            name="unit" 
-                            label="Đơn vị tính (kg, g, phần...)" 
-                            variant="outlined" 
-                            onChange={formik.handleChange} 
-                            value={formik.values.unit} 
-                        />
+                    <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl mb-6 flex items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                        <Typography variant="caption" className="text-emerald-300">
+                            Trạng thái mặc định: <strong>Đang sẵn sàng phục vụ (Còn hàng)</strong>. Quán có thể gạt công tắc tắt/bật bất cứ lúc nào.
+                        </Typography>
                     </div>
 
-                    <TextField 
-                        fullWidth 
-                        id="minThreshold" 
-                        name="minThreshold" 
-                        label="Ngưỡng cảnh báo an toàn tối thiểu" 
-                        type="number" 
-                        variant="outlined" 
-                        helperText="Khi tồn kho <= ngưỡng này, hệ thống sẽ tự động phát cảnh báo cạn kho"
-                        FormHelperTextProps={{ sx: { color: '#9ca3af', fontSize: '0.75rem' } }}
-                        onChange={formik.handleChange} 
-                        value={formik.values.minThreshold} 
-                        sx={{ mb: 2 }} 
-                    />
-
-                    <Button variant="contained" color="primary" type="submit" sx={{ mt: 2 }} fullWidth size='large'>Tạo Nguyên Liệu</Button>
+                    <div className="flex gap-2">
+                        <Button 
+                            variant="outlined" 
+                            onClick={handleClose} 
+                            fullWidth 
+                            sx={{ color: '#9ca3af', borderColor: '#374151', textTransform: 'none', borderRadius: '10px' }}
+                        >
+                            Hủy bỏ
+                        </Button>
+                        <Button 
+                            variant="contained" 
+                            type="submit" 
+                            fullWidth 
+                            sx={{ 
+                                bgcolor: '#ec4899', 
+                                '&:hover': { bgcolor: '#db2777' }, 
+                                fontWeight: 'bold', 
+                                textTransform: 'none',
+                                borderRadius: '10px'
+                            }}
+                        >
+                            Tạo Topping
+                        </Button>
+                    </div>
                 </form>
             </Box>
         </Modal>

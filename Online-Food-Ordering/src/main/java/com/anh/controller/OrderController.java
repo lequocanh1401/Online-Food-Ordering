@@ -33,8 +33,13 @@ public class OrderController {
             User user = userService.findUserByJwtToken(jwt);
             Order order = orderService.createOrder(req, user);
 
-            // Thay vì trả về Order thuần, gọi Stripe để lấy link thanh toán
-            PaymentResponse res = paymentService.createPaymentLink(order);
+            PaymentResponse res = new PaymentResponse();
+            if (req.getPaymentMethod() != null && "COD".equalsIgnoreCase(req.getPaymentMethod().trim())) {
+                res.setPayment_url(null);
+            } else {
+                // Mặc định hoặc chọn thanh toán trực tuyến: gọi Stripe để lấy link thanh toán
+                res = paymentService.createPaymentLink(order);
+            }
 
             return new ResponseEntity<>(res, HttpStatus.OK);
         } catch (Exception e) {

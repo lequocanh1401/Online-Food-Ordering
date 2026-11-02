@@ -46,9 +46,30 @@ export const Orders = () => {
         item => item.orderStatus === "PENDING" || item.orderStatus === "PAID" || item.orderStatus === "OUT_FOR_DELIVERY"
     ).length;
 
-    // Tổng tiền các đơn đã hoàn thành
+    // Nhận diện phương thức thanh toán của đơn hàng (Stripe hoặc COD)
+    const getOrderPaymentMethod = (o) => {
+        if (o.paymentMethod) return o.paymentMethod.toUpperCase();
+        if (o.orderStatus === "PAID") return "STRIPE";
+        return "COD";
+    };
+
+    // Kiểm tra đơn đã thực sự trả tiền chưa (đồng bộ tuyệt đối với Payments.jsx)
+    const isOrderActuallyPaid = (o) => {
+        const isCancelled = o.orderStatus === "CANCELLED" || o.orderStatus === "CANCELED";
+        if (isCancelled) return false;
+
+        const method = getOrderPaymentMethod(o);
+        if (method === "STRIPE") {
+            // Đơn Stripe: Tiền đã trừ khi thanh toán xong (PAID, OUT_FOR_DELIVERY, DELIVERED, COMPLETED)
+            return o.orderStatus !== "PENDING";
+        }
+        // Đơn COD: Khách chỉ thực sự thanh toán khi đã nhận hàng thành công
+        return o.orderStatus === "DELIVERED" || o.orderStatus === "COMPLETED";
+    };
+
+    // Tổng tiền các đơn đã thanh toán thành công
     const totalSpent = allOrders
-        .filter(item => item.orderStatus === "COMPLETED" || item.orderStatus === "DELIVERED")
+        .filter(item => isOrderActuallyPaid(item))
         .reduce((sum, item) => sum + (item.totalPrice || item.totalAmount || 0), 0);
 
     // Đếm số lượng theo từng tab
