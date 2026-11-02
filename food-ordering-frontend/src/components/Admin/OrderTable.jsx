@@ -120,15 +120,22 @@ export const OrderTable = ({ filterValue }) => {
         }
     }, [dispatch, jwt, restaurant.usersRestaurant?.id, filterValue]);
 
-    // Lọc đơn hàng theo tab
-    const filteredOrders = restaurantOrder.orders?.filter((item) => {
-        if (filterValue === "ALL") return true;
-        if (filterValue === "PENDING") return item.orderStatus === "PENDING" || item.orderStatus === "PAID";
-        if (filterValue === "OUT_FOR_DELIVERY") return item.orderStatus === "OUT_FOR_DELIVERY";
-        if (filterValue === "COMPLETED") return item.orderStatus === "COMPLETED" || item.orderStatus === "DELIVERED";
-        if (filterValue === "CANCELLED") return item.orderStatus === "CANCELLED" || item.orderStatus === "CANCELED";
-        return item.orderStatus === filterValue;
-    }) || [];
+    // Lọc đơn hàng theo tab và luôn luôn đưa đơn MỚI NHẤT lên hàng đầu tiên
+    const filteredOrders = (restaurantOrder.orders || [])
+        .filter((item) => {
+            if (filterValue === "ALL") return true;
+            if (filterValue === "PENDING") return item.orderStatus === "PENDING" || item.orderStatus === "PAID";
+            if (filterValue === "OUT_FOR_DELIVERY") return item.orderStatus === "OUT_FOR_DELIVERY";
+            if (filterValue === "COMPLETED") return item.orderStatus === "COMPLETED" || item.orderStatus === "DELIVERED";
+            if (filterValue === "CANCELLED") return item.orderStatus === "CANCELLED" || item.orderStatus === "CANCELED";
+            return item.orderStatus === filterValue;
+        })
+        .sort((a, b) => {
+            const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+            const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+            if (timeB !== timeA) return timeB - timeA;
+            return (b.id || 0) - (a.id || 0);
+        });
 
     // Mở menu cập nhật trạng thái
     const handleUpdateStatusClick = (event, orderId) => {
