@@ -71,9 +71,14 @@ export const AdminSidebar = ({ handleClose }) => {
                 onClose={handleClose}
                 open={true}
                 anchor='left'
-                sx={{ zIndex: 1, position: "sticky" }}
-                PaperProps={{
-                    sx: {
+                sx={{ 
+                    zIndex: 1, 
+                    position: "sticky",
+                    '& .MuiDrawer-paper': {
+                        top: '64px !important',
+                        height: 'calc(100vh - 64px) !important',
+                        width: { xs: '70vw', lg: '20vw' },
+                        boxSizing: 'border-box',
                         overflow: 'hidden',
                         backgroundColor: '#111827',
                         color: 'white',
@@ -84,15 +89,15 @@ export const AdminSidebar = ({ handleClose }) => {
                     }
                 }}
             >
-                {/* Bố cục dàn đều vừa vặn và phong cách đồng bộ 100% với phân hệ khách hàng (ProfileNavigation) */}
-                <div className={`w-[70vw] lg:w-[20vw] h-[100vh] flex flex-col justify-center text-xl ${currentMenu.length > 7 ? 'gap-5 lg:gap-6' : 'gap-8'} pt-16 bg-gray-900 text-white select-none`}>
+                {/* Dàn đều 100% chiều cao dưới Navbar bằng justify-evenly: không bao giờ bị che đỉnh hay lẹm đáy */}
+                <div className='w-full h-full flex flex-col justify-evenly py-2 text-lg lg:text-xl bg-gray-900 text-white select-none'>
                     {currentMenu.map((item, i) => {
                         const isActive = isItemActive(item.path);
                         return (
                             <React.Fragment key={i}>
                                 <div 
                                     onClick={() => handleNavigate(item)} 
-                                    className={`px-5 flex items-center justify-between cursor-pointer transition-colors ${
+                                    className={`px-5 py-0.5 flex items-center justify-between cursor-pointer transition-colors ${
                                         isActive 
                                             ? 'text-pink-500 font-semibold' 
                                             : 'hover:text-pink-400 text-gray-300'
