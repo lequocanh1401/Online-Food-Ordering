@@ -5,7 +5,7 @@ import { getRestaurantReviews, deleteReview } from '../../State/Review/Action';
 import { 
     Box, Typography, FormControl, InputLabel, Select, MenuItem, Card, 
     Rating, IconButton, Divider, CircularProgress, Dialog, DialogTitle, 
-    DialogContent, DialogContentText, DialogActions, Button 
+    DialogContent, DialogContentText, DialogActions, Button, Chip 
 } from '@mui/material';
 import { Delete as DeleteIcon, RateReview as RateReviewIcon } from '@mui/icons-material';
 
