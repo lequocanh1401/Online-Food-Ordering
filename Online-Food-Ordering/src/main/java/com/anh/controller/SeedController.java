@@ -1468,7 +1468,7 @@ public class SeedController {
         try {
             // 1. Cập nhật ảnh chuẩn cho 15 Nhà Hàng
             Map<String, String> restImgMap = new HashMap<>();
-            restImgMap.put("Tiệm Cơm Tấm Sài Gòn - Đặc Biệt", "http://localhost:5173/images/com_tam_suon_bi_cha.jpg");
+            restImgMap.put("Tiệm Cơm Tấm Sài Gòn - Đặc Biệt", "http://localhost:5173/images/tiem_com_tam_facade.jpg");
             restImgMap.put("Phở Gia Truyền Bát Đàn", "http://localhost:5173/images/pho_bo_bat_dan.jpg");
             restImgMap.put("Bún Chả Hương Liên (Obama)", "http://localhost:5173/images/bun_cha_hanoi.jpg");
             restImgMap.put("Pizza 4P's - Lê Thánh Tôn", "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=1200&auto=format&fit=crop");
@@ -1521,13 +1521,13 @@ public class SeedController {
             Map<String, String> foodImgMap = new HashMap<>();
             // Cơm Tấm
             foodImgMap.put("Cơm Sườn Bì Chả", "http://localhost:5173/images/com_tam_suon_bi_cha.jpg");
-            foodImgMap.put("Cơm Sườn Cây Nướng Mật Ong", "http://localhost:5173/images/com_tam_suon_bi_cha.jpg");
-            foodImgMap.put("Cơm Tấm Ba Rọi Nướng Giòn", "http://localhost:5173/images/com_tam_suon_bi_cha.jpg");
+            foodImgMap.put("Cơm Sườn Cây Nướng Mật Ong", "http://localhost:5173/images/com_suon_cay_nuong.jpg");
+            foodImgMap.put("Cơm Tấm Ba Rọi Nướng Giòn", "http://localhost:5173/images/com_tam_ba_roi_nuong.jpg");
             foodImgMap.put("Chả Trứng Cua Hấp", "http://localhost:5173/images/cha_trung_hap.jpg");
             foodImgMap.put("Trứng Ốp La Lòng Đào", "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800&auto=format&fit=crop");
             foodImgMap.put("Đùi Gà Nướng Mật Ong", "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=800&auto=format&fit=crop");
             foodImgMap.put("Canh Khổ Qua Dồn Thịt", "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800&auto=format&fit=crop");
-            foodImgMap.put("Canh Cải Chua Nấu Sườn", "https://images.unsplash.com/photo-1543339308-43e59d6b73a6?w=800&auto=format&fit=crop");
+            foodImgMap.put("Canh Cải Chua Nấu Sườn", "http://localhost:5173/images/canh_cai_chua_suon.jpg");
             foodImgMap.put("Trà Đá Đường Phèn", "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=800&auto=format&fit=crop");
             foodImgMap.put("Nước Mía Tươi Tắc", "https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=800&auto=format&fit=crop");
 
