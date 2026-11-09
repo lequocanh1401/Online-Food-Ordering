@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Navbar } from '../Navbar/Navbar';
 import { AdminSidebar } from './AdminSideBar';
 import { Dashboard } from './Dashboard';
 import { Orders } from './Orders';
@@ -62,13 +63,16 @@ export const Admin = () => {
     }
 
     return (
-        <div className='lg:flex justify-between min-h-[80vh]'>
-            <div className='lg:w-[20%]'>
-                <AdminSidebar handleClose={handleClose} />
-            </div>
-            <div className='lg:w-[80%] pb-10 relative'>
-                {/* Real-time Order Alert Listener (Step 3) */}
-                <OrderNotificationListener />
+        <div className='min-h-screen bg-black text-white'>
+            {/* Thanh Header Hồng chung của hệ thống */}
+            <Navbar />
+            <div className='lg:flex justify-between min-h-[80vh]'>
+                <div className='sticky h-[80vh] lg:w-[20%]'>
+                    <AdminSidebar handleClose={handleClose} />
+                </div>
+                <div className='lg:w-[80%] pb-10 relative mt-5 lg:mt-0'>
+                    {/* Real-time Order Alert Listener (Step 3) */}
+                    <OrderNotificationListener />
                 <Routes>
                     {isSuperAdmin ? (
                         <>
@@ -95,5 +99,6 @@ export const Admin = () => {
                 </Routes>
             </div>
         </div>
+    </div>
     );
 };

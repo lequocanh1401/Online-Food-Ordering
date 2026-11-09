@@ -59,8 +59,8 @@ export const AdminSidebar = ({ handleClose }) => {
 
     const handleConfirmLogout = () => {
         setOpenLogoutConfirm(false);
-        dispatch(logout()); // Gọi hàm đăng xuất
-        navigate("/"); // Đá về trang chủ Khách hàng
+        dispatch(logout());
+        navigate("/");
         if (handleClose) handleClose();
     };
 
@@ -71,38 +71,41 @@ export const AdminSidebar = ({ handleClose }) => {
                 onClose={handleClose}
                 open={true}
                 anchor='left'
-                sx={{ zIndex: 1 }}
+                sx={{ zIndex: 1, position: "sticky" }}
                 PaperProps={{
                     sx: {
                         overflow: 'hidden',
-                        backgroundColor: '#121212',
+                        backgroundColor: '#111827',
                         color: 'white',
+                        borderRight: '1px solid rgba(75, 85, 99, 0.4)',
                         '&::-webkit-scrollbar': { display: 'none !important' },
                         scrollbarWidth: 'none !important',
                         msOverflowStyle: 'none !important'
                     }
                 }}
             >
-                {/* Giữ nguyên cấu trúc giao diện cũ, căn chỉnh chiều cao và khoảng cách để vừa khít màn hình không cần cuộn */}
-                <div className='w-[70vw] lg:w-[20vw] h-screen flex flex-col justify-center text-lg lg:text-xl space-y-3 lg:space-y-3.5 py-4 no-scrollbar select-none'>
+                {/* Bố cục dàn đều vừa vặn và phong cách đồng bộ 100% với phân hệ khách hàng (ProfileNavigation) */}
+                <div className={`w-[70vw] lg:w-[20vw] h-[100vh] flex flex-col justify-center text-xl ${currentMenu.length > 7 ? 'gap-5 lg:gap-6' : 'gap-8'} pt-16 bg-gray-900 text-white select-none`}>
                     {currentMenu.map((item, i) => {
-                        const active = isItemActive(item.path);
+                        const isActive = isItemActive(item.path);
                         return (
                             <React.Fragment key={i}>
                                 <div 
                                     onClick={() => handleNavigate(item)} 
-                                    className={`px-5 py-1 flex items-center gap-5 cursor-pointer transition-colors duration-150 ${
-                                        active 
-                                            ? 'text-pink-500 font-bold' 
-                                            : 'text-gray-200 hover:text-gray-400'
+                                    className={`px-5 flex items-center justify-between cursor-pointer transition-colors ${
+                                        isActive 
+                                            ? 'text-pink-500 font-semibold' 
+                                            : 'hover:text-pink-400 text-gray-300'
                                     }`}
                                 >
-                                    <span className={active ? 'text-pink-500' : ''}>
-                                        {item.icon}
-                                    </span>
-                                    <span>{item.title}</span>
+                                    <div className="flex items-center space-x-5">
+                                        <span className={isActive ? 'text-pink-500' : ''}>
+                                            {item.icon}
+                                        </span>
+                                        <span>{item.title}</span>
+                                    </div>
                                 </div>
-                                {i !== currentMenu.length - 1 && <Divider sx={{ borderColor: 'rgba(255, 255, 255, 0.12)' }} />}
+                                {i !== currentMenu.length - 1 && <Divider sx={{ bgcolor: "rgba(75, 85, 99, 0.4)" }} />}
                             </React.Fragment>
                         );
                     })}
@@ -115,20 +118,21 @@ export const AdminSidebar = ({ handleClose }) => {
                 onClose={() => setOpenLogoutConfirm(false)}
                 PaperProps={{
                     sx: {
-                        bgcolor: '#1f2937',
+                        bgcolor: '#111827',
                         color: 'white',
-                        borderRadius: '12px',
+                        border: '1px solid #1f2937',
+                        borderRadius: '16px',
                         p: 1,
-                        minWidth: '320px'
+                        maxWidth: 400
                     }
                 }}
             >
-                <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1.5, fontWeight: 'bold' }}>
+                <DialogTitle sx={{ display: 'flex', alignItems: 'center', gap: 1.5, fontWeight: 'bold', color: '#f87171' }}>
                     <Logout sx={{ color: '#f87171' }} />
                     Xác Nhận Đăng Xuất
                 </DialogTitle>
                 <DialogContent>
-                    <DialogContentText sx={{ color: '#d1d5db' }}>
+                    <DialogContentText sx={{ color: '#9ca3af' }}>
                         Bạn có chắc chắn muốn đăng xuất khỏi tài khoản quản trị không?
                     </DialogContentText>
                 </DialogContent>
