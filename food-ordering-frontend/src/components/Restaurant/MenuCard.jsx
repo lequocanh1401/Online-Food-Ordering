@@ -299,7 +299,7 @@ export const MenuCard = ({ item, restaurantId, isRestaurantOpen = true, isHighli
 
                 {/* Hàng ảnh nhỏ thumbnails bên dưới ảnh lớn */}
                 {foodImages.length > 1 && (
-                    <div className="flex gap-2 px-4 py-2 bg-gray-950 border-b border-gray-800/80 overflow-x-auto">
+                    <div className="flex gap-2 px-4 py-2 bg-gray-950 border-b border-gray-800/80 overflow-x-auto no-scrollbar">
                         {foodImages.map((img, idx) => (
                             <button
                                 key={idx}

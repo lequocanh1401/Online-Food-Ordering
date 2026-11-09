@@ -304,14 +304,14 @@ export const RestaurantDetails = () => {
             <div className="sticky top-16 z-20 bg-gray-950/95 backdrop-blur-md py-3.5 border-y border-gray-800/80 -mx-4 sm:-mx-6 lg:-mx-20 px-4 sm:px-6 lg:px-20 mb-8 shadow-xl">
                 <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3.5">
                     {/* Hàng Category Pills cuộn ngang: Tất cả + Các danh mục thực tế do quán tự tạo */}
-                    <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+                    <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1.5 flex-1 min-w-0">
                         {/* Nút Tất cả món */}
                         <button
                             type="button"
                             onClick={() => setSelectedCategory("all")}
-                            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-200 flex items-center gap-1.5 ${
+                            className={`shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-200 flex items-center gap-1.5 ${
                                 selectedCategory === "all"
-                                    ? "bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg shadow-pink-600/30 scale-105"
+                                    ? "bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg shadow-pink-600/30 ring-1 ring-pink-500/50"
                                     : "bg-gray-900/90 text-gray-300 hover:bg-gray-800 hover:text-white border border-gray-800"
                             }`}
                         >
@@ -325,9 +325,9 @@ export const RestaurantDetails = () => {
                                 key={cat.id}
                                 type="button"
                                 onClick={() => setSelectedCategory(cat.name)}
-                                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-200 ${
+                                className={`shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-200 ${
                                     selectedCategory === cat.name
-                                        ? "bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg shadow-pink-600/30 scale-105"
+                                        ? "bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg shadow-pink-600/30 ring-1 ring-pink-500/50"
                                         : "bg-gray-900/90 text-gray-300 hover:bg-gray-800 hover:text-white border border-gray-800"
                                 }`}
                             >
@@ -562,7 +562,7 @@ export const RestaurantDetails = () => {
 
                 {/* Thanh lọc nhận xét: Tất cả / Chung về quán / Theo món ăn */}
                 {review.reviews && review.reviews.length > 0 && (
-                    <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-1">
+                    <div className="flex items-center gap-2 mb-6 overflow-x-auto no-scrollbar pb-1">
                         <button
                             type="button"
                             onClick={() => setReviewFilter("ALL")}
