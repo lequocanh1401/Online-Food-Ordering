@@ -145,13 +145,28 @@ export const AiCopilot = () => {
     const [copiedIndex, setCopiedIndex] = useState(null);
 
     const messagesEndRef = useRef(null);
+    const chatContainerRef = useRef(null);
+    const isFirstRender = useRef(true);
 
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const scrollToBottom = (smooth = true) => {
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTo({
+                top: chatContainerRef.current.scrollHeight,
+                behavior: smooth ? 'smooth' : 'auto'
+            });
+        }
     };
 
     useEffect(() => {
-        scrollToBottom();
+        // Khi vừa vào trang: giữ nguyên ở đỉnh trang, hiển thị trọn vẹn 4 thẻ KPI và tiêu đề
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            window.scrollTo({ top: 0, behavior: 'instant' });
+            return;
+        }
+
+        // Khi người dùng trò chuyện hoặc AI đang phản hồi: chỉ cuộn nội bộ trong khung tin nhắn
+        scrollToBottom(true);
     }, [messages, loading]);
 
     // Khi vào trang, tự động kích hoạt lời chào và phân tích nhanh khởi đầu
@@ -462,7 +477,7 @@ export const AiCopilot = () => {
             {/* Khung Chat Trợ lý AI */}
             <div className="flex-1 bg-gradient-to-b from-[#0f0f14] to-[#0a0a0d] border border-gray-800/90 rounded-3xl p-5 lg:p-7 flex flex-col justify-between shadow-2xl min-h-[520px]">
                 {/* Danh sách tin nhắn */}
-                <div className="space-y-6 overflow-y-auto max-h-[58vh] pr-2">
+                <div ref={chatContainerRef} className="space-y-6 overflow-y-auto max-h-[58vh] pr-2 no-scrollbar">
                     {messages.map((msg, index) => {
                         const isAi = msg.role === 'assistant';
                         return (
