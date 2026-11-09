@@ -6,6 +6,7 @@ import { findCart } from './State/Cart/Action';
 import { AuthModal } from './components/Auth/AuthModal';
 import { CustomerRoutes } from './Routers/CustomerRoutes';
 import { Admin } from './components/Admin/Admin';
+import { ScrollToTop } from './util/ScrollToTop';
 
 // 2 Dòng import mới cho Theme của Zosh
 import { CssBaseline, ThemeProvider } from '@mui/material';
@@ -28,6 +29,7 @@ function App() {
     <ThemeProvider theme={darkTheme}>
       <CssBaseline />
       <BrowserRouter>
+        <ScrollToTop />
         <div className='bg-gray-900 min-h-screen text-white'>
           <Routes>
             <Route path='/*' element={<CustomerRoutes />} />

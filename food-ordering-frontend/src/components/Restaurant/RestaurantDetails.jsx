@@ -86,11 +86,14 @@ export const RestaurantDetails = () => {
     // Kéo thông tin chi tiết quán + danh mục món ăn do quán thêm + đánh giá
     useEffect(() => {
         if (id) {
+            if (!highlightFoodId) {
+                window.scrollTo(0, 0);
+            }
             dispatch(getRestaurantById({ jwt, restaurantId: id }));
             dispatch(getRestaurantsCategory({ jwt, restaurantId: id }));
             dispatch(getRestaurantReviews({ restaurantId: id }));
         }
-    }, [dispatch, jwt, id]);
+    }, [dispatch, jwt, id, highlightFoodId]);
 
     // Kéo danh sách món ăn từ server theo danh mục quán chọn
     useEffect(() => {
