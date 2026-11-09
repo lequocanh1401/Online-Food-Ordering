@@ -43,7 +43,10 @@ public class JwtTokenValidator extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
             } catch (Exception e) {
-                throw new BadCredentialsException("Invalid token!");
+                // Token không hợp lệ hoặc đã hết hạn: xóa context để xem như khách vãng lai (guest)
+                // Các endpoint public (permitAll) vẫn truy cập bình thường.
+                // Các endpoint yêu cầu quyền (authenticated) sẽ được Spring Security chặn 401 đúng chuẩn.
+                SecurityContextHolder.clearContext();
             }
         }
         filterChain.doFilter(request, response);

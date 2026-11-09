@@ -23,8 +23,7 @@ public class FoodController {
     @GetMapping("/search")
     public ResponseEntity<List<Food>> searchFood(
             @RequestParam String name,
-            @RequestHeader("Authorization") String jwt) throws Exception {
-        User user = userService.findUserByJwtToken(jwt);
+            @RequestHeader(value = "Authorization", required = false) String jwt) throws Exception {
         List<Food> foods = foodService.searchFood(name);
         return new ResponseEntity<>(foods, HttpStatus.OK);
     }

@@ -23,11 +23,11 @@ export const getAllRestaurantsAction = (token) => async (dispatch) => {
     try {
         console.log("4. Bắt đầu gọi Axios lấy danh sách nhà hàng...");
 
-        const { data } = await axios.get(`${API_URL}/api/restaurants`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
+        const headers = (token && token !== "null" && token !== "undefined")
+            ? { Authorization: `Bearer ${token}` }
+            : {};
+
+        const { data } = await axios.get(`${API_URL}/api/restaurants`, { headers });
 
         console.log("5. Đã nhận dữ liệu từ Java về:", data);
 

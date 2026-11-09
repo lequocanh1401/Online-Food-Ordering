@@ -55,18 +55,14 @@ export const SearchModal = ({ open, handleClose }) => {
                 setRestaurants([]);
             }
 
-            // 2. Tìm kiếm món ăn (Cần JWT)
-            if (jwt) {
-                try {
-                    const foodResponse = await api.get(`/api/food/search?name=${query}`, {
-                        headers: { Authorization: `Bearer ${jwt}` }
-                    });
-                    setFoods(foodResponse.data || []);
-                } catch (err) {
-                    console.error("Lỗi tìm kiếm món ăn:", err);
-                    setFoods([]);
-                }
-            } else {
+            // 2. Tìm kiếm món ăn
+            try {
+                const foodResponse = await api.get(`/api/food/search?name=${query}`, {
+                    headers: (jwt && jwt !== "null" && jwt !== "undefined") ? { Authorization: `Bearer ${jwt}` } : {}
+                });
+                setFoods(foodResponse.data || []);
+            } catch (err) {
+                console.error("Lỗi tìm kiếm món ăn:", err);
                 setFoods([]);
             }
 

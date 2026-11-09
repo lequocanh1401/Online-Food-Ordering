@@ -47,17 +47,13 @@ export const SearchPage = () => {
             }
 
             // 2. Tìm kiếm món ăn
-            if (jwt) {
-                try {
-                    const foodResponse = await api.get(`/api/food/search?name=${query}`, {
-                        headers: { Authorization: `Bearer ${jwt}` }
-                    });
-                    setFoods(foodResponse.data || []);
-                } catch (err) {
-                    console.error("Lỗi tìm kiếm món ăn:", err);
-                    setFoods([]);
-                }
-            } else {
+            try {
+                const foodResponse = await api.get(`/api/food/search?name=${query}`, {
+                    headers: (jwt && jwt !== "null" && jwt !== "undefined") ? { Authorization: `Bearer ${jwt}` } : {}
+                });
+                setFoods(foodResponse.data || []);
+            } catch (err) {
+                console.error("Lỗi tìm kiếm món ăn:", err);
                 setFoods([]);
             }
 

@@ -61,6 +61,10 @@ export const getUser = (jwt) => async (dispatch) => {
         dispatch({ type: GET_USER_SUCCESS, payload: data });
         console.log("Lấy Profile thành công", data);
     } catch (error) {
+        if (error.response?.status === 401 || error.response?.status === 403) {
+            console.warn("Token đã hết hạn hoặc không hợp lệ, tự động dọn dẹp localStorage");
+            localStorage.removeItem("jwt");
+        }
         const errorMessage = error.response?.data?.message || error.message;
         dispatch({ type: GET_USER_FAILURE, payload: errorMessage });
         console.log("Lỗi lấy Profile", errorMessage);

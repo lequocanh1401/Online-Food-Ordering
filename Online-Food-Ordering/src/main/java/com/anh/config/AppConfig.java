@@ -31,6 +31,7 @@ public class AppConfig {
                         .requestMatchers(HttpMethod.GET, "/api/restaurants/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/category/restaurant/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/food/restaurant/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/food/search").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/admin/ingredients/**").authenticated()
                         .requestMatchers(HttpMethod.DELETE, "/api/admin/restaurants/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/order/*/complete-payment").permitAll()
