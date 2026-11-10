@@ -423,7 +423,7 @@ export const Favorites = () => {
                             )}
                         </div>
 
-                        <div className="flex flex-wrap items-center justify-center gap-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
                             {filteredFavorites.map((item) => (
                                 <RestaurantCard key={item.id} item={item} />
                             ))}
@@ -463,7 +463,7 @@ export const Favorites = () => {
                         </Button>
                     </div>
 
-                    <div className="flex flex-wrap items-center justify-center gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {recommendedRestaurants.map((item) => (
                             <RestaurantCard key={item.id} item={item} />
                         ))}

@@ -31,7 +31,7 @@ export const RestaurantCard = ({ item }) => {
     };
 
     return (
-        <Card className='m-5 w-[18rem] bg-gray-900 text-white rounded-lg overflow-hidden shadow-xl border border-gray-800 relative group'>
+        <Card className='w-full bg-gray-900 text-white rounded-xl overflow-hidden shadow-xl border border-gray-800 hover:border-pink-500/40 transition-all duration-300 relative group flex flex-col justify-between'>
             <div
                 className='cursor-pointer relative h-[12rem] overflow-hidden'
                 onClick={handleNavigateToRestaurant}
@@ -65,15 +65,15 @@ export const RestaurantCard = ({ item }) => {
             </div>
 
             <CardContent className='p-4'>
-                <div className='flex justify-between items-start'>
-                    <div className='space-y-1 cursor-pointer' onClick={handleNavigateToRestaurant}>
-                        <h1 className='font-semibold text-lg text-gray-100 truncate w-[12rem]'>{name}</h1>
-                        <p className='text-gray-400 text-sm truncate w-[14rem]'>{item.description || "Món ăn thơm ngon, chuẩn vị sạch sẽ!"}</p>
+                <div className='flex justify-between items-start gap-2'>
+                    <div className='space-y-1 cursor-pointer min-w-0 flex-1' onClick={handleNavigateToRestaurant}>
+                        <h1 className='font-semibold text-lg text-gray-100 truncate'>{name}</h1>
+                        <p className='text-gray-400 text-sm truncate'>{item.description || "Món ăn thơm ngon, chuẩn vị sạch sẽ!"}</p>
                         <div className="flex items-center gap-1 text-xs text-yellow-500 font-semibold mt-1">
                             <span>⭐ {item.totalReviews > 0 ? `${item.averageRating} (${item.totalReviews} đánh giá)` : "Chưa có đánh giá"}</span>
                         </div>
                     </div>
-                    <div>
+                    <div className='shrink-0'>
                         <IconButton onClick={handleToggleFavorite}>
                             {isFavorite ? (
                                 <FavoriteIcon className='text-red-500' />

@@ -357,9 +357,9 @@ export const Home = () => {
                         ))}
                     </div>
 
-                    {/* Grid Nhà Hàng */}
+                    {/* Grid Nhà Hàng - Đồng bộ 4 cột với Carousel và Mã Giảm Giá */}
                     {filteredRestaurants && filteredRestaurants.length > 0 ? (
-                        <div className='flex flex-wrap items-center justify-start gap-3 mt-8'>
+                        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8'>
                             {filteredRestaurants.map((item) => (
                                 <RestaurantCard key={item.id} item={item} />
                             ))}
