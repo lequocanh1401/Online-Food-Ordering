@@ -31,11 +31,7 @@ if errorlevel 1 (
     goto WAIT_BACKEND
 )
 
-echo     [OK] Backend Spring Boot da san sang 100%%!
-echo     -> Dang dong bo du lieu he thong va anh am thuc...
-curl.exe -s http://localhost:5454/public/optimize-thesis-data >nul 2>&1
-curl.exe -s http://localhost:5454/public/update-curated-images >nul 2>&1
-echo     [OK] Du lieu da dong bo thanh cong!
+echo     [OK] Backend Spring Boot da san sang 100%%! (Giu nguyen du lieu & anh hien co trong MySQL)
 echo.
 echo ==============================================================================
 echo    BACKEND DA KHOI DONG THANH CONG TAI: http://localhost:5454

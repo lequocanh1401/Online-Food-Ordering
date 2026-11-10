@@ -40,11 +40,7 @@ if errorlevel 1 (
     echo     -> Backend dang nap Spring context va co so du lieu, vui long doi...
     goto WAIT_BACKEND
 )
-echo     [OK] Backend Spring Boot da san sang 100%%!
-echo     -> Dang dong bo du lieu he thong va kich hoat cac tac tu AI (Agentic AI Seed Data)...
-curl.exe -s http://localhost:5454/public/optimize-thesis-data >nul 2>&1
-curl.exe -s http://localhost:5454/public/update-curated-images >nul 2>&1
-echo     [OK] Du lieu nghien cuu va toan bo anh am thuc chuan 100%% da san sang!
+echo     [OK] Backend Spring Boot da san sang 100%%! (Giu nguyen du lieu & anh hien co trong MySQL)
 echo.
 echo ==============================================================================
 echo    HE THONG DA KHOI DONG THANH CONG!

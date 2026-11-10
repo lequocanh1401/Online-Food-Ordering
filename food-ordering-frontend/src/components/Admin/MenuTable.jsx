@@ -26,6 +26,7 @@ export const MenuTable = () => {
         price: "",
         description: "",
         category: "",
+        foodCategoryObj: null,
         ingredients: [],
         vegetarian: false,
         seasonal: false,
@@ -83,6 +84,7 @@ export const MenuTable = () => {
             price: item.price || "",
             description: item.description || "",
             category: item.foodCategory?.name || "",
+            foodCategoryObj: item.foodCategory || null,
             ingredients: matchedIngredients,
             vegetarian: item.vegetarian || false,
             seasonal: item.seasonal || false,
@@ -97,16 +99,17 @@ export const MenuTable = () => {
 
     const handleEditSubmit = (e) => {
         e.preventDefault();
-        const selectedCategory = restaurant.categories?.find(cat => cat.name === editForm.category);
+        const selectedCategory = restaurant.categories?.find(cat => cat.name === editForm.category) || editForm.foodCategoryObj;
+        const trimmedImage = (editForm.image || "").trim();
         const updatedData = {
             name: editForm.name,
             description: editForm.description,
             price: Number(editForm.price),
             category: selectedCategory,
             ingredients: editForm.ingredients,
-            seasonal: false,
-            vegetarian: false,
-            images: editForm.image ? [editForm.image] : [],
+            seasonal: Boolean(editForm.seasonal),
+            vegetarian: Boolean(editForm.vegetarian),
+            images: trimmedImage ? [trimmedImage] : [],
             restaurantId: restaurant.usersRestaurant?.id
         };
         dispatch(updateMenuItemAction({

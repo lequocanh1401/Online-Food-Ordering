@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -441,7 +442,10 @@ public class SeedController {
     }
 
     @GetMapping("/fix-images")
-    public ResponseEntity<String> fixImages() {
+    public ResponseEntity<String> fixImages(@RequestParam(defaultValue = "false") boolean confirm) {
+        if (!confirm) {
+            return ResponseEntity.status(403).body("Endpoint đã được khóa bảo vệ để tránh ghi đè ảnh nhà hàng đã chỉnh sửa.");
+        }
         try {
             int fixedCount = 0;
             // 1. Tìm Tiệm Cơm Tấm Sài Gòn
@@ -755,7 +759,10 @@ public class SeedController {
     }
 
     @GetMapping("/seed-photos-and-reviews")
-    public ResponseEntity<String> seedPhotosAndReviews() {
+    public ResponseEntity<String> seedPhotosAndReviews(@RequestParam(defaultValue = "false") boolean confirm) {
+        if (!confirm) {
+            return ResponseEntity.status(403).body("Endpoint đã được khóa bảo vệ để tránh ghi đè ảnh và dữ liệu hiện tại.");
+        }
         try {
             Random rand = new Random();
 
@@ -922,7 +929,10 @@ public class SeedController {
     }
 
     @GetMapping("/optimize-thesis-data")
-    public ResponseEntity<String> optimizeThesisData() {
+    public ResponseEntity<String> optimizeThesisData(@RequestParam(defaultValue = "false") boolean confirm) {
+        if (!confirm) {
+            return ResponseEntity.status(403).body("Endpoint đã được khóa bảo vệ để tránh ghi đè dữ liệu và ảnh nhà hàng.");
+        }
         try {
             Random rand = new Random();
 
@@ -1464,7 +1474,10 @@ public class SeedController {
     }
 
     @GetMapping("/update-curated-images")
-    public ResponseEntity<String> updateAllCuratedImages() {
+    public ResponseEntity<String> updateAllCuratedImages(@RequestParam(defaultValue = "false") boolean confirm) {
+        if (!confirm) {
+            return ResponseEntity.status(403).body("Endpoint đã được khóa bảo vệ để tránh ghi đè ảnh nhà hàng và món ăn bạn đã tự chỉnh sửa!");
+        }
         try {
             // 1. Cập nhật ảnh chuẩn cho 15 Nhà Hàng
             Map<String, String> restImgMap = new HashMap<>();
