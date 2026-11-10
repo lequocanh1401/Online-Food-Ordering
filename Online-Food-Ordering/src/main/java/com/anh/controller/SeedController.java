@@ -1481,21 +1481,21 @@ public class SeedController {
         try {
             // 1. Cập nhật ảnh chuẩn cho 15 Nhà Hàng
             Map<String, String> restImgMap = new HashMap<>();
-            restImgMap.put("Tiệm Cơm Tấm Sài Gòn - Đặc Biệt", "http://localhost:5173/images/tiem_com_tam_facade.jpg");
-            restImgMap.put("Phở Gia Truyền Bát Đàn", "http://localhost:5173/images/pho_bo_bat_dan.jpg");
-            restImgMap.put("Bún Chả Hương Liên (Obama)", "http://localhost:5173/images/bun_cha_hanoi.jpg");
-            restImgMap.put("Pizza 4P's - Lê Thánh Tôn", "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=1200&auto=format&fit=crop");
-            restImgMap.put("Sushi Bar - Tôn Đức Thắng", "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=1200&auto=format&fit=crop");
-            restImgMap.put("Bánh Mì Phượng Hội An", "http://localhost:5173/images/banh_mi_thap_cam.jpg");
-            restImgMap.put("Highlands Coffee - Nguyễn Huệ", "http://localhost:5173/images/ca_phe_sua_da.jpg");
-            restImgMap.put("Dim Sum Tiến Phát - Điểm Tâm Hoa", "http://localhost:5173/images/dimsum_hacao.jpg");
-            restImgMap.put("KFC Việt Nam - Bà Triệu", "https://images.unsplash.com/photo-1562967914-608f82629710?w=1200&auto=format&fit=crop");
-            restImgMap.put("Lẩu Phan - Buffet Bò Mỹ", "https://images.unsplash.com/photo-1547592180-85f173990554?w=1200&auto=format&fit=crop");
+            restImgMap.put("Tiệm Cơm Tấm Sài Gòn - Đặc Biệt", "https://topquangbinh.vn/wp-content/uploads/2021/12/244453982_596856808394695_5035792605248304808_n-min-1024x1024.jpg");
+            restImgMap.put("Phở Gia Truyền Bát Đàn", "https://danielfooddiary.com/wp-content/uploads/2025/12/phogiatruyen11.jpg");
+            restImgMap.put("Bún Chả Hương Liên (Obama)", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQD3gp0oZbGTw5L6_DGZFL2S6FqryPpcoOOVFjgpd3tDb5YLQg58NBu4kY&s=10");
+            restImgMap.put("Pizza 4P's - Lê Thánh Tôn", "https://static.kienviet.net/storage/uploads/2023/11/kienviet-pizza-4ps-1-1699925599.jpg");
+            restImgMap.put("Sushi Bar - Tôn Đức Thắng", "https://noithatkendesign.vn/storage/app/media/uploaded-files/thiet-ke-sushi-bar-5.jpg");
+            restImgMap.put("Bánh Mì Phượng Hội An", "https://vnn-imgs-f.vgcloud.vn/2022/01/10/20/sau-lum-xum-bi-keu-goi-tay-chay-banh-mi-phuong-van-phi-may-bay-ra-ha-noi-gia-60-ngan-o-cung-chay-hang.jpg?width=0&s=0QZUZV0SMlPZ08HesFN_Gg");
+            restImgMap.put("Highlands Coffee - Nguyễn Huệ", "https://www.highlandscoffee.com.vn/vnt_upload/home/web_banner_2000x2000.jpg");
+            restImgMap.put("Dim Sum Tiến Phát - Điểm Tâm Hoa", "https://img.mservice.com.vn/common/u/2e02fb5fe4f64fb55bc713540643c6f8eae702d101cea8c59afc49cfc505fc37/9d2ddbfc-4462-459f-a264-b3edb0d599b8e_938rg5.jpeg");
+            restImgMap.put("KFC Việt Nam - Bà Triệu", "https://vcdn1-kinhdoanh.vnecdn.net/2024/11/23/img-3682-jpeg-1732344951-5061-1732345066.jpg?w=1200&h=675&q=100&dpr=1&fit=crop&s=4e4ZQbJdIKfZt6Xjny43BA");
+            restImgMap.put("Lẩu Phan - Buffet Bò Mỹ", "https://cdn.lauphan.com/photo-storage/myFile-1666063686979.jpeg");
             restImgMap.put("El Gaucho Argentinian Steakhouse", "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=1200&auto=format&fit=crop");
             restImgMap.put("Gà Rán Jollibee - Vincom Center", "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=1200&auto=format&fit=crop");
-            restImgMap.put("The Coffee House - Cà Phê & Trà", "http://localhost:5173/images/tra_dao_cam_sa.jpg");
-            restImgMap.put("Trà Sữa Phê La - Đậm Vị Ô Long", "https://images.unsplash.com/photo-1558857563-b371033873b8?w=1200&auto=format&fit=crop");
-            restImgMap.put("Bún Bò Huế Ngự Uyển", "http://localhost:5173/images/bun_bo_hue.jpg");
+            restImgMap.put("The Coffee House - Cà Phê & Trà", "https://cafefcdn.com/thumb_w/640/203337114487263232/2025/2/21/avatar1740096715584-17400967157451708166300.jpg");
+            restImgMap.put("Trà Sữa Phê La - Đậm Vị Ô Long", "https://phela.vn/wp-content/uploads/2025/04/Update-web.jpg");
+            restImgMap.put("Bún Bò Huế Ngự Uyển", "https://bloganchoi.com/wp-content/uploads/2024/07/quan-bun-bo-hue-ha-noi-ngu-uyen.jpg");
 
             List<Restaurant> restaurants = restaurantRepository.findAll();
             for (Restaurant r : restaurants) {
@@ -1532,112 +1532,112 @@ public class SeedController {
 
             // 2. Cập nhật ảnh chuẩn chính xác cho từng món ăn
             Map<String, String> foodImgMap = new HashMap<>();
-            // Cơm Tấm
+            // Tiệm Cơm Tấm Sài Gòn - Đặc Biệt
             foodImgMap.put("Cơm Sườn Bì Chả", "http://localhost:5173/images/com_tam_suon_bi_cha.jpg");
             foodImgMap.put("Cơm Sườn Cây Nướng Mật Ong", "http://localhost:5173/images/com_suon_cay_nuong.jpg");
             foodImgMap.put("Cơm Tấm Ba Rọi Nướng Giòn", "http://localhost:5173/images/com_tam_ba_roi_nuong.jpg");
             foodImgMap.put("Chả Trứng Cua Hấp", "http://localhost:5173/images/cha_trung_hap.jpg");
             foodImgMap.put("Trứng Ốp La Lòng Đào", "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800&auto=format&fit=crop");
             foodImgMap.put("Đùi Gà Nướng Mật Ong", "https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=800&auto=format&fit=crop");
-            foodImgMap.put("Canh Khổ Qua Dồn Thịt", "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800&auto=format&fit=crop");
+            foodImgMap.put("Canh Khổ Qua Dồn Thịt", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwpid5NbmkvmgoQEmIri2U6nJHrEaQQPJLLFytYQqjnqlrbjknWDg9tuE&s=10");
             foodImgMap.put("Canh Cải Chua Nấu Sườn", "http://localhost:5173/images/canh_cai_chua_suon.jpg");
             foodImgMap.put("Trà Đá Đường Phèn", "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=800&auto=format&fit=crop");
             foodImgMap.put("Nước Mía Tươi Tắc", "https://images.unsplash.com/photo-1621263764928-df1444c5e859?w=800&auto=format&fit=crop");
 
-            // Phở Bát Đàn
+            // Phở Gia Truyền Bát Đàn
             foodImgMap.put("Phở Bò Tái", "http://localhost:5173/images/pho_bo_bat_dan.jpg");
-            foodImgMap.put("Phở Bò Chín", "http://localhost:5173/images/pho_bo_bat_dan.jpg");
-            foodImgMap.put("Phở Tái Nạm Gầu", "http://localhost:5173/images/pho_bo_bat_dan.jpg");
+            foodImgMap.put("Phở Bò Chín", "https://fohlafood.vn/cdn/shop/articles/bi-quyet-nau-phi-bo-ngon-tuyet-dinh.jpg?v=1712213789");
+            foodImgMap.put("Phở Tái Nạm Gầu", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWxCckcU2Q07fv9S8GvMW1zU41yNi_Tk-iAvpBbTQbfQsyRwRwjd084ttW&s=10");
             foodImgMap.put("Quẩy Nóng", "http://localhost:5173/images/quay_nong.jpg");
-            foodImgMap.put("Trà Đá", "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=800&auto=format&fit=crop");
+            foodImgMap.put("Trà Đá", "https://media.phunutoday.vn/files/news/2026/06/22/uong-tra-da-phai-chu-y-dieu-nay-de-an-toan-5-sai-lam-nhieu-nguoi-mac-moi-ngay-050113.jpg");
 
-            // Bún Chả Hương Liên
+            // Bún Chả Hương Liên (Obama)
             foodImgMap.put("Combo Obama", "http://localhost:5173/images/bun_cha_hanoi.jpg");
-            foodImgMap.put("Bún Chả Truyền Thống", "http://localhost:5173/images/bun_cha_hanoi.jpg");
+            foodImgMap.put("Bún Chả Truyền Thống", "https://cdn.realtech.com.vn/uploads/gostay/news/327/bun-cha-ha-noi.jpg");
             foodImgMap.put("Nem Cua Bể", "http://localhost:5173/images/nem_cua_be.jpg");
-            foodImgMap.put("Nem Hải Sản", "http://localhost:5173/images/nem_cua_be.jpg");
-            foodImgMap.put("Bia Hà Nội", "https://images.unsplash.com/photo-1608278248354-998816f1c798?w=800&auto=format&fit=crop");
+            foodImgMap.put("Nem Hải Sản", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhI-GoYwiA6mY1l7lHQeX-ovH26wQJkcsQ32Fjr_zwRLzsRWnGtA1Yro1d&s=10");
+            foodImgMap.put("Bia Hà Nội", "https://biahanoi.muabianhanh.com/wp-content/uploads/2023/03/2-1.png");
 
-            // Pizza 4P's
+            // Pizza 4P's - Lê Thánh Tôn
             foodImgMap.put("Pizza 4 Cheeses", "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&auto=format&fit=crop");
             foodImgMap.put("Pizza Burrata Parma Ham", "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800&auto=format&fit=crop");
-            foodImgMap.put("Mỳ Ý Sốt Kem Cua", "https://images.unsplash.com/photo-1621996346565-e3d5d6281745?w=800&auto=format&fit=crop");
+            foodImgMap.put("Mỳ Ý Sốt Kem Cua", "https://cdn2.fptshop.com.vn/unsafe/1920x0/filters:format(webp):quality(75)/1_07a19cb704.png");
             foodImgMap.put("Salad Phô Mai Burrata", "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800&auto=format&fit=crop");
             foodImgMap.put("Bánh Tiramisu", "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=800&auto=format&fit=crop");
 
-            // Sushi Bar
+            // Sushi Bar - Tôn Đức Thắng
             foodImgMap.put("Sashimi Cá Hồi", "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=800&auto=format&fit=crop");
             foodImgMap.put("Sushi Rồng (Dragon Roll)", "https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=800&auto=format&fit=crop");
-            foodImgMap.put("Mỳ Tempura Udon", "https://images.unsplash.com/photo-1618841557871-b4664fbf0c34?w=800&auto=format&fit=crop");
-            foodImgMap.put("Đậu Nành Nhật (Edamame)", "https://images.unsplash.com/photo-1554502078-ef0fc409efce?w=800&auto=format&fit=crop");
-            foodImgMap.put("Kem Trà Xanh Matcha", "https://images.unsplash.com/photo-1505394033641-40c6ad1178d7?w=800&auto=format&fit=crop");
+            foodImgMap.put("Mỳ Tempura Udon", "https://cdn.tgdd.vn/2020/10/content/r-800x503.jpg");
+            foodImgMap.put("Đậu Nành Nhật (Edamame)", "https://nguyenhafood.vn/uploads/files/R2958-final-photo-.png");
+            foodImgMap.put("Kem Trà Xanh Matcha", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGeo86bn9u3Q_NYA9pj8G3xpsTAV-vx6fCnVuWv8aJYeFrsKyLdYAx6hXV&s=10");
 
             // Bánh Mì Phượng Hội An
             foodImgMap.put("Bánh Mì Thập Cẩm", "http://localhost:5173/images/banh_mi_thap_cam.jpg");
-            foodImgMap.put("Bánh Mì Gà Xé Bơ", "http://localhost:5173/images/banh_mi_thap_cam.jpg");
-            foodImgMap.put("Bánh Mì Thịt Nướng Sả", "http://localhost:5173/images/banh_mi_thap_cam.jpg");
-            foodImgMap.put("Sữa Bắp Hạt Sen", "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=800&auto=format&fit=crop");
-            foodImgMap.put("Nước Sấu Đá", "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=800&auto=format&fit=crop");
+            foodImgMap.put("Bánh Mì Gà Xé Bơ", "https://xebanhmithonhiky.com.vn/wp-content/uploads/2019/07/banh-mi-ga-xe-sot-bo-ngon-kho-cuong.jpg");
+            foodImgMap.put("Bánh Mì Thịt Nướng Sả", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpaF3-6_U2ftXdBLX71btbqcCRy5ZbTgdXMZi12aTyR0VOT4o3rSUjdgE&s=10");
+            foodImgMap.put("Sữa Bắp Hạt Sen", "https://bizweb.dktcdn.net/100/603/550/articles/sua-ngo-hat-sen-0.jpg?v=1779101585810");
+            foodImgMap.put("Nước Sấu Đá", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFrRk2ssezmvb0SkutlpO2H9Vkzm4DY2aPOJPE7bnxPei0mr1mo_kSL5M&s=10");
 
-            // Highlands Coffee
+            // Highlands Coffee - Nguyễn Huệ
             foodImgMap.put("Phin Sữa Đá Lớn", "http://localhost:5173/images/ca_phe_sua_da.jpg");
             foodImgMap.put("Trà Sen Vàng", "https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=800&auto=format&fit=crop");
-            foodImgMap.put("Freeze Trà Xanh", "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=800&auto=format&fit=crop");
-            foodImgMap.put("Bánh Mì Thịt Nướng", "http://localhost:5173/images/banh_mi_thap_cam.jpg");
+            foodImgMap.put("Freeze Trà Xanh", "https://voucherhighlands.com/wp-content/uploads/2026/04/anh-chup-freeze-tra-xanh.jpg");
+            foodImgMap.put("Bánh Mì Thịt Nướng", "https://www.huongnghiepaau.com/wp-content/uploads/2025/07/cach-ban-banh-mi-thit-nuong-dat-hang.jpg");
             foodImgMap.put("Bánh Mousse Đào", "https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800&auto=format&fit=crop");
 
-            // Dim Sum Tiến Phát
+            // Dim Sum Tiến Phát - Điểm Tâm Hoa
             foodImgMap.put("Há Cảo Tôm", "http://localhost:5173/images/dimsum_hacao.jpg");
-            foodImgMap.put("Xíu Mại Tôm Thịt", "http://localhost:5173/images/dimsum_hacao.jpg");
+            foodImgMap.put("Xíu Mại Tôm Thịt", "https://dimsumgiabao.com/wp-content/uploads/2024/01/xiu-mai-tom-thit.jpg");
             foodImgMap.put("Bánh Bao Kim Sa", "https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?w=800&auto=format&fit=crop");
-            foodImgMap.put("Chân Gà Hấp Tàu Xì", "https://images.unsplash.com/photo-1608897013039-887f21d8c804?w=800&auto=format&fit=crop");
+            foodImgMap.put("Chân Gà Hấp Tàu Xì", "https://cdn.tgdd.vn/2020/07/CookRecipe/Avatar/chan-ga-tau-xi-thumbnail.jpg");
             foodImgMap.put("Trà Hoa Cúc Mật Ong", "https://images.unsplash.com/photo-1597481499750-3e6b22637e12?w=800&auto=format&fit=crop");
 
-            // KFC
+            // KFC Việt Nam - Bà Triệu
             foodImgMap.put("Combo Gà Giòn Cay", "https://images.unsplash.com/photo-1562967914-608f82629710?w=800&auto=format&fit=crop");
             foodImgMap.put("Gà Popcorn Lớn", "https://images.unsplash.com/photo-1569058242253-92a9c755a0ec?w=800&auto=format&fit=crop");
             foodImgMap.put("Burger Tôm", "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&auto=format&fit=crop");
-            foodImgMap.put("Khoai Tây Chiên Lớn", "https://images.unsplash.com/photo-1576107232684-1279f3908594?w=800&auto=format&fit=crop");
-            foodImgMap.put("Pepsi Ly Lớn", "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=800&auto=format&fit=crop");
+            foodImgMap.put("Khoai Tây Chiên Lớn", "https://vietquangcao.org/wp-content/uploads/2023/10/nhung-chien-dich-quang-cao-doc-la-vang-doi-cua-kfc-1.jpg");
+            foodImgMap.put("Pepsi Ly Lớn", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuC2EBMVwNc0muCE5xRmJrnNuWwVHthOuH33M3KmWjHcAiuSfgMzzge_gP&s=10");
 
-            // Lẩu Phan
-            foodImgMap.put("Buffet Lẩu Bò 139k", "https://images.unsplash.com/photo-1547592180-85f173990554?w=800&auto=format&fit=crop");
-            foodImgMap.put("Buffet Lẩu Hải Sản 199k", "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=800&auto=format&fit=crop");
-            foodImgMap.put("Đĩa Ba Chỉ Bò Mỹ Thêm", "https://images.unsplash.com/photo-1558030006-450675393462?w=800&auto=format&fit=crop");
-            foodImgMap.put("Ngô Chiên Bơ Tỏi", "https://images.unsplash.com/photo-1551782450-a2132b4ba21d?w=800&auto=format&fit=crop");
-            foodImgMap.put("Coca Cola Chai", "https://images.unsplash.com/photo-1554866585-cd94860890b7?w=800&auto=format&fit=crop");
+            // Lẩu Phan - Buffet Bò Mỹ
+            foodImgMap.put("Buffet Lẩu Bò 139k", "https://pasgo.vn/Upload/anh-chi-tiet/hotpot-constructon-buffet-lau-nuong-bo-canada-ha-dong-1-normal-655061433815.webp");
+            foodImgMap.put("Buffet Lẩu Hải Sản 199k", "https://statics.vinpearl.com/buffet-hai-san-ha-noi-1_1698585816.jpg");
+            foodImgMap.put("Đĩa Ba Chỉ Bò Mỹ Thêm", "https://dochienxienque.com/wp-content/uploads/2021/02/ba-chi-bo-my.jpg");
+            foodImgMap.put("Ngô Chiên Bơ Tỏi", "https://i-giadinh.vnecdn.net/2023/02/04/Thanh-pham-1-1-2273-1675483496.jpg");
+            foodImgMap.put("Coca Cola Chai", "https://storage.googleapis.com/teko-gae.appspot.com/media/image/2023/5/11/ec4502ca-a89d-4c58-91b7-f1cc9a638fa5/Sang%20khoai%20va%20ua%20chuong.png");
 
-            // El Gaucho
-            foodImgMap.put("Ribeye Steak 250g", "https://images.unsplash.com/photo-1600891964599-f61ba0e24092?w=800&auto=format&fit=crop");
-            foodImgMap.put("Filet Mignon 200g", "https://images.unsplash.com/photo-1544025162-d76694265947?w=800&auto=format&fit=crop");
+            // El Gaucho Argentinian Steakhouse
+            foodImgMap.put("Ribeye Steak 250g", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQy6NJONA5-2IQEPBErqVN8Lz7g2yFaevyd_Pd5QBu-sK4xonI7mL2cTcuC&s=10");
+            foodImgMap.put("Filet Mignon 200g", "https://www.baronycountryfoods.co.uk/wp-content/uploads/2021/03/Barony-Country-Foods-Beef-21-2.jpg");
             foodImgMap.put("Cá Hồi Nướng Than", "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=800&auto=format&fit=crop");
             foodImgMap.put("Caesar Salad Classic", "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=800&auto=format&fit=crop");
             foodImgMap.put("Ly Vang Đỏ Cabernet", "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=800&auto=format&fit=crop");
 
-            // Jollibee
-            foodImgMap.put("Cơm Gà Giòn Sốt Tiêu Jollibee", "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=800&auto=format&fit=crop");
-            foodImgMap.put("Combo 2 Miếng Gà Giòn Vui Vẻ", "https://images.unsplash.com/photo-1562967914-608f82629710?w=800&auto=format&fit=crop");
-            foodImgMap.put("Mỳ Ý Sốt Bò Bằm Jollibee", "https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800&auto=format&fit=crop");
-            foodImgMap.put("Khoai Tây Lắc Phô Mai", "https://images.unsplash.com/photo-1576107232684-1279f3908594?w=800&auto=format&fit=crop");
-            foodImgMap.put("Bánh Pie Xoài Đào Giòn Rụm", "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=800&auto=format&fit=crop");
+            // Gà Rán Jollibee - Vincom Center
+            foodImgMap.put("Cơm Gà Giòn Sốt Tiêu Jollibee", "https://jollibee.com.vn/media/catalog/product/cache/11f3e6435b23ab624dc55c2d3fe9479d/g/_/g_gi_n_vui_v_-_4.png");
+            foodImgMap.put("Combo 2 Miếng Gà Giòn Vui Vẻ", "https://jollibee.com.vn/media/catalog/product/cache/9011257231b13517d19d9bae81fd87cc/6/6/66k_-_2_cjoy.png");
+            foodImgMap.put("Mỳ Ý Sốt Bò Bằm Jollibee", "https://jollibee.com.vn/media/catalog/product/cache/11f3e6435b23ab624dc55c2d3fe9479d/1/2/1200x1200px_r2-compressed.jpg");
+            foodImgMap.put("Khoai Tây Lắc Phô Mai", "https://cdn.bcbshop.vn/products/1785385395442-fiiyq1yr2t.webp");
+            foodImgMap.put("Bánh Pie Xoài Đào Giòn Rụm", "https://cdn2.fptshop.com.vn/unsafe/800x0/cach_lam_banh_xoai_dao_jollibee_1_4c50e51614.jpg");
 
-            // The Coffee House
+            // The Coffee House - Cà Phê & Trà
             foodImgMap.put("Trà Đào Cam Sả Trứ Danh", "http://localhost:5173/images/tra_dao_cam_sa.jpg");
-            foodImgMap.put("Cà Phê Sữa Đá Đậm Đà", "http://localhost:5173/images/ca_phe_sua_da.jpg");
-            foodImgMap.put("Trà Sữa Mắc Ca Trân Châu Trắng", "https://images.unsplash.com/photo-1558857563-b371033873b8?w=800&auto=format&fit=crop");
-            foodImgMap.put("Bánh Mousse Tiramisu Cacao", "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=800&auto=format&fit=crop");
+            foodImgMap.put("Cà Phê Sữa Đá Đậm Đà", "https://product.hstatic.net/200000745755/product/4_ccceb5085680488b824d1e1308b49921_master.jpg");
+            foodImgMap.put("Trà Sữa Mắc Ca Trân Châu Trắng", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTSfnp-aB38-PAEAwooo2kZqowpFDAlSa_C1bTTT4IrbDbDTWPmexrAqDdH&s=10");
+            foodImgMap.put("Bánh Mousse Tiramisu Cacao", "https://r2.cms.4handy.vn/banh-tiramisu-cacao.jpg");
 
-            // Phê La
-            foodImgMap.put("Ô Long Sữa Phê La Trân Châu", "https://images.unsplash.com/photo-1558857563-b371033873b8?w=800&auto=format&fit=crop");
-            foodImgMap.put("Gấm Ô Long Nhiệt Đới", "https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=800&auto=format&fit=crop");
-            foodImgMap.put("Khói B'lao Kem Cheese", "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=800&auto=format&fit=crop");
+            // Trà Sữa Phê La - Đậm Vị Ô Long
+            foodImgMap.put("Ô Long Sữa Phê La Trân Châu", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGBv6gKBLn0X5STo1_he2aevLilhMe4DDXF-F1j30LRrx2pgjk45BRtn4&s=10");
+            foodImgMap.put("Gấm Ô Long Nhiệt Đới", "https://hunufa.vn/wp-content/uploads/2024/11/menu-phe-la-2.webp");
+            foodImgMap.put("Khói B'lao Kem Cheese", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQBBxu6NPhVq98ValM9GhXGN2n0GTsgAZESaPBEMpjimRm45DMmXYBPfnZq&s=10");
             foodImgMap.put("Bánh Croissant Nướng Bơ Pháp", "https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=800&auto=format&fit=crop");
 
-            // Bún Bò Huế
-            foodImgMap.put("Bún Bò Huế Đặc Biệt Bắp Bò Chả Cua", "http://localhost:5173/images/bun_bo_hue.jpg");
-            foodImgMap.put("Bún Bò Nạm Giò Heo", "http://localhost:5173/images/bun_bo_hue.jpg");
+            // Bún Bò Huế Ngự Uyển
+            foodImgMap.put("Bún Bò Huế Đặc Biệt Bắp Bò Chả Cua", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIOWT2ml4kMGj-VsERHBfSDHlhS0uhmQi6HMzQIuvFmcUxq6lKepFgOw_o&s=10");
+            foodImgMap.put("Bún Bò Nạm Giò Heo", "https://kinhdoamthuc.com/wp-content/uploads/2023/07/cach-nau-bun-bo-gio-heo-ngon-nhat.jpg");
             foodImgMap.put("Bánh Bột Lọc Tôm Thịt Cố Đô", "http://localhost:5173/images/banh_bot_loc.jpg");
-            foodImgMap.put("Trà Cung Đình Huế Mát Lạnh", "https://images.unsplash.com/photo-1597481499750-3e6b22637e12?w=800&auto=format&fit=crop");
+            foodImgMap.put("Trà Cung Đình Huế Mát Lạnh", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQq37uLSfGnIaYAdxKV0BsFayOG_lERf5R59Op3IS-6ow&s=10");
 
             List<Food> foods = foodRepository.findAll();
             for (Food f : foods) {
