@@ -47,6 +47,9 @@ INSERT INTO restaurant_images (restaurant_id, images) VALUES (252, 'https://phel
 -- Bún Bò Huế Ngự Uyển
 DELETE FROM restaurant_images WHERE restaurant_id = 253;
 INSERT INTO restaurant_images (restaurant_id, images) VALUES (253, 'https://bloganchoi.com/wp-content/uploads/2024/07/quan-bun-bo-hue-ha-noi-ngu-uyen.jpg');
+-- Nhà Hàng Chay Hoa Anh Đào - Hội An
+DELETE FROM restaurant_images WHERE restaurant_id = 302;
+INSERT INTO restaurant_images (restaurant_id, images) VALUES (302, 'http://localhost:5173/images/chay_hoian_facade.jpg');
 
 -- 2. Khoi phuc anh cho 77 mon an
 -- [Tiệm Cơm Tấm Sài Gòn - Đặc Biệt] Cơm Sườn Bì Chả
@@ -280,6 +283,21 @@ INSERT INTO food_images (food_id, images) VALUES (508, 'http://localhost:5173/im
 -- [Bún Bò Huế Ngự Uyển] Trà Cung Đình Huế Mát Lạnh
 DELETE FROM food_images WHERE food_id = 509;
 INSERT INTO food_images (food_id, images) VALUES (509, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQq37uLSfGnIaYAdxKV0BsFayOG_lERf5R59Op3IS-6ow&s=10');
+-- [Nhà Hàng Chay Hoa Anh Đào - Hội An] Cao Lầu Chay Hội An
+DELETE FROM food_images WHERE food_id = 552;
+INSERT INTO food_images (food_id, images) VALUES (552, 'http://localhost:5173/images/cao_lau_chay.jpg');
+-- [Nhà Hàng Chay Hoa Anh Đào - Hội An] Cơm Chay Thập Cẩm Xứ Quảng
+DELETE FROM food_images WHERE food_id = 553;
+INSERT INTO food_images (food_id, images) VALUES (553, 'http://localhost:5173/images/com_chay_thap_cam.jpg');
+-- [Nhà Hàng Chay Hoa Anh Đào - Hội An] Bánh Xèo Chay Giòn Rụm
+DELETE FROM food_images WHERE food_id = 554;
+INSERT INTO food_images (food_id, images) VALUES (554, 'http://localhost:5173/images/banh_xeo_chay.jpg');
+-- [Nhà Hàng Chay Hoa Anh Đào - Hội An] Canh Củ Sen Nấm Thanh Đạm
+DELETE FROM food_images WHERE food_id = 555;
+INSERT INTO food_images (food_id, images) VALUES (555, 'http://localhost:5173/images/canh_nam_hat_sen.jpg');
+-- [Nhà Hàng Chay Hoa Anh Đào - Hội An] Trà Hoa Cúc Thảo Mộc Hội An
+DELETE FROM food_images WHERE food_id = 556;
+INSERT INTO food_images (food_id, images) VALUES (556, 'http://localhost:5173/images/tra_thao_moc_hoian.jpg');
 
 -- 3. Dong bo 8 ma giam gia (4 toan san + 4 nha hang)
 INSERT INTO coupon (id, active, code, discount_type, discount_value, restaurant_id, minimum_order_value) VALUES (202, b'1', 'GIAM10%', 'PERCENTAGE', 10, NULL, NULL) ON DUPLICATE KEY UPDATE active=VALUES(active), discount_type=VALUES(discount_type), discount_value=VALUES(discount_value), restaurant_id=VALUES(restaurant_id), minimum_order_value=VALUES(minimum_order_value);

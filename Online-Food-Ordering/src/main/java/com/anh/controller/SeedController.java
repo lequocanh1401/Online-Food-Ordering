@@ -1496,6 +1496,7 @@ public class SeedController {
             restImgMap.put("The Coffee House - Cà Phê & Trà", "https://cafefcdn.com/thumb_w/640/203337114487263232/2025/2/21/avatar1740096715584-17400967157451708166300.jpg");
             restImgMap.put("Trà Sữa Phê La - Đậm Vị Ô Long", "https://phela.vn/wp-content/uploads/2025/04/Update-web.jpg");
             restImgMap.put("Bún Bò Huế Ngự Uyển", "https://bloganchoi.com/wp-content/uploads/2024/07/quan-bun-bo-hue-ha-noi-ngu-uyen.jpg");
+            restImgMap.put("Nhà Hàng Chay Hoa Anh Đào - Hội An", "http://localhost:5173/images/chay_hoian_facade.jpg");
 
             List<Restaurant> restaurants = restaurantRepository.findAll();
             for (Restaurant r : restaurants) {
@@ -1638,6 +1639,13 @@ public class SeedController {
             foodImgMap.put("Bún Bò Nạm Giò Heo", "https://kinhdoamthuc.com/wp-content/uploads/2023/07/cach-nau-bun-bo-gio-heo-ngon-nhat.jpg");
             foodImgMap.put("Bánh Bột Lọc Tôm Thịt Cố Đô", "http://localhost:5173/images/banh_bot_loc.jpg");
             foodImgMap.put("Trà Cung Đình Huế Mát Lạnh", "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQq37uLSfGnIaYAdxKV0BsFayOG_lERf5R59Op3IS-6ow&s=10");
+
+            // Nhà Hàng Chay Hoa Anh Đào - Hội An
+            foodImgMap.put("Cao Lầu Chay Hội An", "http://localhost:5173/images/cao_lau_chay.jpg");
+            foodImgMap.put("Cơm Chay Thập Cẩm Xứ Quảng", "http://localhost:5173/images/com_chay_thap_cam.jpg");
+            foodImgMap.put("Bánh Xèo Chay Giòn Rụm", "http://localhost:5173/images/banh_xeo_chay.jpg");
+            foodImgMap.put("Canh Củ Sen Nấm Thanh Đạm", "http://localhost:5173/images/canh_nam_hat_sen.jpg");
+            foodImgMap.put("Trà Hoa Cúc Thảo Mộc Hội An", "http://localhost:5173/images/tra_thao_moc_hoian.jpg");
 
             List<Food> foods = foodRepository.findAll();
             for (Food f : foods) {
