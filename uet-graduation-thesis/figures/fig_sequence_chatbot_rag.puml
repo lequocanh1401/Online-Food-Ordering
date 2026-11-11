@@ -35,3 +35,4 @@ opt Khách hàng nhấn "Xem Quán & Đặt Món Ngay"
     chatbotUI --> customer : Tự động mở trang nhà hàng, cuộn mượt tới đúng món & làm nổi bật (Highlight)
 end
 @enduml
+
