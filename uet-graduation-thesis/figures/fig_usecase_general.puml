@@ -5,11 +5,11 @@ skinparam shadowing false
 skinparam defaultFontName "Segoe UI"
 skinparam DefaultFontSize 12
 
-actor "Khách hàng\n(Customer)" as customer
+actor "Khách hàng / Khách vãng lai\n(Customer / Guest)" as customer
 actor "Chủ nhà hàng\n(Restaurant Owner)" as owner
 actor "Quản trị viên\n(Super Admin)" as admin
 
-rectangle "Hệ Thống Đặt & Quản Lý Đồ Ăn Trực Tuyến (Online Food Ordering)" {
+rectangle "Nền Tảng Thương Mại Điện Tử F&B Tích Hợp Quản Trị Thông Minh" {
     ' Nhóm xác thực
     usecase "Đăng ký tài khoản" as UC_Register
     usecase "Đăng nhập & Xác thực JWT" as UC_Login
@@ -17,12 +17,13 @@ rectangle "Hệ Thống Đặt & Quản Lý Đồ Ăn Trực Tuyến (Online Foo
 
     ' Phân hệ Khách hàng
     package "Phân hệ Khách hàng" {
-        usecase "Khám phá & Tìm kiếm nhà hàng/món ăn" as UC_Search
+        usecase "Khám phá & Tìm kiếm nhà hàng/món ăn\n(Hỗ trợ Guest Browsing)" as UC_Search
         usecase "Tùy biến món ăn & Thêm vào giỏ hàng" as UC_Cart
         usecase "Áp dụng mã giảm giá (Coupon Engine)" as UC_ApplyCoupon
-        usecase "Thanh toán trực tuyến (Stripe Checkout)" as UC_Payment
-        usecase "Xem lịch sử & Theo dõi trạng thái đơn hàng" as UC_TrackOrder
-        usecase "Gửi đánh giá & Số sao nhận xét" as UC_Review
+        usecase "Thanh toán Stripe / COD & Xem Hóa đơn" as UC_Payment
+        usecase "Xem lịch sử & Theo dõi đơn hàng" as UC_TrackOrder
+        usecase "Gửi đánh giá Nhà hàng & Từng món ăn" as UC_Review
+        usecase "Tư vấn ẩm thực AI Concierge\n(Menu Catalog RAG)" as UC_ChatbotRAG
     }
 
     ' Phân hệ Chủ nhà hàng
@@ -30,18 +31,20 @@ rectangle "Hệ Thống Đặt & Quản Lý Đồ Ăn Trực Tuyến (Online Foo
         usecase "Quản lý thông tin & Giờ mở cửa nhà hàng" as UC_ManageRest
         usecase "Quản lý danh mục món ăn (Category)" as UC_ManageCategory
         usecase "Quản lý thực đơn & Món ăn (Food Menu)" as UC_ManageFood
-        usecase "Quản lý kho nguyên liệu (Ingredients)" as UC_ManageIngredients
-        usecase "Tiếp nhận & Cập nhật đơn hàng" as UC_ManageOrder
-        usecase "Tạo sự kiện & Ưu đãi của quán" as UC_ManageEvents
+        usecase "Quản lý kho nguyên liệu & Tự động trừ kho" as UC_ManageIngredients
+        usecase "Tiếp nhận đơn Real-time (WebSocket)\n& Kiểm soát trạng thái đơn" as UC_ManageOrder
+        usecase "Tạo sự kiện & Đồng bộ mã ưu đãi" as UC_ManageEvents
+        usecase "Tham vấn & Tác tử AI Copilot\n(Tạm khóa món cạn kho 1-Click)" as UC_OwnerCopilot
     }
 
     ' Phân hệ Super Admin
     package "Phân hệ Super Admin" {
         usecase "Quản lý & Khóa tài khoản người dùng" as UC_AdminUsers
         usecase "Kiểm duyệt & Xóa nhà hàng vi phạm" as UC_AdminRest
-        usecase "Kiểm duyệt đánh giá vi phạm chuẩn mực" as UC_AdminReview
+        usecase "Kiểm duyệt đánh giá theo nhà hàng" as UC_AdminReview
         usecase "Quản trị mã giảm giá toàn sàn" as UC_AdminCoupon
-        usecase "Thống kê doanh thu & Hiệu suất toàn sàn" as UC_AdminStats
+        usecase "Thống kê doanh thu & GMV toàn sàn" as UC_AdminStats
+        usecase "AI Executive Copilot & AI Sentinel\n(Gỡ đánh giá vi phạm 1-Click)" as UC_AdminCopilot
     }
 }
 
@@ -55,6 +58,7 @@ customer --> UC_ApplyCoupon
 customer --> UC_Payment
 customer --> UC_TrackOrder
 customer --> UC_Review
+customer --> UC_ChatbotRAG
 
 ' Quan hệ Chủ nhà hàng
 owner --> UC_Register
@@ -66,6 +70,7 @@ owner --> UC_ManageFood
 owner --> UC_ManageIngredients
 owner --> UC_ManageOrder
 owner --> UC_ManageEvents
+owner --> UC_OwnerCopilot
 
 ' Quan hệ Super Admin
 admin --> UC_Login
@@ -74,9 +79,12 @@ admin --> UC_AdminRest
 admin --> UC_AdminReview
 admin --> UC_AdminCoupon
 admin --> UC_AdminStats
+admin --> UC_AdminCopilot
 
 ' Mở rộng / Include
 UC_Payment ..> UC_Cart : <<include>>
 UC_ApplyCoupon ..> UC_Cart : <<extend>>
 UC_Payment ..> UC_ApplyCoupon : <<include>>
+UC_OwnerCopilot ..> UC_ManageFood : <<extend>>
+UC_AdminCopilot ..> UC_AdminReview : <<extend>>
 @enduml

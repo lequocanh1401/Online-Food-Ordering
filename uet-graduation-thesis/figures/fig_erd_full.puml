@@ -12,7 +12,7 @@ skinparam Linetype ortho
 skinparam nodesep 100
 skinparam ranksep 100
 
-' --- Entity Definitions (Original 20 Tables) ---
+' --- Entity Definitions (21 Tables) ---
 
 entity "User" as user {
   * id : BIGINT <<PK>>
@@ -132,6 +132,24 @@ entity "IngredientsItem" as ingredient {
   restaurant_id : BIGINT <<FK>>
   name : VARCHAR(255)
   inStock : BOOLEAN
+  quantity : DOUBLE
+  unit : VARCHAR(50)
+  minThreshold : DOUBLE
+}
+
+entity "InventoryLog" as inventory_log {
+  * id : BIGINT <<PK>>
+  --
+  restaurantId : BIGINT <<FK>>
+  ingredientId : BIGINT <<FK>>
+  ingredientName : VARCHAR(255)
+  actionType : VARCHAR(50)
+  changeAmount : DOUBLE
+  remainingQuantity : DOUBLE
+  unit : VARCHAR(50)
+  orderId : BIGINT <<FK>>
+  note : TEXT
+  createdAt : DATETIME
 }
 
 entity "IngredientCategory" as ingredient_category {
@@ -154,6 +172,7 @@ entity "Order" as order {
   totalPrice : BIGINT
   couponCode : VARCHAR(50)
   discountAmount : BIGINT
+  paymentMethod : VARCHAR(20)
 }
 
 entity "OrderItem" as order_item {
@@ -191,6 +210,10 @@ entity "Events" as events {
   endsAt : VARCHAR(255)
   name : VARCHAR(255)
   location : VARCHAR(255)
+  promoCode : VARCHAR(50)
+  discountType : VARCHAR(50)
+  discountValue : BIGINT
+  minimumOrderValue : BIGINT
 }
 
 entity "Review" as review {
@@ -241,5 +264,8 @@ ingredient "1" -- "0..*" food_ingredients : "part of"
 ingredient "0..*" -- "1" ingredient_category : "categorized by"
 ingredient "1" -- "0..*" cart_item_ingredients : "references"
 ingredient "1" -- "0..*" order_item_ingredients : "references"
+restaurant "1" -- "0..*" inventory_log : "audits"
+ingredient "1" -- "0..*" inventory_log : "tracks"
+order "0..1" -- "0..*" inventory_log : "triggers"
 
 @enduml

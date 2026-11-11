@@ -6,30 +6,35 @@ skinparam DefaultFontSize 12
 
 node "Client Device (PC/Mobile)" {
     node "Web Browser (Chrome/Firefox/Safari)" as browser {
-        artifact "React Client Bundle\n(HTML/CSS/JS)" as react
+        artifact "React 19 SPA Bundle\n(Vite 8 / Redux / Web Audio API)" as react
     }
 }
 
-node "Application Server (AWS EC2 / VPS)" {
-    node "Java Runtime Environment (JRE 17)" as jre {
-        component "Embedded Tomcat Server\n(Port: 5454)" as tomcat
-        artifact "Spring Boot Application\n(.jar file)" as spring
+node "Application Server (Spring Boot 3.4)" {
+    node "Java Runtime Environment (JRE 17+)" as jre {
+        component "Embedded Tomcat Server\n(HTTP :5454 & WS /ws/orders)" as tomcat
+        artifact "Spring Boot Application\n(REST API + Agentic AI Engine)" as spring
     }
 }
 
-node "Database Server (AWS RDS)" {
-    node "MySQL DBMS (Port: 3307)" as mysql {
-        database "online_food_ordering\n(Schema)" as db
+node "Database Server" {
+    node "MySQL 8.x DBMS (Port: 3307)" as mysql {
+        database "anh_food_yt\n(Schema 21 Bang 3NF)" as db
     }
 }
 
 cloud "Stripe Cloud Services" as stripe {
-    component "Stripe Checkout & Billing Engine" as stripe_engine
+    component "Stripe Checkout & Billing Engine\n(PCI DSS Level 1)" as stripe_engine
 }
 
-browser -- jre : "HTTP/HTTPS (JSON & JWT)\nPort 5454"
-browser -- stripe : "HTTPS (Secure Tokenization)"
-jre -- mysql : "JDBC/TCP\nPort 3307"
-jre -- stripe : "HTTPS (REST API Calls)"
+cloud "Google Cloud AI Services" as google_ai {
+    component "Google Gemini 2.5 Flash\n(Generative LLM API)" as gemini_engine
+}
+
+browser -- jre : "HTTP/HTTPS (REST/JSON & JWT)\nWebSocket (ws://.../ws/orders)"
+browser -- stripe : "HTTPS (Stripe Checkout Redirect)"
+jre -- mysql : "JDBC/TCP (Port 3307)"
+jre -- stripe : "HTTPS (Stripe Java SDK)"
+jre -- google_ai : "HTTPS (REST JSON API)"
 
 @enduml

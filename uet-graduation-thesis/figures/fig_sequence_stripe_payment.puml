@@ -7,54 +7,61 @@ skinparam DefaultFontSize 12
 actor "Khách hàng\n(Customer)" as customer
 participant "Trình duyệt Web\n(React 19 Client)" as client
 participant "OrderController\n(/api/order)" as orderCtrl
+participant "OrderServiceImpl\n(State Guard)" as orderSvc
 participant "PaymentServiceImpl" as paymentSvc
 participant "Stripe API Cloud\n(Stripe Checkout)" as stripe
 database "MySQL Database" as db
 
-== Khởi tạo Phiên thanh toán Điện tử Stripe ==
-customer -> client : Nhấn "Tiến hành thanh toán qua Stripe"
-client -> orderCtrl : POST /api/order (CreateOrderRequest + JWT)
+== Khởi tạo Đơn hàng & Phân nhánh Phương thức Thanh toán ==
+customer -> client : Chọn phương thức (STRIPE hoặc COD) & Nhấn "Đặt Hàng"
+client -> orderCtrl : POST /api/order (CreateOrderRequest + paymentMethod + JWT)
 activate orderCtrl
 
-orderCtrl -> orderCtrl : createOrder(...) -> Lưu Order trạng thái "PENDING"
-orderCtrl -> paymentSvc : createPaymentLink(order)
-activate paymentSvc
+orderCtrl -> orderSvc : createOrder(req, user)
+activate orderSvc
+orderSvc -> orderSvc : Thẩm định Coupon Null-Safe & Tính totalPrice
+orderSvc -> db : INSERT orders (orderStatus='PENDING', paymentMethod=STRIPE|COD)
+orderSvc -> orderSvc : depleteStockForOrder() & broadcastToRestaurant(WS)
+orderSvc --> orderCtrl : savedOrder
+deactivate orderSvc
 
-paymentSvc -> paymentSvc : Tính unitAmount = order.getTotalPrice()
-paymentSvc -> stripe : Session.create(amount, currency="vnd", successUrl, cancelUrl)
-activate stripe
-stripe --> paymentSvc : Session(url: "https://checkout.stripe.com/c/pay/cs_test_...")
-deactivate stripe
+alt Phương thức COD (Tiền mặt khi nhận hàng)
+    orderCtrl --> client : HTTP 200 OK (payment_url = null)
+    client --> customer : Chuyển sang /my-profile/orders (Chờ quán xác nhận)
+else Phương thức STRIPE (Thanh toán Thẻ Quốc tế)
+    orderCtrl -> paymentSvc : createPaymentLink(order)
+    activate paymentSvc
+    paymentSvc -> paymentSvc : Tính unitAmount = order.getTotalPrice()
+    paymentSvc -> stripe : Session.create(amount, currency="vnd", successUrl, cancelUrl)
+    activate stripe
+    stripe --> paymentSvc : Session(url: "https://checkout.stripe.com/c/pay/cs_test_...")
+    deactivate stripe
+    paymentSvc --> orderCtrl : PaymentResponse(payment_url)
+    deactivate paymentSvc
 
-paymentSvc --> orderCtrl : PaymentResponse(payment_url)
-deactivate paymentSvc
-
-orderCtrl --> client : HTTP 200 OK (payment_url)
-deactivate orderCtrl
-
-client -> client : window.location.href = res.data.payment_url
-client --> customer : Chuyển hướng trình duyệt sang cổng thanh toán Stripe
-
-== Khách hàng Thực hiện Thanh toán tại Cổng Stripe ==
-customer -> stripe : Nhập số thẻ tín dụng/ghi nợ, ngày hết hạn, mã CVC bảo mật
-stripe -> stripe : Mã hóa token hóa (PCI DSS Tokenization) & Xử lý trừ tiền
-alt Thanh toán bị người dùng Hủy (Cancel)
-    stripe --> client : Redirect về cancelUrl ("http://localhost:5173/payment/fail")
-    client --> customer : Hiển thị màn hình Thanh toán thất bại (PaymentFail.jsx)
-else Thanh toán Thành công (Payment Success)
-    stripe --> client : Redirect về successUrl ("http://localhost:5173/payment/success/{orderId}")
-    activate client
-    
-    client -> orderCtrl : PUT /api/order/{orderId}/complete-payment (Bearer JWT)
-    activate orderCtrl
-    
-    orderCtrl -> db : UPDATE orders SET orderStatus = 'PAID' WHERE id = ?
-    db --> orderCtrl : updatedOrder
-    
-    orderCtrl --> client : HTTP 200 OK (Order với trạng thái PAID)
+    orderCtrl --> client : HTTP 200 OK (payment_url)
     deactivate orderCtrl
-    
-    client --> customer : Hiển thị màn hình Chúc mừng & Mã đơn hàng (PaymentSuccess.jsx)
-    deactivate client
+
+    client -> client : window.location.href = res.data.payment_url
+    client --> customer : Chuyển hướng trình duyệt sang cổng thanh toán Stripe
+
+    == Khách hàng Thanh toán tại Cổng Stripe & Mở khóa Callback ==
+    customer -> stripe : Nhập thông tin thẻ & Xác nhận thanh toán (PCI DSS)
+    alt Thanh toán bị Hủy (Cancel)
+        stripe --> client : Redirect về /payment/fail
+        client --> customer : Hiển thị màn hình Thanh toán thất bại
+    else Thanh toán Thành công (Payment Success)
+        stripe --> client : Redirect về /payment/success/{orderId}
+        activate client
+        client -> orderCtrl : PUT /api/order/{orderId}/complete-payment (permitAll)
+        activate orderCtrl
+        orderCtrl -> orderSvc : updateOrder(orderId, "PAID")
+        orderSvc -> db : UPDATE orders SET orderStatus = 'PAID' WHERE id = ?
+        db --> orderSvc : updatedOrder
+        orderCtrl --> client : HTTP 200 OK (Order với trạng thái PAID)
+        deactivate orderCtrl
+        client --> customer : Hiển thị Hóa đơn & Trạng thái Đã thanh toán
+        deactivate client
+    end
 end
 @enduml

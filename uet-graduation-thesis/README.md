@@ -20,18 +20,22 @@ uet-graduation-thesis/
 ├── BAO_CAO_KHOA_LUAN_TOT_NGHIEP.md # Bản báo cáo toàn văn định dạng Markdown (đọc/xem trước ngay trong VS Code)
 │
 └── figures/                 # Danh mục hình vẽ, sơ đồ kiến trúc & ảnh chụp giao diện
-    ├── fig_usecase_general.puml / .png       # Biểu đồ Use Case tổng quát 3 tác nhân
-    ├── fig_deployment.puml / .png            # Sơ đồ triển khai hệ thống vật lý (Deployment)
+    ├── fig_usecase_general.puml / .png       # Biểu đồ Use Case tổng quát (Guest/Customer, Owner, Admin)
+    ├── fig_deployment.puml / .png            # Sơ đồ triển khai hệ thống (Tomcat WS, MySQL, Stripe, Gemini 2.5)
     ├── fig_sequence_auth.puml / .png         # Sơ đồ tuần tự Đăng ký/Đăng nhập JWT
     ├── fig_sequence_order_coupon.puml / .png # Sơ đồ tuần tự Giỏ hàng & Coupon Engine
-    ├── fig_sequence_stripe_payment.puml/.png # Sơ đồ tuần tự Thanh toán Stripe Checkout
-    ├── fig_sequence_order_status.puml / .png # Sơ đồ tuần tự Cập nhật trạng thái đơn hàng
+    ├── fig_sequence_stripe_payment.puml/.png # Sơ đồ tuần tự Thanh toán Stripe Checkout & COD
+    ├── fig_sequence_order_status.puml / .png # Sơ đồ tuần tự Điều phối & Máy trạng thái Đơn hàng
     ├── fig_sequence_admin_review.puml / .png # Sơ đồ tuần tự Kiểm duyệt đánh giá Super Admin
-    ├── fig_erd_full.puml / .png              # Sơ đồ Cơ sở dữ liệu quan hệ (ERD 20 bảng)
-    ├── fig_ui_home.jpg                       # Ảnh giao diện Trang chủ & Carousel "Hôm nay ăn gì"
-    ├── fig_ui_cart.jpg                       # Ảnh giao diện Giỏ hàng & Áp dụng mã ưu đãi
-    ├── fig_ui_owner_dashboard.jpg            # Ảnh giao diện Bảng điều khiển Quản trị Nhà hàng
-    └── fig_ui_superadmin.jpg                 # Ảnh giao diện Kiểm duyệt & Báo cáo Super Admin
+    ├── fig_sequence_websocket_ai.puml / .png # Sơ đồ tuần tự WebSocket & Dual-Persona Agentic AI
+    ├── fig_sequence_chatbot_rag.puml / .png  # Sơ đồ tuần tự AI Concierge & Menu Catalog RAG
+    ├── fig_erd_full.puml / .png              # Sơ đồ Cơ sở dữ liệu quan hệ (ERD 21 bảng 3NF)
+    ├── fig_ui_home.jpg                       # Ảnh thật Trang chủ & Carousel "Hôm Nay Ăn Gì?"
+    ├── fig_ui_cart.jpg                       # Ảnh thật Giỏ hàng, Mã ưu đãi & Thanh toán Stripe/COD
+    ├── fig_ui_owner_dashboard.jpg            # Ảnh thật Bảng điều khiển Quản trị Chủ nhà hàng
+    ├── fig_ui_superadmin.jpg                 # Ảnh thật Kiểm duyệt Đánh giá Toàn sàn Super Admin
+    ├── fig_ui_ai_copilot.jpg                 # Ảnh thật AI Copilot & Tác tử Hành động 1-Click
+    └── fig_ui_chatbot_rag.jpg                # Ảnh thật Trợ lý Ẩm thực Khách hàng Menu Catalog RAG
 ```
 
 ---

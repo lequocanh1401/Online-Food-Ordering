@@ -4,54 +4,50 @@ skinparam shadowing false
 skinparam defaultFontName "Segoe UI"
 skinparam DefaultFontSize 12
 
-actor "Khách hàng\n(Customer)" as customer
-participant "Client Ứng dụng\n(React Web)" as client
-participant "OrderService" as orderSvc
-participant "IngredientsService" as ingSvc
+actor "Quản trị viên\n(Owner / Super Admin)" as adminActor
+participant "Client React\n(AiCopilot / OrderListener)" as clientUI
+participant "Order / Food / Review\nController" as coreCtrl
 participant "OrderWebSocketHandler\n(/ws/orders)" as wsHandler
-participant "Admin Portal\n(OrderNotificationListener)" as adminPortal
-actor "Chủ nhà hàng\n(Restaurant Owner)" as owner
-participant "AiCopilotService" as aiSvc
-participant "Google Gemini API\n(hoặc Heuristic DSS)" as gemini
+participant "AiCopilotServiceImpl\n(Dual-Persona & Agentic)" as aiSvc
+participant "Google Gemini 2.5 Flash\n(hoặc Heuristic DSS)" as gemini
+database "MySQL Database" as db
 
-== 1. Phát sinh Đơn hàng & Tự động Trừ Kho & Đẩy Thông báo Real-time ==
-customer -> client : Xác nhận Đặt hàng (Thanh toán thành công)
-client -> orderSvc : createOrder(req, user)
-activate orderSvc
-
-orderSvc -> ingSvc : depleteStockForOrder(savedOrder)
-activate ingSvc
-ingSvc -> ingSvc : Tính lượng nguyên liệu tiêu thụ theo món ăn
-ingSvc -> ingSvc : Trừ quantity trong IngredientsItem & ghi InventoryLog(AUTO_DEPLETION)
-ingSvc --> orderSvc : Cập nhật kho hoàn tất
-deactivate ingSvc
-
-orderSvc -> wsHandler : broadcastToRestaurant(restaurantId, orderNotificationDTO)
+== 1. Phát sóng Đơn hàng Thời gian thực & Trừ kho ACID ==
+coreCtrl -> coreCtrl : createOrder() -> depleteStockForOrder()
+coreCtrl -> wsHandler : broadcastToRestaurant(restaurantId, OrderNotificationDTO)
 activate wsHandler
-
-wsHandler -> adminPortal : Gửi TextMessage JSON (type: "NEW_ORDER", orderId, totalAmount, items)
-activate adminPortal
-
-adminPortal -> adminPortal : playOrderChime() (Phát âm thanh chuông báo qua Web Audio API)
-adminPortal -> adminPortal : Dispatch nạp lại danh sách Orders, Kho nguyên liệu & Logs
-adminPortal --> owner : Hiển thị Banner thông báo nổi bật & phát chuông báo đơn mới!
-deactivate adminPortal
+wsHandler -> clientUI : TextMessage JSON ("NEW_ORDER", orderId, totalAmount)
+clientUI -> clientUI : playOrderChime() (Web Audio API: E5 -> G#5 -> B5) & Reload Orders
 deactivate wsHandler
-deactivate orderSvc
 
-== 2. Chủ nhà hàng Tương tác với Trợ lý AI Copilot Thông minh ==
-owner -> adminPortal : Truy cập mục "AI Copilot" & gửi câu hỏi: "Phân tích doanh thu và đề xuất món ế"
-adminPortal -> aiSvc : POST /api/admin/ai/copilot/chat (AiChatRequest)
+== 2. Tham vấn Chiến lược Đa vai trò & Tác tử AI Hành động (Agentic AI) ==
+adminActor -> clientUI : Truy cập AI Copilot & Gửi truy vấn (VD: Cảnh báo kho / Kiểm duyệt)
+clientUI -> aiSvc : POST /api/admin/ai/copilot/chat (restaurantId hoặc null=SuperAdmin)
 activate aiSvc
 
-aiSvc -> aiSvc : collectRestaurantMetrics(restaurantId) (Doanh thu, Top món bán chạy, Món ế, Tồn kho thấp)
-aiSvc -> gemini : Gửi System Prompt + Dữ liệu nghiệp vụ thực tế
-activate gemini
-gemini --> aiSvc : Trả về phân tích chiến lược, bảng so sánh & đề xuất khuyến mãi (Markdown)
-deactivate gemini
+aiSvc -> db : collectRestaurantMetrics(restaurantId)\n(GMV, CSAT, Top món, Tồn kho, Đánh giá)
+aiSvc -> gemini : callGeminiApi(gemini-2.5-flash, Context Prompt)
+alt Gemini 2.5 Flash phản hồi HTTP 200
+    gemini --> aiSvc : Phân tích Markdown chuyên sâu
+else Quá hạn / Mất kết nối / Chưa cấu hình Key
+    aiSvc -> aiSvc : generateHeuristicBusinessInsight() (Fallback DSS < 5ms)
+end
 
-aiSvc --> adminPortal : HTTP 200 OK (AiChatResponse: tin nhắn Markdown, metrics, prompts gợi ý)
+aiSvc -> aiSvc : determineAgentAction()\n-> Sinh payload LOCK_FOOD_AVAILABILITY (Owner)\nhoặc MODERATE_REVIEW (Super Admin)
+aiSvc --> clientUI : HTTP 200 OK (AiChatResponse + agentAction)
 deactivate aiSvc
 
-adminPortal --> owner : Kết xuất báo cáo Markdown đẹp mắt, gợi ý hành động cụ thể
+clientUI --> adminActor : Hiển thị Báo cáo Markdown + Thẻ Nút Tác tử AI 1-Click
+
+opt Người dùng nhấn nút thực thi Tác tử AI 1-Click
+    adminActor -> clientUI : Click nút Tác tử AI trên thẻ Đề xuất
+    alt Owner: Tạm khóa món cạn kho
+        clientUI -> coreCtrl : PUT /api/admin/food/{foodId}
+        coreCtrl -> db : Cập nhật available = false (Đồng bộ Menu khách)
+    else Super Admin: Gỡ đánh giá vi phạm
+        clientUI -> coreCtrl : DELETE /api/reviews/{reviewId}
+        coreCtrl -> db : Xóa Review vi phạm & Phục hồi CSAT
+    end
+    coreCtrl --> clientUI : HTTP 200 OK -> Hiển thị xác nhận đã thực thi
+end
 @enduml

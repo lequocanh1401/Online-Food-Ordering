@@ -113,19 +113,19 @@ Trong bối cảnh nền kinh tế số và thương mại điện tử phát tr
 
 Khóa luận này tập trung nghiên cứu, thiết kế và phát triển toàn diện hệ thống \textbf{``Online Food Ordering''} -- một nền tảng web ứng dụng Full-Stack hiện đại phục vụ việc đặt và quản lý đồ ăn trực tuyến tích hợp các công nghệ quản trị thông minh tiên tiến:
 \begin{itemize}
-    \item \textbf{Phía Backend:} Được xây dựng trên nền tảng Java 17 với framework Spring Boot 3.4.0. Hệ thống hiện thực cơ chế bảo mật xác thực phi trạng thái (Stateless Authentication) thông qua Spring Security kết hợp JSON Web Token (JWT). Hệ thống triển khai cơ chế kiểm soát vai trò chặt chẽ ở tầng API, ngăn chặn hoàn toàn việc đăng ký trái phép quyền Quản trị viên (ROLE\_ADMIN) từ phía công khai. Cơ sở dữ liệu quan hệ MySQL được quản trị thông qua Spring Data JPA và Hibernate ORM với thiết kế chuẩn hóa 21 thực thể liên kết, đảm bảo tính toàn vẹn giao dịch (ACID).
-    \item \textbf{Động cơ khuyến mãi nâng cao (Coupon Constraint Engine):} Triển khai giải pháp tính toán mã giảm giá linh hoạt (theo tỷ lệ phần trăm hoặc số tiền cố định) với cơ chế kiểm tra giá trị đơn hàng tối thiểu (Minimum Order Value). Thuật toán kiểm soát an toàn ngoại lệ (Null-safe Bounds Checking) được tích hợp ở tầng dịch vụ giúp ngăn ngừa triệt để các lỗi tràn số âm hoặc xung đột giá tiền. Đồng thời, phía giao diện được tích hợp cơ chế tự động gỡ bỏ mã giảm giá (Auto-removal) tức thời khi giỏ hàng không còn đáp ứng điều kiện ngưỡng.
-    \item \textbf{Cổng thanh toán điện tử Stripe:} Hệ thống tích hợp trực tiếp Stripe Java SDK và cơ chế phiên thanh toán bảo mật Stripe Checkout Session, cho phép khách hàng thanh toán an toàn bằng thẻ quốc tế tuân thủ tiêu chuẩn bảo mật dữ liệu thẻ PCI DSS mà không cần lưu giữ thông tin thẻ nhạy cảm trên máy chủ cục bộ.
-    \item \textbf{Truyền thông đơn hàng thời gian thực qua WebSocket \& Chuông thuật toán (Real-time Alerts):} Khắc phục triệt để nhược điểm của cơ chế HTTP Polling, hệ thống triển khai kênh WebSocket hai chiều chuyên biệt (\texttt{/ws/orders}) với \texttt{TextWebSocketHandler} quản lý phiên đồng thời đa nhà hàng. Ngay khi khách hàng xác nhận đặt đơn hoặc hủy đơn, sự kiện được phát sóng (broadcast) tức thời đến giao diện quản trị của chủ nhà hàng trong vòng mili-giây, kết hợp chuông cảnh báo tương tác được điều chế bằng Web Audio API mà không cần phụ thuộc vào tệp âm thanh bên ngoài.
-    \item \textbf{Trợ lý AI Copilot \& Hệ thống Hỗ trợ Ra Quyết định (Decision Support System -- DSS):} Tích hợp trợ lý trí tuệ nhân tạo chuyên biệt cho chủ nhà hàng, kết hợp sức mạnh phân tích ngôn ngữ tự nhiên của Google Gemini API với Động cơ Heuristic DSS dự phòng dựa trên dữ liệu thời gian thực (doanh thu, các món bán chạy nhất, các món tiêu thụ chậm, cảnh báo nguyên liệu sắp cạn kiệt, gợi ý khung giờ vàng khuyến mãi). Cơ chế phòng thủ hai tầng đảm bảo chủ quán luôn nhận được khuyến nghị kinh doanh chính xác ngay cả khi gián đoạn kết nối Internet quốc tế hoặc vượt hạn mức API.
-    \item \textbf{Quản lý Kho nguyên liệu Thông minh \& Tự động Trừ/Hoàn Tồn kho (Smart Inventory Tracking):} Bổ sung thuộc tính định lượng số lượng tồn kho (\texttt{quantity}), đơn vị đo (\texttt{unit}) và ngưỡng cảnh báo an toàn (\texttt{minThreshold}) cho từng nguyên liệu. Tầng dịch vụ tự động khấu trừ nguyên liệu chế biến khi đơn hàng phát sinh, tự động hoàn trả kho khi đơn bị hủy và lưu vết toàn bộ biến động vào nhật ký xuất nhập kho (\texttt{InventoryLog}).
-    \item \textbf{Phía Frontend:} Được phát triển bằng React 19 và công cụ đóng gói Vite tốc độ cao, quản lý trạng thái tập trung thông qua Redux Toolkit và Redux Thunk. Giao diện được thiết kế theo phong cách Dark Mode sang trọng, trực quan bằng Material-UI (MUI v9) kết hợp TailwindCSS, tích hợp thanh điều hướng thông minh, carousel tương tác ``Hôm nay ăn gì'' và các bảng điều khiển chuyên biệt cho từng nhóm tác nhân.
+    \item \textbf{Phía Backend:} Được xây dựng trên nền tảng Java 17 với framework Spring Boot 3.4.0. Hệ thống hiện thực cơ chế bảo mật xác thực phi trạng thái (Stateless Authentication) thông qua Spring Security kết hợp JSON Web Token (JWT), hỗ trợ duyệt thực đơn tự do cho khách vãng lai (Guest Browsing) nhưng bảo vệ nghiêm ngặt phân hệ giao dịch và quản trị; áp dụng cơ chế kiểm soát vai trò chặn triệt để leo thang đặc quyền (\texttt{ROLE\_ADMIN}). Cơ sở dữ liệu quan hệ MySQL 8.x (\texttt{anh\_food\_yt}) được quản trị qua Spring Data JPA và Hibernate ORM gồm 21 thực thể chuẩn 3NF (với bộ dữ liệu mẫu chuẩn thực tiễn gồm 16 nhà hàng thuộc 3 khu vực Hà Nội, TP.HCM, Quảng Nam và 82 món ăn đặc trưng), đảm bảo tính toàn vẹn ACID.
+    \item \textbf{Động cơ khuyến mãi nâng cao \& Đồng bộ Sự kiện:} Triển khai giải pháp tính toán mã giảm giá linh hoạt (theo tỷ lệ phần trăm hoặc số tiền cố định) với cơ chế kiểm tra ngưỡng đơn hàng tối thiểu. Thuật toán kiểm soát an toàn ngoại lệ (Null-safe Bounds Checking) ở Backend kết hợp cơ chế tự động gỡ mã (Auto-removal) ở Frontend giúp ngăn ngừa gian lận; đồng thời tự động đồng bộ mã ưu đãi khi Chủ quán khởi tạo sự kiện khuyến mãi (\texttt{Events} $\to$ \texttt{Coupon}).
+    \item \textbf{Thanh toán Đa phương thức (Stripe Checkout \& COD) kèm Hóa đơn Điện tử:} Hỗ trợ song song thanh toán trực tuyến qua cổng quốc tế Stripe (Checkout Session tuân thủ chuẩn PCI DSS, mở khóa cơ chế callback \texttt{complete-payment} ổn định) và thanh toán tiền mặt khi nhận hàng (COD), kết hợp Máy trạng thái đơn hàng (Order State Guard) chặt chẽ và xuất hóa đơn điện tử chi tiết.
+    \item \textbf{Truyền thông đơn hàng thời gian thực qua WebSocket \& Chuông thuật toán (Real-time Alerts):} Khắc phục triệt để nhược điểm của HTTP Polling, hệ thống triển khai kênh WebSocket hai chiều chuyên biệt (\texttt{/ws/orders}) với \texttt{TextWebSocketHandler} quản lý phiên đồng thời đa nhà hàng. Sự kiện đơn hàng mới (luôn sắp xếp mới nhất lên đầu) được phát sóng tức thời trong vòng mili-giây kèm chuông cảnh báo 3 âm sắc điều chế bằng Web Audio API.
+    \item \textbf{Trợ lý AI Copilot Đa vai trò \& Tác tử AI Hành động (Dual-Persona Agentic AI) kết hợp Chatbot Menu Catalog RAG:} Tích hợp mô hình \textbf{Google Gemini 2.5 Flash} cùng Động cơ Heuristic DSS dự phòng hai tầng, phân tách hai vai trò chuyên biệt cho Chủ nhà hàng (giám sát doanh thu, cảnh báo kho, tự động đề xuất nút tác tử \textbf{tạm khóa món cạn kho 1-Click}) và Super Admin (theo dõi GMV toàn sàn, chỉ số CSAT và \textbf{AI Sentinel gỡ bỏ đánh giá vi phạm 1-Click}). Đối với khách hàng, hệ thống cung cấp Widget \textbf{AI Concierge} ứng dụng kỹ thuật \textbf{Menu Catalog RAG} gợi ý món bán chạy, mã giảm giá và điều hướng trực tiếp tới món ăn đích.
+    \item \textbf{Quản lý Kho nguyên liệu Thông minh \& Tự động Trừ/Hoàn Tồn kho (Smart Inventory Tracking):} Định lượng tồn kho (\texttt{quantity}), đơn vị đo (\texttt{unit}) và ngưỡng cảnh báo an toàn (\texttt{minThreshold}) cho từng nguyên liệu; tự động khấu trừ khi tạo đơn, tự động hoàn trả khi đơn bị hủy (bao gồm cả lúc chủ quán chuyển trạng thái sang \texttt{CANCELLED}) và lưu vết nhật ký xuất nhập kho (\texttt{InventoryLog}).
+    \item \textbf{Phía Frontend:} Được phát triển bằng React 19 và Vite 8, quản lý trạng thái tập trung qua Redux Toolkit và Redux Thunk. Giao diện thiết kế theo phong cách Dark Mode đồng bộ với lưới khám phá nhà hàng 4 cột thích ứng, thanh điều hướng hài hòa giữa khách hàng và quản trị, carousel tương tác ``Hôm nay ăn gì?'', đánh giá theo từng món ăn/nhà hàng và tự động cuộn trang (\texttt{ScrollToTop}).
 \end{itemize}
 
-Kết quả thực nghiệm trên hệ thống cho thấy toàn bộ các luồng nghiệp vụ cốt lõi -- từ duyệt thực đơn, tùy chọn nguyên liệu, áp dụng ưu đãi, thanh toán trực tuyến, cảnh báo đơn hàng thời gian thực, quản lý kho tự động cho đến trợ lý AI phân tích kinh doanh -- đều vận hành chính xác, mượt mà với độ trễ thấp và độ tin cậy cao. Khóa luận đóng góp một mô hình mẫu hoàn chỉnh về mặt kỹ thuật công nghệ phần mềm ứng dụng trong lĩnh vực thương mại điện tử ẩm thực.
+Kết quả thực nghiệm trên hệ thống cho thấy toàn bộ các luồng nghiệp vụ cốt lõi -- từ duyệt thực đơn (Guest Browsing), tư vấn AI Menu RAG, tùy chọn nguyên liệu, áp dụng ưu đãi, thanh toán Stripe/COD, cảnh báo đơn hàng WebSocket thời gian thực, quản lý kho tự động cho đến Tác tử AI hành động -- đều vận hành chính xác, mượt mà với độ trễ thấp và độ tin cậy cao. Khóa luận đóng góp một mô hình mẫu hoàn chỉnh về mặt kỹ thuật công nghệ phần mềm ứng dụng trong lĩnh vực thương mại điện tử ẩm thực.
 
 \vspace{0.5cm}
-\textbf{Từ khóa:} Online Food Ordering, Spring Boot 3, React 19, JWT Authentication, Redux Toolkit, Stripe Payment Gateway, Coupon Constraint Engine, WebSocket Real-time, AI Copilot, Decision Support System, Smart Inventory, MySQL.
+\textbf{Từ khóa:} Online Food Ordering, Spring Boot 3, React 19, JWT Authentication, Redux Toolkit, Stripe Payment Gateway, COD, Coupon Constraint Engine, WebSocket Real-time, Agentic AI Copilot, Menu Catalog RAG, Smart Inventory, MySQL.
 \end{preamble}
 
 % =========================================================================
@@ -153,7 +153,11 @@ Kết quả thực nghiệm trên hệ thống cho thấy toàn bộ các luồn
 \textbf{SDK} & Software Development Kit & Bộ công cụ phát triển phần mềm \\
 \textbf{WS} & WebSocket Protocol & Giao thức truyền thông hai chiều thời gian thực \\
 \textbf{LLM} & Large Language Model & Mô hình ngôn ngữ lớn trí tuệ nhân tạo \\
+\textbf{RAG} & Retrieval-Augmented Generation & Kỹ thuật truy xuất ngữ cảnh tăng cường cho trợ lý AI \\
 \textbf{DSS} & Decision Support System & Hệ thống hỗ trợ ra quyết định kinh doanh \\
+\textbf{COD} & Cash On Delivery & Phương thức thanh toán tiền mặt khi nhận hàng \\
+\textbf{GMV} & Gross Merchandise Value & Tổng giá trị giao dịch hàng hóa trên toàn sàn \\
+\textbf{CSAT} & Customer Satisfaction Score & Chỉ số đo lường mức độ hài lòng của khách hàng \\
 \textbf{FIFO} & First In, First Out & Phương pháp quản lý kho nhập trước xuất trước \\
 \textbf{CORS} & Cross-Origin Resource Sharing & Cơ chế chia sẻ tài nguyên giữa các nguồn khác nhau \\
 \textbf{PCI DSS} & Payment Card Industry Data Security Standard & Tiêu chuẩn an ninh dữ liệu thẻ thanh toán quốc tế \\
@@ -196,13 +200,13 @@ Xuất phát từ những đòi hỏi thực tiễn và thách thức công ngh�
 Khóa luận hướng tới việc thực hiện các mục tiêu cụ thể sau:
 \begin{enumerate}
     \item \textbf{Nghiên cứu kiến trúc phần mềm Full-Stack hiện đại:} Nắm vững và làm chủ mô hình Client-Server phân tầng, kiến trúc RESTful API phi trạng thái (Stateless), cơ chế tiêm phụ thuộc (IoC/DI) của framework Spring Boot 3 và cơ chế quản lý trạng thái tập trung trong React 19.
-    \item \textbf{Thiết kế hệ thống phân quyền đa tầng và bảo mật dữ liệu:} Hiện thực hóa hệ thống xác thực an toàn dựa trên chuẩn JSON Web Token (JWT) và Spring Security; áp dụng thuật toán băm mật khẩu một chiều BCrypt; thiết kế cơ chế chặn đăng ký trái phép quyền Admin (Role Sanitization) ngay từ tầng Controller.
-    \item \textbf{Nghiên cứu và phát triển Động cơ kiểm soát mã giảm giá (Coupon Constraint Engine):} Thiết kế và hiện thực thuật toán kiểm tra tính hợp lệ của mã khuyến mãi đa cấp độ (mã riêng của nhà hàng và mã ưu đãi toàn sàn), áp dụng cơ chế tự động gỡ mã (Auto-removal) khi tổng giá trị giỏ hàng suy giảm dưới ngưỡng tối thiểu, kết hợp xử lý dữ liệu an toàn ngoại lệ (Null-safe Bounds Checking).
-    \item \textbf{Tích hợp cổng thanh toán quốc tế Stripe:} Nghiên cứu cơ chế vận hành của Stripe Checkout Session, tích hợp Stripe Java SDK phía máy chủ và xây dựng luồng chuyển hướng thanh toán an toàn, xác nhận cập nhật trạng thái đơn hàng đã thanh toán (PAID) bảo mật.
-    \item \textbf{Hiện thực hóa truyền thông đơn hàng thời gian thực (Real-time WebSocket Alerts):} Xây dựng kênh liên lạc hai chiều bằng Spring WebSocket kết hợp bộ tổng hợp âm thanh điều chế Web Audio API, giúp chủ cơ sở nhận thông báo và chuông báo đơn hàng mới ngay tức khắc.
-    \item \textbf{Nghiên cứu và phát triển Trợ lý AI Copilot \& Hệ thống Hỗ trợ Ra Quyết định (DSS):} Xây dựng trợ lý ảo phân tích kinh doanh tích hợp Google Gemini API kết hợp động cơ suy luận Heuristic dự phòng (Fallback DSS), cung cấp các góc nhìn đa chiều về doanh thu, món bán chạy, món ế ẩm và khuyến nghị tiếp thị.
-    \item \textbf{Phát triển phân hệ Quản lý Kho nguyên liệu Tự động (Smart Inventory Tracking):} Xây dựng mô hình định lượng tồn kho theo đơn vị đo lường, cơ chế tự động khấu trừ nguyên liệu khi phát sinh đơn hàng, tự động hoàn trả khi hủy đơn và lưu nhật ký xuất nhập kho minh bạch.
-    \item \textbf{Xây dựng giao diện người dùng tương tác cao:} Phát triển ứng dụng Single Page Application (SPA) với React 19, Material-UI (MUI) và TailwindCSS; triển khai chủ đề giao diện tối (Dark Mode) sang trọng; tích hợp Carousel tìm kiếm món ăn ``Hôm nay ăn gì'' và các bảng điều khiển trực quan cho từng đối tượng sử dụng.
+    \item \textbf{Thiết kế hệ thống phân quyền đa tầng, bảo mật dữ liệu và duyệt mở (Guest Browsing):} Hiện thực hóa hệ thống xác thực an toàn dựa trên chuẩn JSON Web Token (JWT) và Spring Security; áp dụng thuật toán băm mật khẩu một chiều BCrypt; thiết kế cơ chế chặn đăng ký trái phép quyền Admin (Role Sanitization) ngay từ tầng Controller; đồng thời tối ưu \texttt{JwtTokenValidator} để cho phép khách vãng lai (Guest) tự do duyệt nhà hàng, tìm món và tham vấn Chatbot ngay cả khi chưa đăng nhập hoặc token hết hạn.
+    \item \textbf{Nghiên cứu và phát triển Động cơ kiểm soát mã giảm giá (Coupon Constraint Engine) \& Đồng bộ Sự kiện:} Thiết kế và hiện thực thuật toán kiểm tra tính hợp lệ của mã khuyến mãi đa cấp độ (mã riêng của nhà hàng và mã ưu đãi toàn sàn), áp dụng cơ chế tự động gỡ mã (Auto-removal) khi tổng giá trị giỏ hàng suy giảm dưới ngưỡng tối thiểu, xử lý an toàn ngoại lệ (Null-safe Bounds Checking), và tự động đồng bộ mã giảm giá khi Chủ quán tạo sự kiện (\texttt{Events} $\to$ \texttt{Coupon}).
+    \item \textbf{Tích hợp Thanh toán Đa phương thức (Stripe Checkout \& COD) kèm Kiểm soát Máy trạng thái Đơn hàng:} Nghiên cứu cơ chế vận hành của Stripe Checkout Session với Stripe Java SDK, mở khóa luồng callback tự động cập nhật trạng thái (\texttt{PAID}), hỗ trợ song song thanh toán tiền mặt khi nhận hàng (COD), xuất hóa đơn điện tử chi tiết cho khách hàng, và cài đặt bộ lọc chuyển trạng thái đơn hàng chặt chẽ (Order State Guard).
+    \item \textbf{Hiện thực hóa truyền thông đơn hàng thời gian thực (Real-time WebSocket Alerts):} Xây dựng kênh liên lạc hai chiều bằng Spring WebSocket kết hợp bộ tổng hợp âm thanh điều chế Web Audio API, giúp chủ cơ sở nhận thông báo và chuông báo đơn hàng mới tức khắc với danh sách luôn ưu tiên đơn mới nhất lên đầu.
+    \item \textbf{Nghiên cứu và phát triển Trợ lý AI Copilot Đa vai trò (Dual-Persona Agentic AI) \& Chatbot Menu Catalog RAG:} Xây dựng trợ lý quản trị tích hợp \textbf{Google Gemini 2.5 Flash} kết hợp động cơ suy luận Heuristic dự phòng hai tầng (cho cả Chủ quán và Super Admin), trang bị \textbf{Tác tử AI hành động 1-Click} (tự động tạm khóa món cạn kho trên menu hoặc \textbf{AI Sentinel} gỡ bỏ đánh giá vi phạm); đồng thời tích hợp \textbf{Trợ lý Ẩm thực Khách hàng (AI Concierge)} ứng dụng kỹ thuật \textbf{Menu Catalog RAG} để gợi ý món hot và mã ưu đãi trực tiếp.
+    \item \textbf{Phát triển phân hệ Quản lý Kho nguyên liệu Tự động (Smart Inventory Tracking):} Xây dựng mô hình định lượng tồn kho theo đơn vị đo lường, cơ chế tự động khấu trừ nguyên liệu khi phát sinh đơn hàng, tự động hoàn trả khi khách hoặc chủ quán hủy đơn và lưu nhật ký xuất nhập kho minh bạch.
+    \item \textbf{Xây dựng giao diện người dùng tương tác cao:} Phát triển ứng dụng Single Page Application (SPA) với React 19, Material-UI (MUI v9), Recharts và TailwindCSS; triển khai chủ đề Dark Mode đồng bộ; lưới 4 cột khám phá 16 nhà hàng cùng Carousel ``Hôm nay ăn gì?'', bảng điều khiển trực quan với thanh điều hướng hài hòa giữa khách hàng và quản trị.
 \end{enumerate}
 
 \section{Đối tượng và Phạm vi nghiên cứu}
@@ -225,13 +229,13 @@ Khóa luận đạt được những kết quả đóng góp thiết thực cả
 \begin{itemize}
     \item \textbf{Về mặt kỹ thuật:}
     \begin{itemize}
-        \item Xây dựng hoàn chỉnh một giải pháp Full-Stack có độ gắn kết cao nhưng phân tách lỏng lẻo (Loose Coupling) giữa Frontend (React SPA) và Backend (Spring Boot REST API \& WebSocket Server).
-        \item Đề xuất và hiện thực thành công \textbf{Động cơ kiểm soát mã giảm giá có điều kiện ràng buộc (Coupon Constraint Engine)}, giải quyết triệt để vấn đề gian lận khuyến mãi và xử lý an toàn dữ liệu biên (Null-safe logic).
-        \item Tích hợp thành công cơ chế thanh toán thẻ chuẩn quốc tế \textbf{Stripe Checkout Session}, mang lại quy trình thanh toán nhanh chóng, an toàn đạt tiêu chuẩn PCI DSS.
+        \item Xây dựng hoàn chỉnh một giải pháp Full-Stack có độ gắn kết cao nhưng phân tách lỏng lẻo (Loose Coupling) giữa Frontend (React 19 SPA) và Backend (Spring Boot REST API \& WebSocket Server), hỗ trợ trải nghiệm duyệt quán không cần đăng nhập (Guest Browsing) và cơ chế tự dọn dẹp token hết hạn ở phía Client.
+        \item Đề xuất và hiện thực thành công \textbf{Động cơ kiểm soát mã giảm giá có điều kiện ràng buộc (Coupon Constraint Engine)} kết hợp cơ chế tự động đồng bộ mã ưu đãi từ phân hệ Sự kiện nhà hàng (\texttt{Events}), giải quyết triệt để vấn đề gian lận khuyến mãi và xử lý an toàn dữ liệu biên (Null-safe logic).
+        \item Tích hợp thành công cơ chế thanh toán đa phương thức gồm \textbf{Stripe Checkout Session} (chuẩn PCI DSS, tối ưu callback xác nhận tự động) và \textbf{Thanh toán khi nhận hàng (COD)}, đi kèm \textbf{Máy trạng thái đơn hàng (Order State Guard)} chống nhảy cóc trạng thái thanh toán và xuất Hóa đơn điện tử.
         \item Hiện thực hóa thành công \textbf{Hệ thống cảnh báo đơn hàng thời gian thực qua WebSocket} kết hợp chuông báo tương tác điều chế từ Web Audio API, giảm độ trễ tiếp nhận đơn hàng xuống dưới 50ms mà không làm tăng tải CPU máy chủ.
-        \item Thiết kế và triển khai \textbf{Trợ lý AI Copilot \& Động cơ DSS hai tầng (Google Gemini LLM + Heuristic Fallback Engine)}, cung cấp khả năng phân tích kinh doanh thông minh và tính sẵn sàng cao (High Availability).
-        \item Phát triển \textbf{Cơ chế Quản lý Kho nguyên liệu Tự động (Smart Stock Depletion Engine)}, tự động đồng bộ số lượng tồn kho với các đơn hàng phát sinh và lưu trữ nhật ký biến động kho minh bạch.
-        \item Triển khai cơ chế nạp dữ liệu mẫu an toàn (Database Seeding Engine) với dữ liệu nhà hàng, thực đơn, đánh giá đa dạng, đồng thời áp dụng chính sách chặn leo thang đặc quyền quản trị viên công khai.
+        \item Thiết kế và triển khai \textbf{Trợ lý AI Copilot Đa vai trò \& Tác tử AI Hành động (Dual-Persona Agentic AI)} dựa trên \textbf{Google Gemini 2.5 Flash + Heuristic Fallback Engine}, tích hợp nút thực thi 1-Click (\textit{Tạm khóa món cạn kho} cho Chủ quán và \textit{AI Sentinel gỡ bỏ đánh giá vi phạm} cho Super Admin), cùng \textbf{Chatbot AI Concierge (Menu Catalog RAG)} phục vụ khách hàng.
+        \item Phát triển \textbf{Cơ chế Quản lý Kho nguyên liệu Tự động (Smart Stock Depletion Engine)}, tự động khấu trừ và hoàn trả tồn kho nguyên liệu khi đơn phát sinh hoặc bị hủy (bao gồm cả thao tác hủy từ phía nhà hàng), lưu trữ nhật ký biến động kho minh bạch.
+        \item Triển khai cơ chế nạp và sao lưu dữ liệu mẫu chuẩn thực tiễn (Database Seeding \& SQL Snapshot) với \textbf{16 nhà hàng} trải dài 3 tỉnh thành (Hà Nội, TP. Hồ Chí Minh, Quảng Nam), \textbf{82 món ăn} hình ảnh thực tế, \textbf{8 mã giảm giá}, \textbf{4 sự kiện}, kết hợp cơ chế khóa bảo vệ các endpoint seed tránh ghi đè dữ liệu tùy chỉnh và chặn leo thang đặc quyền công khai.
     \end{itemize}
     \item \textbf{Về mặt thực tiễn:} Cung cấp một sản phẩm phần mềm hoàn chỉnh, giao diện Dark Mode đẹp mắt, hiện đại, tích hợp công nghệ trí tuệ nhân tạo và truyền thông thời gian thực, sẵn sàng phục vụ triển khai thực tế cho các chuỗi nhà hàng hoặc các mô hình sàn thương mại ẩm thực số.
 \end{itemize}
@@ -275,7 +279,7 @@ Trong dự án này, hệ thống áp dụng cơ chế xác thực phi trạng t
 \begin{itemize}
     \item \textbf{Cấu trúc của JWT:} Một mã JWT bao gồm 3 phần được phân tách bằng dấu chấm: Header (chứa thông tin thuật toán ký HMAC-SHA256), Payload (chứa các thông tin định danh người dùng như Email, Vai trò, Thời gian phát hành, Thời gian hết hạn), và Signature (chữ ký số mật mã đảm bảo tính toàn vẹn của token).
     \item \textbf{Quy trình hoạt động:} Khi người dùng đăng nhập thành công với tài khoản và mật khẩu hợp lệ, máy chủ sinh ra một JWT và trả về phía Client. Ở các yêu cầu tiếp theo đến các tài nguyên cần bảo mật (ví dụ: đặt hàng, xem thông tin cá nhân, cập nhật thực đơn), Client sẽ đính kèm mã JWT này vào tiêu đề yêu cầu: \texttt{Authorization: Bearer <token>}.
-    \item \textbf{Ưu điểm:} Máy chủ không cần duy trì bộ nhớ trạng thái phiên làm việc (Session Memory), giúp giảm tải bộ nhớ RAM máy chủ và cho phép hệ thống dễ dàng mở rộng theo chiều ngang (Horizontal Scaling) khi lưu lượng truy cập gia tăng.
+    \item \textbf{Ưu điểm \& Cơ chế Guest-Friendly:} Máy chủ không cần duy trì bộ nhớ trạng thái phiên làm việc (Session Memory), giúp giảm tải bộ nhớ RAM máy chủ và cho phép mở rộng theo chiều ngang. Đặc biệt, bộ lọc \texttt{JwtTokenValidator} được thiết kế theo hướng \textit{Graceful Degradation}: nếu khách vãng lai gửi yêu cầu không có token hoặc token đã hết hạn tới các tài nguyên công khai (\texttt{GET /api/restaurants/**}, \texttt{/api/food/**}, \texttt{/api/coupons}), bộ lọc sẽ xóa ngữ cảnh xác thực (\texttt{SecurityContextHolder.clearContext()}) để người dùng tiếp tục duyệt quán, xem thực đơn và trò chuyện với AI Chatbot mà không gặp lỗi chặn trắng màn hình; trong khi các endpoint riêng tư vẫn được Spring Security bảo vệ nghiêm ngặt bằng mã lỗi 401/403.
 \end{itemize}
 
 \subsection{Tầng Truy cập Dữ liệu Spring Data JPA và Hibernate ORM}
@@ -345,26 +349,24 @@ Trong hệ sinh thái Spring Framework, mô-đun Spring WebSocket cung cấp gi�
 Khi có đơn hàng mới phát sinh hoặc có sự thay đổi trạng thái giao vận, tầng dịch vụ kích hoạt phương thức phát sóng \texttt{broadcastToRestaurant(restaurantId, notification)}, đóng gói đối tượng \texttt{OrderNotificationDTO} thành chuỗi JSON và gửi tức thời qua luồng socket tới đúng các phiên của nhà hàng mục tiêu, đảm bảo tính bảo mật và cách ly dữ liệu giữa các cơ sở kinh doanh.
 
 \section{Mô hình Ngôn ngữ Lớn (LLM) và Hệ thống Hỗ trợ Ra Quyết định (DSS) trong Quản trị F\&B}
-\subsection{Tổng quan về Mô hình Ngôn ngữ Lớn và API Google Gemini}
+\subsection{Tổng quan về Mô hình Ngôn ngữ Lớn và API Google Gemini 2.5 Flash}
 Sự phát triển đột phá của các mô hình ngôn ngữ lớn (Large Language Models -- LLM) dựa trên kiến trúc Transformer đã mở ra kỷ nguyên mới cho việc tự động hóa phân tích dữ liệu và tư vấn chiến lược doanh nghiệp. Khác với các thuật toán thống kê truyền thống vốn chỉ cung cấp các bảng số liệu rời rạc, LLM có năng lực thấu hiểu ngữ cảnh nghiệp vụ sâu sắc, tổng hợp dữ liệu định lượng và diễn đạt thành các bản tóm tắt chiến lược mạch lạc bằng ngôn ngữ tự nhiên.
 
-Trong đề tài khóa luận này, hệ thống tích hợp API thế hệ mới \textbf{Google Gemini 1.5 Flash}. Đây là mô hình trí tuệ nhân tạo được tối ưu hóa đặc biệt về tốc độ suy luận cực nhanh, chi phí vận hành thấp và khả năng tiếp nhận cửa sổ ngữ cảnh dài. Gemini được tích hợp vào hệ thống thông qua giao diện lập trình hướng dịch vụ RESTful với cơ chế xác thực API Key, đóng vai trò là khối óc phân tích trực tuyến cho trợ lý quản trị \textbf{AI Copilot}.
+Trong đề tài khóa luận này, hệ thống tích hợp API thế hệ mới \textbf{Google Gemini 2.5 Flash} (endpoint \texttt{v1beta/models/gemini-2.5-flash}). Đây là mô hình trí tuệ nhân tạo được tối ưu hóa đặc biệt về tốc độ suy luận nhanh, chi phí vận hành thấp và khả năng tiếp nhận ngữ cảnh có cấu trúc lớn. Gemini được tích hợp vào hệ thống thông qua giao diện lập trình hướng dịch vụ RESTful với cơ chế xác thực API Key cấu hình qua biến môi trường, đóng vai trò là khối óc phân tích trực tuyến cho trợ lý quản trị \textbf{AI Copilot}.
 
-\subsection{Chiến lược Phòng thủ Hai tầng (Two-tier Architecture) và Động cơ Heuristic DSS Dự phòng}
-Một trong những thách thức sống còn khi triển khai các dịch vụ AI đám mây trong môi trường quản trị sản xuất (Production) là rủi ro về tính sẵn sàng (Availability): các sự cố đứt cáp quang quốc tế, suy giảm tốc độ mạng, hoặc hiện tượng chạm ngưỡng giới hạn tần suất yêu cầu (Rate Limiting HTTP 429) có thể làm tê liệt chức năng trợ lý ảo.
+\subsection{Kiến trúc Phòng thủ Hai tầng, Tác tử AI Hành động (Agentic AI) và Menu Catalog RAG}
+Một trong những thách thức sống còn khi triển khai các dịch vụ AI đám mây trong môi trường quản trị sản xuất (Production) là rủi ro về tính sẵn sàng (Availability): các sự cố nghẽn kết nối, suy giảm tốc độ mạng, hoặc hiện tượng chạm ngưỡng giới hạn tần suất yêu cầu (Rate Limiting HTTP 429) có thể làm tê liệt chức năng trợ lý ảo.
 
-Để khắc phục rủi ro này, khóa luận đề xuất và hiện thực hóa mô hình \textbf{Kiến trúc phòng thủ hai tầng (Two-tier Resilient DSS Architecture)}:
+Để khắc phục rủi ro này và nâng tầm trợ lý ảo từ ``hệ thống hỏi-đáp thụ động'' thành ``hệ thống hỗ trợ điều hành chủ động'', khóa luận đề xuất và hiện thực hóa kiến trúc kết hợp ba trụ cột:
 \begin{enumerate}
-    \item \textbf{Tầng 1 -- Trí tuệ AI Đám mây (Primary Cloud LLM Engine):} Hệ thống tổng hợp các chỉ số hoạt động kinh doanh trực tiếp từ CSDL (tổng doanh thu, tổng số đơn, giá trị đơn trung bình, danh sách 5 món bán chạy nhất, danh sách các món tiêu thụ chậm, danh sách các nguyên liệu dưới ngưỡng an toàn, điểm đánh giá của khách hàng) và đóng gói vào cấu trúc Prompt ngữ cảnh chuẩn mực gửi tới Gemini 1.5 Flash. AI sẽ đóng vai trò như một chuyên gia tư vấn chiến lược F\&B cao cấp.
-    \item \textbf{Tầng 2 -- Động cơ Heuristic DSS Cục bộ Dự phòng (Fallback Local DSS Engine):} Khi tiến trình gọi API đám mây bị quá thời gian chờ (Timeout > 10s), không có API Key hoặc gặp lỗi mạng, hệ thống tự động kích hoạt Động cơ suy luận quy tắc Heuristic cục bộ được lập trình trực tiếp bằng Java. Động cơ này tự động phân tích dữ liệu thống kê để đưa ra các đề xuất hành động cụ thể:
+    \item \textbf{Chiến lược phòng thủ hai tầng (Two-tier Resilient DSS Architecture):}
     \begin{itemize}
-        \item \textit{Phân tích phân khúc thực đơn:} Tự động phân loại món ăn theo ma trận hiệu quả (Star items, Dog items) dựa trên doanh số và đề xuất chương trình Flash Sale hoặc combo giảm giá cho các món tiêu thụ chậm.
-        \item \textit{Cảnh báo an toàn chuỗi cung ứng:} Tự động rà soát kho nguyên liệu, tính toán tỷ lệ tiêu hao và phát cảnh báo bổ sung khẩn cấp đối với các nguyên liệu có số lượng tồn kho rơi xuống dưới ngưỡng cảnh báo (\texttt{quantity $\le$ minThreshold}).
-        \item \textit{Khuyến nghị tối ưu doanh thu:} Phân tích giá trị đơn hàng trung bình và đề xuất thiết lập ngưỡng giá trị áp dụng mã giảm giá (Minimum Order Value) cao hơn 15\% so với mức trung bình để kích thích khách hàng mua thêm món.
+        \item \textit{Tầng 1 -- Trí tuệ AI Đám mây (Primary Cloud LLM Engine):} Hệ thống tổng hợp chỉ số kinh doanh thực tế từ CSDL (tổng doanh thu/GMV, số đơn hoàn thành/hủy, Top 5 món bán chạy, món bán chậm, nguyên liệu cạn kho, điểm hài lòng CSAT) đóng gói vào System Prompt thích ứng theo vai trò (\textbf{Dual-Persona}: Chủ nhà hàng vs. Ban quản trị toàn sàn Super Admin) và gửi tới Google Gemini 2.5 Flash.
+        \item \textit{Tầng 2 -- Động cơ Heuristic DSS Cục bộ Dự phòng (Fallback Local DSS Engine):} Khi tiến trình gọi API đám mây bị quá thời gian chờ, chưa cấu hình API Key hoặc gặp lỗi mạng, hệ thống tự động kích hoạt Động cơ suy luận quy tắc Heuristic cục bộ bằng Java để trả về phân tích định lượng chính xác 100\% tức thì.
     \end{itemize}
+    \item \textbf{Động cơ Tác tử AI Hành động (Agentic Action Decision Engine):} Sau khi phân tích ngữ cảnh, hệ thống tự động sinh cấu trúc \texttt{agentAction} kèm giao diện tương tác 1-Click cho phép người quản trị thực thi trực tiếp thay đổi xuống CSDL ngay trong luồng hội thoại: (i) Đối với Chủ nhà hàng, tự động phát hiện nguyên liệu cạn kho và đề xuất nút \textit{``Tạm khóa món ăn trên Menu''} (\texttt{LOCK\_FOOD\_AVAILABILITY}); (ii) Đối với Super Admin, bộ giám sát \textit{AI Content Moderation Sentinel} tự động quét đánh giá vi phạm tiêu chuẩn cộng đồng và đề xuất nút \textit{``Gỡ bỏ đánh giá \& Phục hồi uy tín đối tác''} (\texttt{MODERATE\_REVIEW}).
+    \item \textbf{Kỹ thuật Truy xuất Tăng cường Danh mục Thực đơn (Menu Catalog RAG):} Phía ứng dụng khách hàng (\texttt{Chatbot.jsx}), Trợ lý Ẩm thực \textbf{AI Concierge} tự động truy vấn trước danh mục món bán chạy (\texttt{/api/food/popular}) và mã giảm giá hiệu lực (\texttt{/api/coupons}) để ghép ngữ cảnh thực tế vào câu trả lời, kết xuất thẻ món ăn kèm ảnh thật, giá tiền, mã ưu đãi và liên kết sâu (\texttt{?foodId=...}) giúp khách hàng bấm đặt món chỉ với một thao tác.
 \end{enumerate}
-
-Mô hình kết hợp hai tầng này đảm bảo hệ thống vừa sở hữu khả năng phân tích ngôn ngữ tự nhiên hiện đại của LLM, vừa duy trì tính sẵn sàng tuyệt đối (100\% High Availability) phục vụ công tác điều hành liên tục của nhà hàng ẩm thực.
 
 
 % =========================================================================
@@ -391,36 +393,36 @@ Hệ thống được chia thành các phân hệ chức năng tương ứng v�
         \item Đăng nhập hệ thống, cấp phát token JWT và tự động điều hướng người dùng tới giao diện tương ứng theo vai trò.
         \item Quản lý thông tin hồ sơ cá nhân và danh sách địa chỉ giao hàng của người dùng.
     \end{itemize}
-    \item \textbf{Phân hệ Khách hàng (Customer):}
+    \item \textbf{Phân hệ Khách hàng \& Khách vãng lai (Customer / Guest):}
     \begin{itemize}
-        \item Khám phá danh sách các nhà hàng đang hoạt động, lọc theo thành phố, khu vực và danh mục món.
-        \item Xem chi tiết món ăn, giá tiền, hình ảnh và danh sách thành phần nguyên liệu đi kèm.
+        \item Khám phá danh sách 16 nhà hàng thuộc 3 khu vực (Hà Nội, TP. Hồ Chí Minh, Quảng Nam), lọc theo khu vực và loại hình ẩm thực ngay cả khi chưa đăng nhập (Guest Browsing).
+        \item Tương tác với \textbf{Trợ lý Ẩm thực AI Concierge (Menu Catalog RAG)} để nhận gợi ý món ăn bán chạy, tra cứu mã ưu đãi và bấm liên kết sâu tới đúng món ăn trên thực đơn quán.
+        \item Xem chi tiết món ăn, giá tiền, bộ ảnh thực tế và danh sách thành phần nguyên liệu đi kèm.
         \item Thêm món ăn vào giỏ hàng với các nguyên liệu tùy chọn; tăng, giảm số lượng hoặc xóa món khỏi giỏ hàng.
-        \item Nhập mã ưu đãi hoặc áp dụng mã giảm giá 1-Click từ danh sách gợi ý.
-        \item Tự động tính toán lại số tiền sau giảm giá và tự động gỡ bỏ mã nếu giỏ hàng không còn đủ giá trị tối thiểu.
-        \item Thanh toán trực tuyến qua cổng thẻ quốc tế Stripe Checkout hoặc tiền mặt khi nhận hàng (COD).
-        \item Xem lịch sử chi tiết các đơn hàng đã đặt, theo dõi trạng thái giao hàng và hủy đơn hàng khi đơn còn ở trạng thái chờ xử lý.
-        \item Gửi đánh giá số sao (Rating từ 1 đến 5 sao) và để lại bình luận nhận xét về món ăn, nhà hàng.
+        \item Nhập mã ưu đãi hoặc áp dụng mã giảm giá 1-Click từ danh sách gợi ý; tự động tính toán lại số tiền và tự động gỡ bỏ mã nếu giỏ hàng không còn đủ giá trị tối thiểu.
+        \item Thanh toán đa phương thức: qua cổng thẻ quốc tế Stripe Checkout hoặc tiền mặt khi nhận hàng (COD); theo dõi lịch sử giao dịch và xuất Hóa đơn điện tử chi tiết.
+        \item Xem lịch sử đơn hàng (luôn hiển thị đơn mới nhất lên đầu), theo dõi tiến độ giao hàng và hủy đơn hàng khi đơn còn ở trạng thái chờ xử lý.
+        \item Gửi, chỉnh sửa, xóa đánh giá số sao (1 đến 5 sao) cho từng nhà hàng hoặc từng món ăn cụ thể trong đơn hàng đã hoàn thành.
     \end{itemize}
     \item \textbf{Phân hệ Chủ nhà hàng (Restaurant Owner):}
     \begin{itemize}
-        \item Đăng ký khởi tạo thông tin nhà hàng mới (nếu chưa có) hoặc xem thông tin nhà hàng hiện tại.
-        \item Bật/tắt trạng thái mở cửa tiếp nhận đơn hàng trực tuyến của nhà hàng.
-        \item Quản lý danh mục món ăn (Category) riêng của quán.
+        \item Đăng ký khởi tạo thông tin nhà hàng mới (nếu chưa có) hoặc xem thông tin nhà hàng hiện tại; bật/tắt trạng thái mở cửa nhận đơn.
+        \item Quản lý danh mục món ăn (Category) riêng của quán kèm cơ chế chống trùng tên danh mục.
         \item Quản lý thực đơn: thêm món mới, cập nhật hình ảnh, giá bán, thành phần chay, trạng thái còn/hết hàng.
         \item Quản lý kho nguyên liệu thông minh: tạo nhóm nguyên liệu (Ingredient Category) và nguyên liệu cụ thể (IngredientsItem), định lượng số lượng tồn kho (\texttt{quantity}), đơn vị tính (\texttt{unit}), thiết lập ngưỡng cảnh báo an toàn (\texttt{minThreshold}) và xem nhật ký xuất nhập kho (\texttt{InventoryLog}).
-        \item Quản lý đơn hàng: tiếp nhận các đơn hàng mới, lọc theo trạng thái và cập nhật trạng thái chế biến/giao hàng.
+        \item Quản lý đơn hàng: tiếp nhận các đơn hàng mới nhất xếp trên cùng kèm nhãn phương thức thanh toán (\texttt{STRIPE}/\texttt{COD}), điều phối trạng thái tuân thủ Máy trạng thái đơn hàng (State Guard) và tự động hoàn kho nếu hủy đơn.
         \item Tiếp nhận thông báo đơn hàng mới tức thời theo thời gian thực (Real-time WebSocket alerts) kèm chuông báo âm thanh thuật toán (Web Audio Chime) mà không cần làm mới trang.
-        \item Tương tác với Trợ lý AI Copilot: tra cứu báo cáo kinh doanh tổng quan, nhận phân tích chuyên sâu về doanh thu, món bán chạy, món ế ẩm, cảnh báo nguyên liệu cạn kiệt và đề xuất chiến lược tiếp thị.
-        \item Tạo các sự kiện (Events) quảng bá ẩm thực của nhà hàng.
+        \item Tương tác với Trợ lý AI Copilot \& Tác tử hành động: tra cứu báo cáo kinh doanh theo thời gian thực, nhận cảnh báo nguyên liệu cạn kiệt và bấm nút \textbf{Tác tử AI 1-Click} để tạm khóa hoặc mở bán lại món ăn ngay trên menu khách hàng.
+        \item Tạo sự kiện khuyến mãi (\texttt{Events}) quảng bá ẩm thực gắn liền mã giảm giá, tự động đồng bộ sinh mã \texttt{Coupon} áp dụng riêng cho nhà hàng.
     \end{itemize}
     \item \textbf{Phân hệ Quản trị viên Sàn (Super Admin):}
     \begin{itemize}
-        \item Xem danh sách toàn bộ người dùng trong hệ thống và khóa/mở tài khoản.
+        \item Xem danh sách toàn bộ người dùng trong hệ thống và khóa/mở hoặc phân quyền tài khoản.
         \item Xem danh sách các nhà hàng trên toàn hệ thống và thực hiện xóa các nhà hàng vi phạm chính sách sàn.
-        \item Kiểm duyệt các bài đánh giá của người dùng và trực tiếp xóa bỏ các bài viết có nội dung phản cảm, vi phạm chuẩn mực.
+        \item Kiểm duyệt danh sách đánh giá theo từng nhà hàng được chọn và xóa bỏ các bài viết có nội dung phản cảm, vi phạm chuẩn mực.
+        \item Tương tác với \textbf{Platform Executive AI Copilot \& AI Content Moderation Sentinel}: giám sát tổng GMV toàn sàn, chỉ số hài lòng CSAT và kích hoạt tác tử AI gỡ bỏ đánh giá vi phạm chỉ bằng 1 thao tác.
         \item Khởi tạo các mã giảm giá áp dụng toàn sàn (Global Coupons) với điều kiện ràng buộc giá trị đơn tối thiểu.
-        \item Báo cáo thống kê doanh thu toàn sàn, số lượng đơn hàng và số lượng người dùng mới.
+        \item Báo cáo thống kê doanh thu toàn sàn, tổng quan mạng lưới nhà hàng đối tác và biểu đồ tăng trưởng.
     \end{itemize}
 \end{itemize}
 
@@ -440,10 +442,10 @@ Dựa trên các yêu cầu chức năng đã phân tích, biểu đồ ca sử 
 \includegraphics[width=0.95\textwidth]{figures/fig_usecase_general.png}
 \end{figure}
 
-Biểu đồ Hình 3.1 thể hiện rõ ba tác nhân chính của hệ thống là Khách hàng (Customer), Chủ nhà hàng (Restaurant Owner) và Quản trị viên sàn (Super Admin). Các ca sử dụng như Áp dụng mã giảm giá và Thanh toán trực tuyến được thiết kế quan hệ mở rộng (\texttt{<<extend>>}) và bao gồm (\texttt{<<include>>}) với ca sử dụng Giỏ hàng, phản ánh chính xác quy trình nghiệp vụ thực tế.
+Biểu đồ Hình 3.1 thể hiện rõ ba nhóm tác nhân chính của hệ thống là Khách hàng/Khách vãng lai (Customer/Guest), Chủ nhà hàng (Restaurant Owner) và Quản trị viên sàn (Super Admin), bao quát đầy đủ cả các ca sử dụng AI hiện đại như AI Concierge Menu RAG, Tác tử AI khóa món cạn kho và AI Sentinel kiểm duyệt.
 
 \section{Đặc tả Chi tiết các Ca sử dụng Tiêu biểu}
-Dưới đây là các bảng đặc tả chi tiết cho 10 ca sử dụng quan trọng nhất trong hệ thống, tuân thủ đúng định dạng chuẩn mực của khóa luận tốt nghiệp ngành Công nghệ thông tin.
+Dưới đây là các bảng đặc tả chi tiết cho 11 ca sử dụng quan trọng nhất trong hệ thống, tuân thủ đúng định dạng chuẩn mực của khóa luận tốt nghiệp ngành Công nghệ thông tin.
 
 % --- UC 1 ---
 \subsection{Đặc tả Ca sử dụng: Đăng ký tài khoản}
@@ -564,31 +566,31 @@ Lỗi cú pháp ký tự đặc biệt trong mã: Đã được xử lý triệt
 \end{table}
 
 % --- UC 5 ---
-\subsection{Đặc tả Ca sử dụng: Thanh toán trực tuyến qua Stripe Checkout}
-\begin{table}{Phân tích ca sử dụng Thanh toán qua Stripe Checkout}
+\subsection{Đặc tả Ca sử dụng: Thanh toán Đa phương thức (Stripe Checkout \& COD)}
+\begin{table}{Phân tích ca sử dụng Thanh toán qua Stripe Checkout và COD}
 \centering
 \small
 \begin{tabularx}{\textwidth}{|l|X|}
 \hline
-\textbf{Tên ca sử dụng} & \textbf{Thanh toán trực tuyến qua Stripe (Stripe Checkout)} \\ \hline
+\textbf{Tên ca sử dụng} & \textbf{Thanh toán Đa phương thức (Stripe Checkout \& COD)} \\ \hline
 \textbf{Mã ca sử dụng} & UC-05 \\ \hline
 \textbf{Tác nhân} & Khách hàng, Cổng thanh toán Stripe \\ \hline
-\textbf{Mô tả} & Khách hàng xác nhận thông tin đơn hàng và chuyển hướng sang cổng thanh toán Stripe để thanh toán bằng thẻ quốc tế an toàn. \\ \hline
-\textbf{Tiền điều kiện} & Khách hàng đã chọn địa chỉ giao hàng và phương thức thanh toán là Stripe. \\ \hline
-\textbf{Hậu điều kiện} & Giao dịch thanh toán thành công, đơn hàng được cập nhật trạng thái ``PAID'', giỏ hàng được làm sạch. \\ \hline
+\textbf{Mô tả} & Khách hàng xác nhận thông tin đơn hàng, lựa chọn thanh toán trực tuyến qua cổng quốc tế Stripe hoặc tiền mặt khi nhận hàng (COD) và theo dõi hóa đơn điện tử. \\ \hline
+\textbf{Tiền điều kiện} & Khách hàng đã chọn địa chỉ giao hàng và có sản phẩm trong giỏ hàng. \\ \hline
+\textbf{Hậu điều kiện} & Đơn hàng lưu với \texttt{paymentMethod} tương ứng (\texttt{STRIPE} hoặc \texttt{COD}); đối với Stripe sau khi quẹt thẻ hoàn tất trạng thái chuyển thành \texttt{PAID}; giỏ hàng được làm sạch. \\ \hline
 \textbf{Luồng cơ bản} & 
-1. Khách hàng nhấn ``Thanh toán qua Stripe''.\newline
-2. Hệ thống tạo bản ghi Order ở trạng thái ``PENDING'' và gọi Stripe SDK tạo Session thanh toán với số tiền thực tế (đã trừ khuyến mãi).\newline
-3. Stripe trả về URL phiên thanh toán an toàn.\newline
-4. Ứng dụng chuyển hướng trình duyệt của khách hàng tới trang Stripe Checkout.\newline
-5. Khách hàng nhập thông tin thẻ hợp lệ và xác nhận thanh toán.\newline
-6. Stripe xử lý giao dịch thành công và chuyển hướng người dùng về trang \texttt{/payment/success/:id}.\newline
-7. Phía Client kích hoạt API \texttt{/api/order/\{id\}/complete-payment}.\newline
-8. Máy chủ cập nhật trạng thái đơn hàng thành ``PAID'' và hiển thị màn hình chúc mừng. \\ \hline
+1. Khách hàng chọn phương thức thanh toán (\texttt{STRIPE} hoặc \texttt{COD}) tại màn hình Giỏ hàng và nhấn Đặt hàng.\newline
+2. Hệ thống tạo bản ghi \texttt{Order} ở trạng thái \texttt{PENDING} kèm \texttt{paymentMethod}, thực thi khấu trừ kho tự động và gửi thông báo WebSocket tới nhà hàng.\newline
+3. Nếu chọn Stripe: Hệ thống gọi Stripe SDK tạo Session thanh toán theo số tiền thực tế (đã trừ khuyến mãi) và chuyển hướng khách tới Stripe Checkout.\newline
+4. Khách hàng nhập thông tin thẻ hợp lệ và xác nhận thanh toán.\newline
+5. Stripe xử lý giao dịch thành công và chuyển hướng người dùng về \texttt{/payment/success/:id}.\newline
+6. Phía Client kích hoạt API callback \texttt{PUT /api/order/\{id\}/complete-payment} (đã mở khóa \texttt{permitAll} an toàn).\newline
+7. Máy chủ cập nhật trạng thái đơn hàng thành \texttt{PAID} và hiển thị giao diện xác nhận kèm liên kết xuất hóa đơn điện tử. \\ \hline
 \textbf{Luồng thay thế} & 
-5a. Khách hàng nhấn nút Hủy trên giao diện Stripe hoặc thanh toán thất bại: Stripe chuyển hướng về \texttt{/payment/fail}; đơn hàng giữ nguyên trạng thái PENDING. \\ \hline
+1a. Khách hàng chọn thanh toán \texttt{COD}: Máy chủ trả về \texttt{payment\_url = null}; ứng dụng chuyển thẳng sang trang Lịch sử đơn hàng (\texttt{/my-profile/orders}) ở trạng thái \texttt{PENDING} chờ quán xác nhận.\newline
+4a. Khách hàng hủy trên giao diện Stripe: Stripe chuyển hướng về \texttt{/payment/fail}; đơn hàng giữ trạng thái \texttt{PENDING} và khách có thể bấm ``Thanh toán ngay'' lại sau. \\ \hline
 \textbf{Luồng ngoại lệ} & 
-Mất kết nối mạng giữa chừng khi đang ở cổng thanh toán: Khách hàng có thể truy cập lịch sử đơn hàng để bấm thanh toán lại (\texttt{createPaymentLink}). \\ \hline
+Mất kết nối hoặc token hết hạn khi Stripe redirect: Nhờ mở khóa endpoint \texttt{complete-payment}, trạng thái thanh toán của đơn vẫn được ghi nhận chính xác, đồng thời chủ quán vẫn có nút ``Xác nhận đã thanh toán'' dự phòng. \\ \hline
 \end{tabularx}
 \end{table}
 
@@ -620,30 +622,29 @@ Chủ quán chưa tạo hồ sơ nhà hàng: Hệ thống tự động chuyển 
 \end{table}
 
 % --- UC 7 ---
-\subsection{Đặc tả Ca sử dụng: Tiếp nhận và Cập nhật trạng thái đơn hàng}
-\begin{table}{Phân tích ca sử dụng Cập nhật trạng thái đơn hàng}
+\subsection{Đặc tả Ca sử dụng: Tiếp nhận và Kiểm soát Máy trạng thái Đơn hàng}
+\begin{table}{Phân tích ca sử dụng Tiếp nhận và kiểm soát máy trạng thái đơn hàng}
 \centering
 \small
 \begin{tabularx}{\textwidth}{|l|X|}
 \hline
-\textbf{Tên ca sử dụng} & \textbf{Tiếp nhận \& Cập nhật trạng thái đơn hàng (Order Fulfillment)} \\ \hline
+\textbf{Tên ca sử dụng} & \textbf{Tiếp nhận \& Kiểm soát Máy trạng thái Đơn hàng (Order Fulfillment)} \\ \hline
 \textbf{Mã ca sử dụng} & UC-07 \\ \hline
 \textbf{Tác nhân} & Chủ nhà hàng \\ \hline
-\textbf{Mô tả} & Chủ quán xem danh sách các đơn đặt hàng mới của thực khách, theo dõi chi tiết các món ăn, địa chỉ nhận và cập nhật tiến độ xử lý đơn hàng. \\ \hline
+\textbf{Mô tả} & Chủ quán xem danh sách đơn hàng được sắp xếp mới nhất lên đầu kèm phương thức thanh toán, theo dõi chi tiết món ăn và điều phối chuyển đổi trạng thái hợp lệ. \\ \hline
 \textbf{Tiền điều kiện} & Chủ quán đăng nhập vào Bảng điều khiển quản trị nhà hàng. \\ \hline
-\textbf{Hậu điều kiện} & Trạng thái đơn hàng trong CSDL chuyển đổi tuần tự; khách hàng theo dõi được tiến độ mới. \\ \hline
+\textbf{Hậu điều kiện} & Trạng thái đơn hàng tuân thủ Máy trạng thái đơn hàng; tự động hoàn kho nếu hủy đơn và phát sóng WebSocket. \\ \hline
 \textbf{Luồng cơ bản} & 
-1. Chủ quán chọn mục ``Orders'' trên thanh menu quản trị.\newline
-2. Hệ thống gửi yêu cầu lấy danh sách đơn hàng thuộc nhà hàng của chủ quán: \texttt{/api/admin/order/restaurant/\{id\}}.\newline
-3. Hệ thống trả về bảng danh sách đơn hàng kèm chi tiết từng món ăn, số lượng và tổng tiền.\newline
-4. Chủ quán chọn đơn hàng cần xử lý và chọn trạng thái cập nhật tiếp theo (ví dụ: chuyển từ \texttt{PENDING} sang \texttt{OUT\_FOR\_DELIVERY}, hoặc từ \texttt{OUT\_FOR\_DELIVERY} sang \texttt{DELIVERED}).\newline
-5. Hệ thống gọi API \texttt{PUT /api/admin/orders/\{orderId\}/\{orderStatus\}}.\newline
-6. Máy chủ kiểm tra quyền hợp lệ và lưu trạng thái mới vào CSDL.\newline
-7. Giao diện bảng đơn hàng tự động cập nhật màu sắc huy hiệu trạng thái mới. \\ \hline
+1. Chủ quán chọn mục ``Đơn hàng'' trên thanh menu quản trị.\newline
+2. Hệ thống truy vấn \texttt{/api/admin/order/restaurant/\{id\}} (đã sắp xếp \texttt{ORDER BY createdAt DESC, id DESC}).\newline
+3. Bảng hiển thị danh sách đơn kèm huy hiệu thanh toán (\texttt{STRIPE} / \texttt{COD}) và trạng thái hiện tại.\newline
+4. Chủ quán chọn chuyển trạng thái tuần tự (\texttt{PAID} $\to$ \texttt{OUT\_FOR\_DELIVERY} $\to$ \texttt{COMPLETED} hoặc \texttt{CANCELLED}).\newline
+5. Hệ thống gọi API \texttt{PUT /api/admin/order/\{orderId\}/\{orderStatus\}}.\newline
+6. Máy chủ áp dụng \textbf{Order State Guard}: kiểm tra quyền sở hữu và tính hợp lệ của bước chuyển trạng thái, sau đó lưu CSDL và phát sóng sự kiện \texttt{STATUS\_UPDATED}. \\ \hline
 \textbf{Luồng thay thế} & 
-4a. Đơn hàng bị khách hủy khi còn ở trạng thái PENDING: Hệ thống hiển thị trạng thái CANCELLED; chủ quán không cần chuẩn bị món. \\ \hline
+4a. Chủ quán hủy đơn (\texttt{CANCELLED}): Hệ thống tự động kích hoạt \texttt{restoreStockForOrder(order)} để hoàn trả nguyên liệu vào kho và ghi log \texttt{AUTO\_RESTORE}. \\ \hline
 \textbf{Luồng ngoại lệ} & 
-Lỗi kết nối máy chủ: Hiển thị thông báo thất bại và giữ nguyên giao diện đơn hàng cũ. \\ \hline
+6a. Cố tình sửa đơn đã kết thúc (\texttt{COMPLETED}/\texttt{CANCELLED}) hoặc chuyển đơn Stripe \texttt{PENDING} nhảy cóc sang \texttt{OUT\_FOR\_DELIVERY}: Hệ thống chặn và ném ngoại lệ bảo vệ nghiệp vụ. \\ \hline
 \end{tabularx}
 \end{table}
 
@@ -677,30 +678,30 @@ Tài khoản không phải ROLE\_ADMIN cố tình gọi API kiểm duyệt: Spri
 \end{table}
 
 % --- UC 9 ---
-\subsection{Đặc tả Ca sử dụng: Tham vấn Quản trị cùng Trợ lý AI Copilot}
-\begin{table}{Phân tích ca sử dụng Tham vấn Quản trị cùng Trợ lý AI Copilot}
+\subsection{Đặc tả Ca sử dụng: Tham vấn \& Thực thi Tác tử Hành động AI Copilot}
+\begin{table}{Phân tích ca sử dụng Tham vấn và thực thi Tác tử AI Copilot}
 \centering
 \small
 \begin{tabularx}{\textwidth}{|l|X|}
 \hline
-\textbf{Tên ca sử dụng} & \textbf{Tham vấn Quản trị cùng Trợ lý AI Copilot (AI-Driven Decision Support)} \\ \hline
+\textbf{Tên ca sử dụng} & \textbf{Tham vấn Quản trị \& Thực thi Tác tử AI Hành động (Dual-Persona Agentic AI)} \\ \hline
 \textbf{Mã ca sử dụng} & UC-09 \\ \hline
-\textbf{Tác nhân} & Chủ nhà hàng (Restaurant Owner) \\ \hline
-\textbf{Mô tả} & Cho phép chủ nhà hàng tra cứu các chỉ số kinh doanh, nhận khuyến nghị tối ưu doanh thu, kích cầu món ế ẩm và cảnh báo nguyên liệu cạn kiệt từ Trợ lý AI kết hợp Động cơ Heuristic DSS dự phòng. \\ \hline
-\textbf{Tiền điều kiện} & Chủ nhà hàng đã đăng nhập và đang truy cập trang Quản trị nhà hàng. \\ \hline
-\textbf{Hậu điều kiện} & Trợ lý AI tổng hợp các chỉ số thực tế từ DB và đưa ra câu trả lời chi tiết bằng ngôn ngữ tự nhiên; giao diện hiển thị các thẻ chỉ số trực quan. \\ \hline
+\textbf{Tác nhân} & Chủ nhà hàng (Restaurant Owner), Quản trị viên Sàn (Super Admin) \\ \hline
+\textbf{Mô tả} & Cho phép Chủ quán và Super Admin tra cứu chỉ số vận hành theo thời gian thực, nhận phân tích chiến lược từ Google Gemini 2.5 Flash (hoặc Heuristic DSS dự phòng) kèm thẻ hành động tự động 1-Click. \\ \hline
+\textbf{Tiền điều kiện} & Người dùng đã đăng nhập với vai trò \texttt{ROLE\_RESTAURANT\_OWNER} hoặc \texttt{ROLE\_ADMIN}. \\ \hline
+\textbf{Hậu điều kiện} & Hiển thị 4 thẻ KPI theo vai trò, phản hồi Markdown và thẻ đề xuất hành động (\texttt{agentAction}) sẵn sàng thực thi xuống CSDL. \\ \hline
 \textbf{Luồng cơ bản} & 
-1. Chủ quán nhấn chọn mục ``AI Copilot'' trên thanh điều hướng quản trị.\newline
-2. Giao diện tự động gửi yêu cầu lấy thông tin tổng quan nhanh (\texttt{GET /api/admin/ai/quick-insights}).\newline
-3. Hệ thống trả về bản tóm tắt gồm 3 điểm mấu chốt kinh doanh và các thẻ chỉ số (Doanh thu, Đơn hàng, Tồn kho thấp).\newline
-4. Chủ quán nhập câu hỏi cụ thể hoặc nhấn vào một trong các gợi ý (ví dụ: ``Đề xuất chiến lược tăng doanh thu \& kích cầu món ế'').\newline
-5. Hệ thống gửi yêu cầu \texttt{POST /api/admin/ai/chat} kèm nội dung câu hỏi.\newline
-6. Backend thu thập số liệu thực tế từ các Repository và chuyển tới Google Gemini API để tạo nội dung tư vấn.\newline
-7. Trợ lý AI trả về nội dung phân tích chi tiết, giao diện hiển thị định dạng Markdown và gợi ý các hành động tiếp theo. \\ \hline
+1. Người quản trị chọn mục ``Trợ lý AI Copilot'' trên thanh điều hướng.\newline
+2. Giao diện tự động gọi \texttt{GET /api/admin/ai/copilot/quick-insights/\{id\}} (với \texttt{0} cho Super Admin) và hiển thị 4 thẻ KPI tương ứng vai trò.\newline
+3. Người quản trị nhập câu hỏi hoặc bấm câu hỏi gợi ý (ví dụ: Chủ quán chọn ``Cảnh báo nguyên liệu sắp hết''; Super Admin chọn ``Kiểm duyệt bình luận độc hại'').\newline
+4. Hệ thống gửi \texttt{POST /api/admin/ai/copilot/chat}.\newline
+5. Backend tổng hợp số liệu từ DB, gọi Google Gemini 2.5 Flash (hoặc kích hoạt Heuristic DSS dự phòng) và gọi \texttt{determineAgentAction()} để sinh gói \texttt{agentAction}.\newline
+6. Phía Client hiển thị báo cáo Markdown kèm thẻ \textbf{Tác tử AI Hành Động} tương tác.\newline
+7. Người dùng bấm nút Tác tử AI: Hệ thống thực thi khóa món cạn kho (\texttt{PUT /api/admin/food/\{foodId\}}) hoặc gỡ bỏ đánh giá vi phạm (\texttt{DELETE /api/reviews/\{reviewId\}}). \\ \hline
 \textbf{Luồng thay thế} & 
-6a. Kết nối tới Gemini API bị quá hạn hoặc mất mạng Internet quốc tế: Hệ thống tự động kích hoạt Động cơ Heuristic DSS dự phòng, phân tích thống kê CSDL cục bộ và trả về kết quả tư vấn ngay lập tức mà không gây gián đoạn. \\ \hline
+5a. Gemini API quá hạn hoặc chưa cấu hình Key: Động cơ Heuristic DSS phân tách vai trò (Owner DSS vs. AI Content Moderation Sentinel) lập tức trả về phân tích và \texttt{agentAction} trong dưới 5ms. \\ \hline
 \textbf{Luồng ngoại lệ} & 
-Lỗi kết nối CSDL: Báo lỗi không thể truy xuất dữ liệu kinh doanh của nhà hàng. \\ \hline
+Lỗi quyền truy cập hoặc mất kết nối CSDL: Hệ thống thông báo lỗi rõ ràng trên khung hội thoại. \\ \hline
 \end{tabularx}
 \end{table}
 
@@ -726,9 +727,36 @@ Lỗi kết nối CSDL: Báo lỗi không thể truy xuất dữ liệu kinh doa
 6. WebSocket Server gửi tin nhắn JSON tới toàn bộ các kết nối đang mở của nhà hàng.\newline
 7. Phía Client nhận gói tin qua \texttt{OrderNotificationListener.jsx}, kích hoạt hàm \texttt{playOrderChime()} tạo chuông 3 âm sắc (E5 $\to$ G\#5 $\to$ B5) qua Web Audio API và cập nhật danh sách đơn hàng mà không cần tải lại trang. \\ \hline
 \textbf{Luồng thay thế} & 
-2a. Đơn hàng sau đó bị khách hủy khi đang ở trạng thái PENDING: Backend kích hoạt phương thức \texttt{restoreStockForOrder}, hoàn trả lại số lượng tồn kho nguyên liệu, ghi log \texttt{AUTO\_RESTORE} và gửi thông báo hủy đơn qua WebSocket để chủ quán dừng chuẩn bị món. \\ \hline
+2a. Đơn hàng sau đó bị khách hoặc chủ quán hủy (\texttt{CANCELLED}): Backend kích hoạt phương thức \texttt{restoreStockForOrder}, hoàn trả lại số lượng tồn kho nguyên liệu, ghi log \texttt{AUTO\_RESTORE} và gửi thông báo qua WebSocket để chủ quán dừng chuẩn bị món. \\ \hline
 \textbf{Luồng ngoại lệ} & 
 Kết nối WebSocket bị ngắt do mạng gián đoạn: Phía Frontend có cơ chế tự động kết nối lại (Auto-reconnect) định kỳ 3 giây một lần. \\ \hline
+\end{tabularx}
+\end{table}
+
+% --- UC 11 ---
+\subsection{Đặc tả Ca sử dụng: Tư vấn Ẩm thực Khách hàng (AI Concierge \& Menu RAG)}
+\begin{table}{Phân tích ca sử dụng Tư vấn ẩm thực AI Concierge Menu Catalog RAG}
+\centering
+\small
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\textbf{Tên ca sử dụng} & \textbf{Tư vấn Ẩm thực Khách hàng qua Trợ lý AI Concierge (Menu Catalog RAG)} \\ \hline
+\textbf{Mã ca sử dụng} & UC-11 \\ \hline
+\textbf{Tác nhân} & Khách hàng / Khách vãng lai (Customer / Guest) \\ \hline
+\textbf{Mô tả} & Cho phép người dùng truy cập nền tảng tương tác với Widget Trợ lý Ẩm thực để được gợi ý món bán chạy thực tế, xem mã giảm giá hiệu lực và điều hướng trực tiếp tới đúng món ăn tại nhà hàng. \\ \hline
+\textbf{Tiền điều kiện} & Người dùng mở giao diện khách hàng của nền tảng (không bắt buộc đăng nhập). \\ \hline
+\textbf{Hậu điều kiện} & Khách hàng nhận được thẻ món ăn trực quan khớp ngữ cảnh thực tế từ DB và mở nhanh thực đơn tại món ăn được gợi ý. \\ \hline
+\textbf{Luồng cơ bản} & 
+1. Khi truy cập trang chủ, component \texttt{Chatbot.jsx} nạp sẵn ngữ cảnh thực tế từ \texttt{GET /api/food/popular} và \texttt{GET /api/coupons}.\newline
+2. Người dùng bấm biểu tượng Chat nổi ở góc phải màn hình.\newline
+3. Người dùng chọn câu hỏi gợi ý (VD: ``Gợi ý cơm trưa ngon hôm nay'') hoặc nhập từ khóa món ăn.\newline
+4. Bộ truy xuất Menu Catalog RAG tìm kiếm món bán chạy phù hợp nhất kèm mã ưu đãi đang kích hoạt.\newline
+5. Giao diện kết xuất thẻ món ăn giàu thông tin gồm ảnh thực tế, giá niêm yết, tên nhà hàng, mẹo nhập mã \texttt{GIAM20K} và nút ``Xem Quán \& Đặt Món Ngay''.\newline
+6. Khách hàng bấm nút: hệ thống điều hướng tới \texttt{/restaurant/\{city\}/\{name\}/\{id\}?foodId=\{foodId\}}, tự động cuộn mượt và làm nổi bật (highlight) đúng món ăn đó. \\ \hline
+\textbf{Luồng thay thế} & 
+4a. Khách hàng hỏi về danh sách nhà hàng, mã giảm giá hoặc quy định hủy đơn/giao hàng: Chatbot trích xuất thông tin trực tiếp từ Redux Store và trả lời tức thời. \\ \hline
+\textbf{Luồng ngoại lệ} & 
+Backend tạm thời không tải được món phổ biến: Chatbot tự động chuyển sang món gợi ý dự phòng chuẩn (\textit{Cơm Sườn Cây Nướng Mật Ong}). \\ \hline
 \end{tabularx}
 \end{table}
 
@@ -749,7 +777,7 @@ Hệ thống được thiết kế theo mô hình kiến trúc phân tầng 3 l�
         \item \textit{Service Layer:} Nơi thực thi logic nghiệp vụ cốt lõi: xử lý đơn hàng, tính toán chiết khấu khuyến mãi an toàn, tương tác với Stripe SDK.
         \item \textit{Data Access Layer (Repository):} Sử dụng Spring Data JPA để tương tác và thực thi các câu lệnh truy vấn xuống CSDL MySQL.
     \end{itemize}
-    \item \textbf{Tầng Dịch vụ Bên ngoài (External Cloud Services):} Cổng thanh toán quốc tế Stripe tiếp nhận các giao dịch thanh toán thẻ an toàn.
+    \item \textbf{Tầng Dịch vụ Bên ngoài (External Cloud Services):} Bao gồm Cổng thanh toán quốc tế Stripe tiếp nhận giao dịch thẻ PCI DSS và \textbf{Google Cloud AI Services (Gemini 2.5 Flash LLM API)} phục vụ tư vấn vận hành chiến lược cho AI Copilot.
 \end{enumerate}
 
 \subsection{Sơ đồ Triển khai Hệ thống (Deployment Diagram)}
@@ -760,12 +788,13 @@ Sơ đồ vật lý triển khai các thành phần của hệ thống được 
 \includegraphics[width=0.88\textwidth]{figures/fig_deployment.png}
 \end{figure}
 
-Theo Hình 4.1, hệ thống bao gồm 4 khối kiến trúc vật lý chính:
+Theo Hình 4.1, hệ thống bao gồm 5 khối kiến trúc vật lý chính:
 \begin{itemize}
-    \item \textbf{Khối Thiết bị Người dùng (Client Device):} Chạy trình duyệt web hiện đại (Chrome, Edge, Firefox, Safari) kết xuất gói bundle tĩnh của React (HTML, CSS, JavaScript).
-    \item \textbf{Khối Máy chủ Ứng dụng (Application Server - AWS EC2/VPS):} Môi trường máy chủ chạy JRE 17, triển khai file \texttt{.jar} của ứng dụng Spring Boot với máy chủ Tomcat nhúng lắng nghe trên cổng 5454.
-    \item \textbf{Khối Máy chủ Cơ sở Dữ liệu (Database Server - AWS RDS):} Hệ quản trị MySQL DBMS phiên bản 8.x chạy trên cổng 3307, lưu trữ toàn bộ schema dữ liệu \texttt{online\_food\_ordering}.
-    \item \textbf{Khối Dịch vụ Đám mây Stripe (Stripe Cloud Services):} Động cơ xử lý thanh toán và hóa đơn điện tử bảo mật của Stripe, giao tiếp hai chiều với máy chủ ứng dụng qua HTTPS REST API.
+    \item \textbf{Khối Thiết bị Người dùng (Client Device):} Chạy trình duyệt web hiện đại (Chrome, Edge, Firefox, Safari) kết xuất gói bundle SPA của React 19 (Vite 8, Redux Toolkit, Web Audio API).
+    \item \textbf{Khối Máy chủ Ứng dụng (Application Server - Spring Boot 3.4):} Môi trường chạy JRE 17+, triển khai file \texttt{.jar} Spring Boot với Embedded Tomcat lắng nghe giao thức HTTP REST và WebSocket (\texttt{/ws/orders}) trên cổng 5454 cùng Agentic AI Decision Engine.
+    \item \textbf{Khối Máy chủ Cơ sở Dữ liệu (Database Server):} Hệ quản trị MySQL 8.x chạy trên cổng 3307, lưu trữ schema dữ liệu \texttt{anh\_food\_yt} gồm 21 bảng chuẩn 3NF.
+    \item \textbf{Khối Dịch vụ Đám mây Stripe (Stripe Cloud Services):} Động cơ xử lý thanh toán Checkout Session chuẩn PCI DSS giao tiếp qua Stripe Java SDK.
+    \item \textbf{Khối Dịch vụ AI Đám mây Google (Google Cloud AI Services):} Điểm cuối REST API \textbf{Google Gemini 2.5 Flash} kết nối qua HTTPS để tạo phân tích điều hành F\&B chuyên sâu.
 \end{itemize}
 
 \section{Biểu đồ Tuần tự cho các Luồng Nghiệp vụ Cốt lõi}
@@ -795,25 +824,25 @@ Sơ đồ Hình 4.3 làm rõ sự phối hợp hai lớp giữa Client và Serve
     \item Phía Server tại \texttt{OrderServiceImpl} một lần nữa kiểm tra độc lập tính hợp lệ của mã, phạm vi áp dụng (theo nhà hàng hay toàn sàn) và áp dụng công thức an toàn biên \texttt{Math.max(0, Math.min(discount, applicableTotal))} để đảm bảo đơn hàng không bao giờ bị âm tiền hoặc bị gian lận.
 \end{itemize}
 
-\subsection{Biểu đồ Tuần tự: Thanh toán Trực tuyến qua Stripe Checkout}
-Luồng thanh toán an toàn chuẩn PCI DSS được mô tả trong Hình 4.4:
+\subsection{Biểu đồ Tuần tự: Thanh toán Đa phương thức (Stripe Checkout \& COD)}
+Luồng phân nhánh thanh toán đa phương thức an toàn được mô tả trong Hình 4.4:
 
-\begin{figure}{Biểu đồ tuần tự ca sử dụng Thanh toán trực tuyến tích hợp Stripe Checkout}
+\begin{figure}{Biểu đồ tuần tự ca sử dụng Thanh toán Đa phương thức (Stripe Checkout \& COD)}
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig_sequence_stripe_payment.png}
 \end{figure}
 
-Hình 4.4 mô tả quá trình khởi tạo phiên thanh toán: Khi khách hàng nhấn nút thanh toán, máy chủ tạo đơn hàng ở trạng thái PENDING và gọi Stripe SDK để khởi tạo một \texttt{Session} thanh toán. Sau khi người dùng nhập thông tin thẻ và hoàn tất trên trang Stripe, hệ thống sẽ chuyển hướng về \texttt{PaymentSuccess.jsx} và gọi API \texttt{completePayment} để chuyển trạng thái đơn hàng sang ``PAID''.
+Hình 4.4 mô tả quá trình phân nhánh xử lý thông minh dựa trên \texttt{paymentMethod}: Nếu khách chọn \texttt{COD}, hệ thống lưu đơn hàng trạng thái \texttt{PENDING} và điều hướng ngay tới trang quản lý đơn (\texttt{payment\_url = null}). Nếu chọn \texttt{STRIPE}, máy chủ gọi Stripe SDK tạo Checkout Session theo số tiền sau giảm giá. Sau khi hoàn tất quẹt thẻ, trình duyệt chuyển về \texttt{/payment/success/:id} và gọi API callback \texttt{PUT /api/order/\{orderId\}/complete-payment} (đã được mở khóa \texttt{permitAll()} an toàn) để cập nhật dứt điểm trạng thái đơn hàng sang \texttt{PAID}.
 
-\subsection{Biểu đồ Tuần tự: Tiếp nhận và Cập nhật Trạng thái Đơn hàng}
-Quy trình điều phối đơn hàng của chủ nhà hàng được thể hiện trong Hình 4.5:
+\subsection{Biểu đồ Tuần tự: Tiếp nhận và Kiểm soát Máy trạng thái Đơn hàng}
+Quy trình điều phối và bảo vệ trạng thái đơn hàng của chủ nhà hàng được thể hiện trong Hình 4.5:
 
-\begin{figure}{Biểu đồ tuần tự ca sử dụng Tiếp nhận và Cập nhật trạng thái đơn hàng}
+\begin{figure}{Biểu đồ tuần tự ca sử dụng Tiếp nhận và Kiểm soát Máy trạng thái Đơn hàng}
 \centering
-\includegraphics[width=0.9\textwidth]{figures/fig_sequence_order_status.png}
+\includegraphics[width=0.92\textwidth]{figures/fig_sequence_order_status.png}
 \end{figure}
 
-Sơ đồ Hình 4.5 mô tả cách thức chủ quán ẩm thực kiểm tra danh sách đơn đặt hàng thuộc nhà hàng của mình và thực hiện chuyển đổi trạng thái đơn hàng tuần tự từ PENDING $\to$ OUT\_FOR\_DELIVERY $\to$ DELIVERED, giúp việc kiểm soát tiến độ bếp và giao hàng diễn ra minh bạch, nhịp nhàng.
+Sơ đồ Hình 4.5 mô tả quy trình sắp xếp đơn hàng mới nhất lên đầu (\texttt{ORDER BY createdAt DESC, id DESC}) và bộ kiểm soát chuyển trạng thái (\textbf{Order State Guard}): hệ thống chặn mọi thao tác chỉnh sửa đối với đơn đã kết thúc (\texttt{COMPLETED}/\texttt{CANCELLED}), ngăn đơn Stripe \texttt{PENDING} nhảy cóc sang bước giao hàng nếu chưa xác nhận thanh toán, đồng thời tự động kích hoạt \texttt{restoreStockForOrder()} hoàn kho khi đơn bị hủy và phát sóng cập nhật qua WebSocket.
 
 \subsection{Biểu đồ Tuần tự: Kiểm duyệt Đánh giá của Super Admin}
 Quy trình bảo vệ môi trường văn hóa số trên sàn được thể hiện trong Hình 4.6:
@@ -823,12 +852,12 @@ Quy trình bảo vệ môi trường văn hóa số trên sàn được thể hi
 \includegraphics[width=0.92\textwidth]{figures/fig_sequence_admin_review.png}
 \end{figure}
 
-Hình 4.6 minh họa cách thức Quản trị viên tối cao rà soát các bài đánh giá của người dùng và thực hiện quyền hạn gỡ bỏ bài viết độc hại hoặc đình chỉ các cơ sở nhà hàng có hành vi gian lận thông qua các API bảo vệ riêng biệt.
+Hình 4.6 minh họa cách thức Quản trị viên tối cao rà soát các bài đánh giá theo từng nhà hàng và thực hiện quyền hạn gỡ bỏ bài viết độc hại hoặc đình chỉ các cơ sở nhà hàng có hành vi gian lận thông qua các API bảo vệ riêng biệt.
 
-\subsection{Biểu đồ Tuần tự: Cảnh báo Đơn hàng WebSocket và Tương tác Trợ lý AI Copilot}
-Quy trình truyền thông thời gian thực và điều phối hỗ trợ thông minh được mô tả trong Hình 4.7:
+\subsection{Biểu đồ Tuần tự: Cảnh báo Đơn hàng WebSocket và Tác tử AI Copilot}
+Quy trình truyền thông thời gian thực và điều phối Tác tử AI hành động được mô tả trong Hình 4.7:
 
-\begin{figure}{Biểu đồ tuần tự Cảnh báo Đơn hàng thời gian thực qua WebSocket và Tham vấn AI Copilot}
+\begin{figure}{Biểu đồ tuần tự Cảnh báo WebSocket và Tác tử AI Copilot Đa vai trò}
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig_sequence_websocket_ai.png}
 \end{figure}
@@ -836,12 +865,22 @@ Quy trình truyền thông thời gian thực và điều phối hỗ trợ thô
 Sơ đồ Hình 4.7 minh họa sự phối hợp nhịp nhàng giữa hai luồng kỹ thuật nâng cao:
 \begin{enumerate}
     \item \textbf{Luồng cảnh báo tức thời \& Trừ kho tự động:} Khi khách hàng tạo đơn hàng thành công tại \texttt{OrderServiceImpl}, hệ thống tự động kích hoạt dịch vụ kho \texttt{IngredientsServiceImpl.depleteStockForOrder} để khấu trừ định lượng nguyên liệu và ghi bản ghi biến động vào bảng \texttt{inventory\_log}. Ngay sau đó, đối tượng thông báo \texttt{OrderNotificationDTO} được đẩy tới \texttt{OrderWebSocketHandler.broadcastToRestaurant}. Tại trình duyệt của chủ nhà hàng, component \texttt{OrderNotificationListener.jsx} bắt sự kiện, gọi bộ tổng hợp âm thanh \texttt{playOrderChime()} tạo chuông ngân 3 nốt nhạc và cập nhật bảng đơn hàng tức thì mà không cần làm mới trang.
-    \item \textbf{Luồng tham vấn chiến lược AI Copilot:} Khi chủ cơ sở gửi yêu cầu tư vấn tại \texttt{AiCopilot.jsx}, Controller tiếp nhận và chuyển tới \texttt{AiCopilotServiceImpl}. Dịch vụ này tổng hợp toàn bộ các chỉ số vận hành thời gian thực từ CSDL MySQL (doanh thu, đơn hàng, các món bán chạy/chậm, nguyên liệu thấp) và chuyển tới Google Gemini API. Nếu xảy ra sự cố mạng, Động cơ Heuristic DSS dự phòng sẽ tự động kích hoạt tính toán khuyến nghị và phản hồi lại Client với định dạng Markdown chuyên nghiệp.
+    \item \textbf{Luồng Tác tử AI Copilot Đa vai trò (Dual-Persona Agentic AI):} Khi Chủ quán (\texttt{restaurantId > 0}) hoặc Super Admin (\texttt{restaurantId = 0/null}) gửi truy vấn tại \texttt{AiCopilot.jsx}, dịch vụ \texttt{AiCopilotServiceImpl} thu thập chỉ số thực tế theo vai trò, gửi tới \textbf{Google Gemini 2.5 Flash} (hoặc tự động kích hoạt Động cơ Heuristic DSS dự phòng), đồng thời gọi \texttt{determineAgentAction()} để sinh kèm gói đề xuất hành động (\texttt{LOCK\_FOOD\_AVAILABILITY} hoặc \texttt{MODERATE\_REVIEW}). Chỉ với 1 thao tác bấm nút trên giao diện, Tác tử AI lập tức khóa món cạn kho hoặc gỡ bỏ đánh giá vi phạm xuống CSDL.
 \end{enumerate}
+
+\subsection{Biểu đồ Tuần tự: Tư vấn Ẩm thực Khách hàng AI Concierge (Menu Catalog RAG)}
+Quy trình truy xuất thực đơn thực tế và điều hướng đặt món thông minh cho khách hàng được minh họa trong Hình 4.8:
+
+\begin{figure}{Biểu đồ tuần tự Tư vấn Ẩm thực Khách hàng qua AI Concierge (Menu Catalog RAG)}
+\centering
+\includegraphics[width=0.92\textwidth]{figures/fig_sequence_chatbot_rag.png}
+\end{figure}
+
+Hình 4.8 làm rõ cơ chế RAG phía ứng dụng khách hàng: ngay khi khởi tạo, \texttt{Chatbot.jsx} nạp ngữ cảnh món bán chạy (\texttt{/api/food/popular}) và các mã khuyến mãi hoạt động (\texttt{/api/coupons}) thông qua các endpoint công khai (\texttt{permitAll}). Khi thực khách đặt câu hỏi hoặc nhấn gợi ý, thuật toán đối sánh ngữ cảnh sẽ ghép đúng món ăn kèm ảnh thật, giá bán và mã giảm giá vào một thẻ tương tác có gắn deep-link \texttt{?foodId=\{id\}} để khách hàng đi thẳng tới đúng món tại trang nhà hàng.
 
 \section{Thiết kế Cơ sở Dữ liệu}
 \subsection{Mô hình Thực thể Liên kết Hoàn chỉnh (ERD)}
-Cơ sở dữ liệu của hệ thống được thiết kế theo chuẩn hóa dữ liệu quan hệ bậc ba (3NF) gồm 21 bảng/thực thể, đáp ứng toàn vẹn các mối quan hệ nghiệp vụ phức tạp của nền tảng ẩm thực. Sơ đồ thực thể liên kết được trình bày trong Hình 4.8:
+Cơ sở dữ liệu của hệ thống được thiết kế theo chuẩn hóa dữ liệu quan hệ bậc ba (3NF) gồm 21 bảng/thực thể, đáp ứng toàn vẹn các mối quan hệ nghiệp vụ phức tạp của nền tảng ẩm thực. Sơ đồ thực thể liên kết được trình bày trong Hình 4.9:
 
 \begin{figure}{Mô hình Thực thể Liên kết (ERD) Hoàn chỉnh 21 Bảng của Hệ thống}
 \centering
@@ -983,9 +1022,30 @@ totalAmount & BIGINT & Not Null & Tổng tiền đơn hàng trước khi trừ �
 discountAmount & BIGINT & Default 0 & Số tiền được chiết khấu từ mã ưu đãi \\ \hline
 totalPrice & BIGINT & Not Null & Số tiền thanh toán thực tế cuối cùng \\ \hline
 couponCode & VARCHAR(50) & Nullable & Mã giảm giá đã được áp dụng vào đơn \\ \hline
-orderStatus & VARCHAR(50) & Not Null & Trạng thái: PENDING, PAID, DELIVERED... \\ \hline
+orderStatus & VARCHAR(50) & Not Null & Trạng thái: PENDING, PAID, OUT\_FOR\_DELIVERY... \\ \hline
+paymentMethod & VARCHAR(20) & Default 'STRIPE' & Phương thức thanh toán: STRIPE hoặc COD \\ \hline
 createdAt & DATETIME & Not Null & Thời điểm khởi tạo đơn hàng \\ \hline
 totalItem & INT & Not Null & Tổng số lượng món ăn có trong đơn \\ \hline
+\end{tabular}
+\end{table}
+
+% Bảng Events
+\begin{table}{Từ điển dữ liệu bảng Events (Sự kiện đồng bộ Mã ưu đãi)}
+\centering
+\small
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Ràng buộc} & \textbf{Mô tả ý nghĩa} \\ \hline
+id & BIGINT & PK, Auto Increment & Khóa chính định danh sự kiện nhà hàng \\ \hline
+restaurant\_id & BIGINT & FK (Restaurant.id) & Nhà hàng tổ chức sự kiện khuyến mãi \\ \hline
+name & VARCHAR(255) & Not Null & Tên chương trình sự kiện ẩm thực \\ \hline
+location & VARCHAR(255) & Nullable & Địa điểm áp dụng sự kiện của quán \\ \hline
+startedAt & VARCHAR(255) & Nullable & Thời điểm bắt đầu áp dụng ưu đãi \\ \hline
+endsAt & VARCHAR(255) & Nullable & Thời điểm kết thúc chương trình \\ \hline
+promoCode & VARCHAR(50) & Nullable & Mã ưu đãi gắn sự kiện (tự đồng bộ sang Coupon) \\ \hline
+discountType & VARCHAR(50) & Default 'PERCENTAGE' & Loại giảm giá: PERCENTAGE hoặc FLAT \\ \hline
+discountValue & BIGINT & Default 0 & Giá trị ưu đãi (\% hoặc VNĐ) \\ \hline
+minimumOrderValue & BIGINT & Default 0 & Giá trị đơn tối thiểu được hưởng ưu đãi \\ \hline
 \end{tabular}
 \end{table}
 
@@ -1033,11 +1093,11 @@ createdAt & DATETIME & Not Null & Thời điểm đăng bài đánh giá \\ \hli
 Hệ thống được thiết kế, lập trình và kiểm thử toàn diện trên môi trường công nghệ tiêu chuẩn:
 \begin{itemize}
     \item \textbf{Hệ điều hành:} Microsoft Windows 11 Pro 64-bit.
-    \item \textbf{Môi trường thực thi Java:} Oracle OpenJDK 17.0.10 LTS / Java 23 SE Runtime Environment.
-    \item \textbf{Công cụ phát triển (IDE):} Visual Studio Code, IntelliJ IDEA Ultimate.
-    \item \textbf{Môi trường Frontend:} Node.js v20.x, NPM v10.x, Vite v6.
-    \item \textbf{Hệ quản trị CSDL:} MySQL Community Server 8.0 kết hợp MySQL Workbench.
-    \item \textbf{Công cụ kiểm thử API:} Postman v11.
+    \item \textbf{Môi trường thực thi Java:} Oracle OpenJDK 17 LTS / Java 23 SE Runtime Environment.
+    \item \textbf{Công cụ phát triển (IDE):} Visual Studio Code, IntelliJ IDEA Ultimate, Antigravity IDE.
+    \item \textbf{Môi trường Frontend:} Node.js v24.x, NPM v10.x, Vite v8.0.
+    \item \textbf{Hệ quản trị CSDL:} MySQL Community Server 8.0 (cổng 3307) kết hợp MySQL Workbench.
+    \item \textbf{Công cụ kiểm thử API:} Postman v11, Apache JMeter.
 \end{itemize}
 
 \subsection{Danh mục Công cụ và Thư viện Phần mềm Cốt lõi}
@@ -1050,21 +1110,22 @@ Bảng 5.1 tổng hợp các thư viện và khung ứng dụng chính phục v�
 \hline
 \textbf{Tên Thư viện / Công cụ} & \textbf{Phân hệ} & \textbf{Chức năng kỹ thuật chính} \\ \hline
 Spring Boot 3.4.0 & Backend & Khung ứng dụng chính, quản lý IoC/DI và máy chủ nhúng \\ \hline
-Spring Security & Backend & Quản lý bảo mật, chuỗi bộ lọc FilterChain và phân quyền \\ \hline
-jjwt (Java JWT) 0.12.5 & Backend & Sinh, giải mã và xác thực chữ ký mã thông báo JWT \\ \hline
+Spring Security & Backend & Quản lý bảo mật, FilterChain phân quyền và hỗ trợ Guest Browsing \\ \hline
+jjwt (Java JWT) 0.11.5 & Backend & Sinh, giải mã và xác thực chữ ký mã thông báo JWT \\ \hline
 Spring Data JPA / Hibernate & Backend & Ánh xạ đối tượng quan hệ ORM và quản lý giao dịch CSDL \\ \hline
 Spring WebSocket & Backend & Quản lý kênh truyền thông hai chiều thời gian thực và phát sóng sự kiện \\ \hline
-Google Gemini REST API & Backend & Tích hợp mô hình ngôn ngữ lớn LLM hỗ trợ phân tích kinh doanh \\ \hline
-Stripe Java SDK & Backend & Tích hợp cổng thanh toán trực tuyến Stripe Checkout \\ \hline
-React 19 & Frontend & Thư viện lõi xây dựng giao diện người dùng theo Component \\ \hline
-Redux Toolkit (RTK) & Frontend & Quản lý trạng thái toàn cục ứng dụng một cách bất biến \\ \hline
-React Router DOM v6 & Frontend & Quản lý định tuyến và điều hướng trang Single Page \\ \hline
-Material-UI (MUI v9) & Frontend & Bộ thành phần giao diện người dùng chuyên nghiệp \\ \hline
-TailwindCSS & Frontend & Tiện ích xây dựng layout Responsive và màu sắc Dark Mode \\ \hline
+Google Gemini 2.5 Flash API & Backend & Tích hợp mô hình ngôn ngữ lớn LLM hỗ trợ phân tích và điều hành \\ \hline
+Stripe Java SDK 24.12.0 & Backend & Tích hợp cổng thanh toán trực tuyến Stripe Checkout Session \\ \hline
+React 19.2.6 & Frontend & Thư viện lõi xây dựng giao diện người dùng theo Component \\ \hline
+Redux Toolkit 2.12.0 (RTK) & Frontend & Quản lý trạng thái toàn cục ứng dụng một cách bất biến \\ \hline
+React Router DOM 7.15.1 & Frontend & Quản lý định tuyến và điều hướng trang Single Page \\ \hline
+Material-UI (MUI 9.0.1) & Frontend & Bộ thành phần giao diện người dùng chuyên nghiệp \\ \hline
+TailwindCSS 3.4.19 & Frontend & Tiện ích xây dựng layout Responsive và màu sắc Dark Mode \\ \hline
+Recharts 3.8.1 & Frontend & Kết xuất biểu đồ doanh thu và phân bổ đơn hàng trực quan \\ \hline
 Web Audio API & Frontend & Tổng hợp chuông cảnh báo âm thanh thuật toán tương tác trực tiếp \\ \hline
-Axios & Frontend & Client HTTP gửi các yêu cầu API bất đồng bộ kèm Token \\ \hline
-Formik \& Yup & Frontend & Quản lý form nhập liệu và kiểm tra tính hợp lệ dữ liệu Client \\ \hline
-React Slick & Frontend & Thư viện kết xuất thanh trượt tương tác Carousel món ăn \\ \hline
+Axios 1.16.1 & Frontend & Client HTTP gửi các yêu cầu API bất đồng bộ kèm Token \\ \hline
+Formik 2.4 \& Yup 1.7 & Frontend & Quản lý form nhập liệu và kiểm tra tính hợp lệ dữ liệu Client \\ \hline
+React Slick 0.31 & Frontend & Thư viện kết xuất thanh trượt tương tác Carousel món ăn \\ \hline
 \end{tabular}
 \end{table}
 
@@ -1115,7 +1176,22 @@ public ResponseEntity<AuthResponse> createUserHandler(@RequestBody User user) th
 }
 \end{lstlisting}
 
-Đoạn mã trên thể hiện nguyên lý phòng thủ theo chiều sâu: ngay cả khi kẻ tấn công cố ý can thiệp vào Payload của HTTP POST request để gán \texttt{"role": "ROLE\_ADMIN"}, hệ thống tại dòng 13 sẽ phát hiện và ném ra ngoại lệ ngăn chặn, đảm bảo chỉ có tài khoản Super Admin duy nhất được sinh ra từ quy trình Auto-Seeding nội bộ mới có quyền quản trị tối cao.
+Đoạn mã trên thể hiện nguyên lý phòng thủ theo chiều sâu: ngay cả khi kẻ tấn công cố ý can thiệp vào Payload của HTTP POST request để gán \texttt{"role": "ROLE\_ADMIN"}, hệ thống sẽ phát hiện và ném ra ngoại lệ ngăn chặn, đảm bảo chỉ có tài khoản Super Admin duy nhất được sinh ra từ quy trình Auto-Seeding nội bộ mới có quyền quản trị tối cao.
+
+Bên cạnh đó, để hỗ trợ khách vãng lai (Guest Browsing) tự do khám phá 16 nhà hàng, tìm kiếm món ăn, xem đánh giá và tương tác với Chatbot trước khi đăng nhập, bộ lọc bảo mật \texttt{AppConfig.java} mở quyền \texttt{permitAll()} cho các API đọc công khai và callback \texttt{PUT /api/order/*/complete-payment}, kết hợp cơ chế xử lý ngoại lệ nhẹ nhàng trong \texttt{JwtTokenValidator.java}:
+
+\begin{lstlisting}[language=Java, caption={Cơ chế mở quyền Guest Browsing và dọn ngữ cảnh an toàn khi Token hết hạn}]
+// Trong AppConfig.java: Mo quyen truy cap cong khai cho khach vang lai (Guest)
+.requestMatchers(HttpMethod.GET, "/api/reviews/restaurant/**", "/api/reviews/food/**").permitAll()
+.requestMatchers(HttpMethod.GET, "/api/coupons", "/api/food/popular", "/api/food/search").permitAll()
+.requestMatchers(HttpMethod.GET, "/api/restaurants/**", "/api/category/restaurant/**", "/api/food/restaurant/**").permitAll()
+.requestMatchers(HttpMethod.PUT, "/api/order/*/complete-payment").permitAll()
+
+// Trong JwtTokenValidator.java: Neu JWT het han/loi, xoa SecurityContext de truy cap nhu Guest
+} catch (Exception e) {
+    SecurityContextHolder.clearContext();
+}
+\end{lstlisting}
 
 \subsection{Cài đặt Động cơ Kiểm soát Khuyến mãi An toàn Biên (Null-Safe Coupon Engine)}
 Tại tầng dịch vụ \texttt{OrderServiceImpl.java}, thuật toán xử lý mã giảm giá được xây dựng để kiểm soát mọi giá trị biên và ràng buộc ngưỡng tối thiểu:
@@ -1186,52 +1262,40 @@ if (orderReq.getCouponCode() != null && !orderReq.getCouponCode().trim().isEmpty
     \item Dòng 49 đảm bảo số tiền thanh toán cuối cùng không bao giờ âm (\texttt{Math.max(0, totalPrice - discount)}).
 \end{enumerate}
 
-\subsection{Cài đặt Dịch vụ Thanh toán Stripe Checkout Session}
-Trong tệp \texttt{PaymentServiceImpl.java}, dịch vụ thanh toán tích hợp trực tiếp Stripe Java SDK để tạo phiên thanh toán:
+\subsection{Cài đặt Thanh toán Đa phương thức (Stripe Checkout \& COD) và Máy trạng thái Đơn hàng}
+Hệ thống hỗ trợ linh hoạt hai phương thức thanh toán: qua cổng thẻ quốc tế Stripe hoặc tiền mặt khi nhận hàng (COD) tại \texttt{OrderController.java} và \texttt{PaymentServiceImpl.java}:
 
-\begin{lstlisting}[language=Java, caption={Khởi tạo phiên Stripe Checkout Session trong PaymentServiceImpl.java}]
-@Override
-public PaymentResponse createPaymentLink(Order order) throws StripeException {
-    Stripe.apiKey = stripeSecretKey;
-
-    Long amount = order.getTotalPrice() != null && order.getTotalPrice() > 0 
-                  ? order.getTotalPrice() : order.getTotalAmount();
-    if (amount == null) {
-        amount = 0L;
-    }
-
-    if (amount <= 0) {
-        PaymentResponse res = new PaymentResponse();
-        res.setPayment_url("http://localhost:5173/payment/success/" + order.getId());
-        return res;
-    }
-
-    SessionCreateParams params = SessionCreateParams.builder()
-            .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
-            .setMode(SessionCreateParams.Mode.PAYMENT)
-            .setSuccessUrl("http://localhost:5173/payment/success/" + order.getId())
-            .setCancelUrl("http://localhost:5173/payment/fail")
-            .addLineItem(SessionCreateParams.LineItem.builder()
-                    .setQuantity(1L)
-                    .setPriceData(SessionCreateParams.LineItem.PriceData.builder()
-                            .setCurrency("vnd")
-                            .setUnitAmount(amount)
-                            .setProductData(SessionCreateParams.LineItem.PriceData.ProductData.builder()
-                                    .setName("Thanh toan don hang #" + order.getId())
-                                    .build())
-                            .build())
-                    .build())
-            .build();
-
-    Session session = Session.create(params);
+\begin{lstlisting}[language=Java, caption={Phân nhánh phương thức thanh toán và mở khóa Callback trong OrderController.java}]
+@PostMapping("/order")
+public ResponseEntity<PaymentResponse> createOrder(
+        @RequestBody CreateOrderRequest req,
+        @RequestHeader("Authorization") String jwt) throws Exception {
+    User user = userService.findUserByJwtToken(jwt);
+    Order order = orderService.createOrder(req, user);
 
     PaymentResponse res = new PaymentResponse();
-    res.setPayment_url(session.getUrl());
-    return res;
+    if (req.getPaymentMethod() != null && "COD".equalsIgnoreCase(req.getPaymentMethod().trim())) {
+        res.setPayment_url(null);
+    } else {
+        // Mac dinh hoac chon thanh toan truc tuyen: goi Stripe Checkout Session
+        res = paymentService.createPaymentLink(order);
+    }
+    return new ResponseEntity<>(res, HttpStatus.OK);
+}
+
+@PutMapping("/order/{orderId}/complete-payment")
+public ResponseEntity<?> completePayment(@PathVariable Long orderId,
+        @RequestHeader(value = "Authorization", required = false) String jwt) {
+    try {
+        Order updatedOrder = orderService.updateOrder(orderId, "PAID");
+        return new ResponseEntity<>(updatedOrder, HttpStatus.OK);
+    } catch (Exception e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
 \end{lstlisting}
 
-Đoạn mã trên cấu hình các tham số phiên làm việc chuẩn của Stripe: Thiết lập phương thức thanh toán thẻ tín dụng (\texttt{CARD}), chế độ thanh toán một lần (\texttt{PAYMENT}), đơn vị tiền tệ Việt Nam Đồng (\texttt{vnd}), cùng các đường dẫn chuyển tiếp an toàn khi thành công hoặc hủy giao dịch.
+Song song đó, để ngăn ngừa lỗi vận hành bếp, lớp \texttt{OrderServiceImpl.java} cài đặt \textbf{Máy trạng thái Đơn hàng (Order State Guard)}: chặn thay đổi đối với các đơn đã ở trạng thái kết thúc (\texttt{COMPLETED}, \texttt{CANCELLED}), cấm đơn \texttt{STRIPE} đang chờ (\texttt{PENDING}) nhảy cóc sang bước giao hàng khi chưa thanh toán, tự động hoàn trả kho nguyên liệu (\texttt{restoreStockForOrder}) nếu chủ quán chuyển trạng thái sang hủy đơn, và truy vấn đơn hàng sắp xếp mới nhất lên đầu (\texttt{ORDER BY o.createdAt DESC, o.id DESC}) trong \texttt{OrderRepository.java}.
 
 \subsection{Cài đặt Cơ chế Tự động Gỡ bỏ Mã Giảm giá ở Phía Client (Auto-Removal)}
 Trong tệp giao diện giỏ hàng \texttt{Cart.jsx}, thuật toán theo dõi giá trị giỏ hàng được cài đặt thông qua React Hook \texttt{useEffect}:
@@ -1359,10 +1423,10 @@ export const playOrderChime = () => {
 };
 \end{lstlisting}
 
-\subsection{Cài đặt Trợ lý Quản trị Thông minh AI Copilot kết hợp Động cơ DSS Heuristic Dự phòng}
-Lớp dịch vụ \texttt{AiCopilotServiceImpl.java} hiện thực hóa chiến lược phòng thủ hai tầng: kết nối API Google Gemini 1.5 Flash và tự động kích hoạt Động cơ Heuristic DSS nội bộ khi mất mạng:
+\subsection{Cài đặt Trợ lý Quản trị Thông minh AI Copilot Đa vai trò \& Tác tử Hành động}
+Lớp dịch vụ \texttt{AiCopilotServiceImpl.java} hiện thực hóa kiến trúc \textbf{Dual-Persona Agentic AI} kết hợp chiến lược phòng thủ hai tầng: kết nối API \textbf{Google Gemini 2.5 Flash} (\texttt{gemini-2.5-flash}) và tự động kích hoạt Động cơ Heuristic DSS nội bộ (phân tách riêng cho Chủ quán và Super Admin), đồng thời đính kèm payload \texttt{agentAction} qua phương thức \texttt{determineAgentAction()}:
 
-\begin{lstlisting}[language=Java, caption={Động cơ điều phối AI Copilot và Heuristic DSS trong AiCopilotServiceImpl.java}]
+\begin{lstlisting}[language=Java, caption={Điều phối Dual-Persona Agentic AI và DSS trong AiCopilotServiceImpl.java}]
 @Service
 public class AiCopilotServiceImpl implements AiCopilotService {
     @Value("${gemini.api.key:}")
@@ -1371,39 +1435,32 @@ public class AiCopilotServiceImpl implements AiCopilotService {
     @Override
     public AiChatResponse chatWithCopilot(AiChatRequest request) {
         Long restaurantId = request.getRestaurantId();
+        boolean isSuperAdmin = (restaurantId == null || restaurantId == 0L);
         String userQuery = (request.getMessage() != null && !request.getMessage().trim().isEmpty())
                 ? request.getMessage().trim()
-                : "Phân tích tình hình kinh doanh tổng quan và đề xuất cải thiện.";
+                : (isSuperAdmin ? "Phan tich van hanh toan san." : "Phan tich kinh doanh tong quan.");
 
-        // 1. Thu thap toan bo chi so van hanh truc tiep tu MySQL Database
+        // 1. Thu thap chi so thuc te tu MySQL (theo nha hang hoac GMV/CSAT toan san)
         Map<String, Object> metrics = collectRestaurantMetrics(restaurantId);
 
-        // 2. Thu goi mo hinh Google Gemini API
+        // 2. Goi API Google Gemini 2.5 Flash
         String aiReply = callGeminiApi(userQuery, metrics);
 
-        // 3. Neu Gemini loi/timeout/chua co key, tu dong kich hoat Heuristic DSS Engine du phong
+        // 3. Kich hoat Heuristic DSS Engine du phong neu Gemini timeout / offline
         if (aiReply == null || aiReply.trim().isEmpty()) {
-            aiReply = generateHeuristicBusinessInsight(metrics, userQuery);
+            aiReply = generateHeuristicBusinessInsight(metrics, userQuery, restaurantId);
         }
 
-        return new AiChatResponse(aiReply, Instant.now(), metrics, defaultSuggestedPrompts);
-    }
+        // 4. Sinh goi Tac tu AI Hanh dong 1-Click (MODERATE_REVIEW hoac LOCK_FOOD_AVAILABILITY)
+        Map<String, Object> agentAction = determineAgentAction(userQuery, isSuperAdmin, restaurantId, metrics);
+        List<String> prompts = isSuperAdmin ? superAdminSuggestedPrompts : ownerSuggestedPrompts;
 
-    private String generateHeuristicBusinessInsight(Map<String, Object> metrics, String query) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("### 📊 Báo Cáo Phân Tích Quản Trị Hệ Thống (Heuristic DSS Engine)\n\n");
-        sb.append("> *Hệ thống đang kích hoạt Động cơ Phân tích Dự phòng Thông minh dựa trên dữ liệu thời gian thực.*\n\n");
-        sb.append("- **Tổng doanh thu:** ").append(metrics.get("totalRevenueFormatted")).append(" VNĐ\n");
-        sb.append("- **Tổng đơn hàng:** ").append(metrics.get("totalOrders")).append(" đơn\n");
-        sb.append("- **Giá trị đơn trung bình (AOV):** ").append(metrics.get("avgOrderValueFormatted")).append(" VNĐ\n\n");
-
-        sb.append("#### 💡 Khuyến Nghị Chiến Lược:\n");
-        sb.append("1. **Kích cầu món bán chậm:** Tạo combo hoặc Flash Sale giảm giá 15% vào khung giờ trưa (11h-13h).\n");
-        sb.append("2. **Bảo toàn chuỗi cung ứng:** Bổ sung khẩn cấp các nguyên liệu đang chạm ngưỡng cảnh báo tồn kho để tránh đứt gãy phục vụ.\n");
-        return sb.toString();
+        return new AiChatResponse(aiReply, Instant.now(), metrics, prompts, agentAction);
     }
 }
 \end{lstlisting}
+
+Nhờ thiết kế này, Chủ nhà hàng có thể kích hoạt nút \textit{``Tạm khóa món ăn trên Menu''} ngay khi AI cảnh báo nguyên liệu cạn kho (\texttt{PUT /api/admin/food/\{foodId\}}), còn Super Admin có thể kích hoạt \textit{AI Content Moderation Sentinel} gỡ bỏ đánh giá vi phạm quy chuẩn cộng đồng ngay tức thì (\texttt{DELETE /api/reviews/\{reviewId\}}).
 
 \subsection{Cài đặt Cơ chế Tự động Trừ Kho và Lưu Nhật ký Xuất Nhập (Smart Stock Depletion)}
 Tại lớp \texttt{IngredientsServiceImpl.java}, hệ thống tự động khấu trừ định lượng nguyên liệu cấu thành món ăn khi đơn được tạo và hoàn kho khi đơn bị hủy:
@@ -1454,6 +1511,16 @@ public void depleteStockForOrder(Order order) {
 }
 \end{lstlisting}
 
+\subsection{Cài đặt Trợ lý Ẩm thực Menu Catalog RAG và Đồng bộ Hệ sinh thái Dữ liệu}
+Bên cạnh trợ lý điều hành phía quản trị, phân hệ khách hàng tích hợp Widget \textbf{Trợ lý Ẩm thực AI Concierge} tại \texttt{Chatbot.jsx} ứng dụng kỹ thuật \textbf{Menu Catalog RAG} (nạp danh mục món bán chạy thực tế từ \texttt{/api/food/popular} và các coupon kích hoạt từ \texttt{/api/coupons}), trả về thẻ gợi ý món ăn trực quan kèm nút liên kết sâu \texttt{/restaurant/\{city\}/\{name\}/\{id\}?foodId=\{id\}} tự động cuộn và làm nổi bật món ăn tại trang nhà hàng.
+
+Đồng thời, hệ sinh thái dữ liệu và vận hành được hoàn thiện đồng bộ gồm:
+\begin{itemize}
+    \item \textbf{Đồng bộ Sự kiện -- Mã ưu đãi (\texttt{EventsServiceImpl.java}):} Khi chủ quán tạo hoặc cập nhật sự kiện khuyến mãi có đính kèm \texttt{promoCode}, hệ thống tự động tạo/cập nhật bản ghi \texttt{Coupon} tương ứng trong CSDL.
+    \item \textbf{Mở rộng hệ thống dữ liệu thực tiễn:} Hoàn thiện mạng lưới \textbf{16 nhà hàng đối tác} trải dài 3 tỉnh thành (Hà Nội, TP. Hồ Chí Minh, Quảng Nam -- bổ sung Nhà Hàng Chay Hoa Anh Đào Hội An), \textbf{82 món ăn} với 100\% ảnh thực tế chuẩn ẩm thực, \textbf{8 mã giảm giá} (4 toàn sàn, 4 riêng theo quán), và \textbf{4 sự kiện} đồng bộ.
+    \item \textbf{Bảo vệ dữ liệu \& Tự động hóa vận hành:} Các endpoint seed ghi đè dữ liệu (\texttt{/public/fix-images}, \texttt{/public/update-curated-images}) được khóa bằng cờ bảo vệ \texttt{?confirm=true}; đồng thời cung cấp bộ kịch bản khởi chạy và giải phóng cổng mạng 1-Click (\texttt{KHOI\_DONG\_HE\_THONG.bat}, \texttt{KHOI\_DONG\_LAI\_BACKEND.bat}) cùng tệp sao lưu SQL chuẩn \texttt{database/restore\_images\_and\_coupons.sql}.
+\end{itemize}
+
 \section{Đánh giá Thực nghiệm và Đo đạc Hiệu năng Hệ thống}
 Để kiểm chứng tính khả thi, độ ổn định và hiệu năng vận hành trong điều kiện thực tế, hệ thống đã được triển khai thử nghiệm trên môi trường máy chủ thực nghiệm và tiến hành đo đạc định lượng trên ba phân hệ cốt lõi: truyền thông thời gian thực WebSocket, tính toàn vẹn kho nguyên liệu ACID khi chịu tải đồng thời, và thời gian phản hồi của Trợ lý Quản trị AI Copilot kết hợp Động cơ DSS dự phòng.
 
@@ -1500,14 +1567,14 @@ Hiện tượng xung đột khóa chết (Deadlock) & Không phát sinh & Không
 Kết quả thực nghiệm tại Bảng 5.2 chứng minh cơ chế quản lý giao dịch Spring Data JPA kết hợp cơ chế khóa tự nhiên của MySQL đảm bảo tính toàn vẹn tuyệt đối: Dưới áp lực 100 yêu cầu đồng thời, thời gian hoàn tất trung bình chỉ đạt \textbf{483 ms / giao dịch}, không phát sinh bất kỳ hiện tượng Deadlock nào và độ lệch tồn kho bằng \textbf{0\%}, toàn bộ 100 giao dịch đều được ghi vết minh bạch vào nhật ký \texttt{InventoryLog}.
 
 \subsection{Đo đạc Thời gian Phản hồi và Tính Sẵn sàng của Trợ lý AI Copilot}
-Trợ lý AI Copilot được thiết kế theo kiến trúc phòng thủ hai tầng: tầng 1 là mô hình Google Gemini 1.5 Flash Cloud API phục vụ phân tích ngôn ngữ tự nhiên chuyên sâu; tầng 2 là Động cơ Heuristic DSS nội bộ hoạt động ngoại tuyến (Offline) dựa trên dữ liệu thống kê SQL thời gian thực. Bảng 5.3 thể hiện số liệu so sánh hiệu năng giữa hai tầng:
+Trợ lý AI Copilot được thiết kế theo kiến trúc phòng thủ hai tầng: tầng 1 là mô hình Google Gemini 2.5 Flash Cloud API phục vụ phân tích ngôn ngữ tự nhiên chuyên sâu; tầng 2 là Động cơ Heuristic DSS nội bộ hoạt động ngoại tuyến (Offline) dựa trên dữ liệu thống kê SQL thời gian thực (hỗ trợ Dual-Persona cho cả Chủ quán và Super Admin). Bảng 5.4 thể hiện số liệu so sánh hiệu năng giữa hai tầng:
 
-\begin{table}{Đo đạc hiệu năng Trợ lý AI Copilot: Gemini 1.5 Flash Cloud so với Heuristic DSS Fallback}
+\begin{table}{Đo đạc hiệu năng Trợ lý AI Copilot: Gemini 2.5 Flash Cloud so với Heuristic DSS Fallback}
 \centering
 \small
 \begin{tabularx}{\textwidth}{|X|c|c|}
 \hline
-\textbf{Tiêu chí Đánh giá} & \textbf{Tầng 1: Google Gemini 1.5 Flash} & \textbf{Tầng 2: Heuristic DSS Fallback} \\ \hline
+\textbf{Tiêu chí Đánh giá} & \textbf{Tầng 1: Google Gemini 2.5 Flash} & \textbf{Tầng 2: Heuristic DSS Fallback} \\ \hline
 Thời gian phản hồi trung bình (Response Time) & 8,01 giây & \textbf{3,8 ms (0,0038s)} \\ \hline
 Độ trễ sinh từ đầu tiên (Time to First Token) & 1,45 giây & \textbf{Tức thì (< 1ms)} \\ \hline
 Tính phụ thuộc đường truyền Internet quốc tế & Có (Yêu cầu kết nối Cloud) & \textbf{Không (Chạy hoàn toàn nội bộ)} \\ \hline
@@ -1517,60 +1584,70 @@ Chất lượng và phong cách câu trả lời & Văn phong tự nhiên, linh 
 \end{tabularx}
 \end{table}
 
-Bảng 5.3 làm nổi bật tính thực tiễn của giải pháp: Khi có kết nối mạng ổn định, Gemini 1.5 Flash mang lại trải nghiệm tư vấn thông minh, linh hoạt trong khoảng \textbf{8,01 giây}. Ngược lại, khi xảy ra sự cố nghẽn mạng quốc tế hoặc vượt hạn mức truy vấn, Động cơ Heuristic DSS lập tức phản hồi trong chỉ \textbf{3,8 mili-giây}, bảo đảm hệ thống quản trị nhà hàng đạt tính sẵn sàng \textbf{100\%} mà không bao giờ bị gián đoạn.
+Số liệu đo đạc làm nổi bật tính thực tiễn của giải pháp: Khi có kết nối mạng ổn định, Gemini 2.5 Flash mang lại trải nghiệm tư vấn thông minh, linh hoạt trong khoảng \textbf{8,01 giây}. Ngược lại, khi xảy ra sự cố nghẽn mạng quốc tế hoặc vượt hạn mức truy vấn, Động cơ Heuristic DSS lập tức phản hồi trong chỉ \textbf{3,8 mili-giây}, đồng thời vẫn bảo đảm sinh đầy đủ các đề xuất Tác tử AI Hành động (\texttt{agentAction}) với tính sẵn sàng \textbf{100\%}.
 
 \section{Giao diện Một số Màn hình Chính của Hệ thống}
-Hệ thống được thiết kế hoàn chỉnh với hơn 20 màn hình chức năng. Dưới đây là hình ảnh thực tế đại diện cho 5 màn hình trọng yếu nhất trong hệ thống:
+Hệ thống được thiết kế hoàn chỉnh với hơn 20 màn hình chức năng chạy thực tế. Dưới đây là ảnh chụp màn hình thực tế từ hệ thống đang vận hành đại diện cho 6 phân hệ trọng yếu nhất:
 
 \subsection{Màn hình Trang chủ Hệ thống (Customer Home Screen)}
 Màn hình trang chủ của hệ thống được minh họa trong Hình 5.1:
 
-\begin{figure}{Giao diện Trang chủ Hệ thống với Carousel "Hôm nay ăn gì"}
+\begin{figure}{Giao diện Trang chủ Hệ thống với Carousel "Hôm Nay Ăn Gì?"}
 \centering
 \includegraphics[width=0.95\textwidth]{figures/fig_ui_home.jpg}
 \end{figure}
 
-Hình 5.1 thể hiện giao diện Dark Mode hiện đại của ứng dụng: Phía trên là thanh điều hướng (Navbar) với logo thương hiệu, ô tìm kiếm thông minh và thông tin người dùng. Phần giữa là Carousel tương tác ``Hôm nay ăn gì?'' cho phép khách hàng cuộn lướt và nhấn chọn các thể loại ẩm thực (Phở bò gia truyền, Pizza Pepperoni, Bánh mì kẹp, Burger). Phía dưới là danh sách lưới các nhà hàng nổi bật kèm hình ảnh bắt mắt, số sao đánh giá trung bình và nhãn trạng thái mở/đóng cửa thời gian thực.
+Hình 5.1 là ảnh chụp thực tế giao diện Dark Mode của ứng dụng: Phía trên là thanh điều hướng (Navbar) màu hồng nhận diện thương hiệu cùng các nút tìm kiếm, đăng nhập/hồ sơ và giỏ hàng. Khu vực Banner nổi bật với tiêu đề thương hiệu và thanh tìm kiếm thông minh hỗ trợ cả khách vãng lai (Guest Browsing). Ngay bên dưới là Carousel ``Hôm Nay Ăn Gì? Món Bán Chạy Nhất'' hiển thị hình ảnh chân thực của các đặc sản Việt Nam (Cơm sườn bì chả, Phở bò Bát Đàn, Cà phê phin...) cùng lưới 4 cột khám phá 16 nhà hàng và các thẻ mã giảm giá kích hoạt 1-Click.
 
-\subsection{Màn hình Giỏ hàng và Áp dụng Khuyến mãi (Cart \& Checkout Screen)}
+\subsection{Màn hình Giỏ hàng và Thanh toán Đa phương thức (Cart \& Checkout Screen)}
 Giao diện quản lý giỏ hàng và chốt đơn được minh họa trong Hình 5.2:
 
-\begin{figure}{Giao diện Giỏ hàng và Động cơ Khuyến mãi Ràng buộc}
+\begin{figure}{Giao diện Giỏ hàng, Gợi ý Mã Ưu đãi 1-Click và Lựa chọn Thanh toán Stripe/COD}
 \centering
 \includegraphics[width=0.95\textwidth]{figures/fig_ui_cart.jpg}
 \end{figure}
 
-Hình 5.2 minh họa chi tiết khu vực giỏ hàng: Cột bên trái liệt kê danh sách món ăn, số lượng kèm các nguyên liệu tùy biến (ví dụ: Phở Đặc Biệt thêm bò viên; Bánh mì thêm phô mai, cay). Cột bên phải là thẻ tổng kết đơn hàng hiển thị chi tiết tiền món, phí giao hàng, ô nhập mã ưu đãi với mã \texttt{GIAM10\%} đã được kích hoạt thành công (hiển thị dòng chữ xanh thông báo số tiền được giảm), lựa chọn địa chỉ giao nhận và nút chuyển tiếp sang thanh toán thẻ Stripe.
+Hình 5.2 thể hiện màn hình Giỏ hàng thực tế: Cột bên trái liệt kê các món ăn kèm giá tiền (ví dụ: Cơm Sườn Bì Chả, Cơm Tấm Ba Rọi Nướng Giòn), nút điều chỉnh số lượng và hộp ``Khuyến mãi / Mã giảm giá'' kèm 5 chip gợi ý áp dụng nhanh 1-Click (\texttt{GIAM10\%}, \texttt{GIAM20K}, \texttt{COMTAM15}...). Cột bên phải cho phép chọn nhanh địa chỉ giao nhận đã lưu và lựa chọn phương thức thanh toán giữa \textbf{Thanh toán Online (Stripe)} hoặc \textbf{Tiền mặt (COD)} trước khi xác nhận đặt hàng.
 
 \subsection{Bảng Điều khiển Quản trị Nhà hàng (Restaurant Owner Dashboard)}
 Giao diện dành cho đối tác chủ quán ăn được mô tả trong Hình 5.3:
 
-\begin{figure}{Giao diện Bảng điều khiển Quản trị của Chủ nhà hàng}
+\begin{figure}{Giao diện Bảng điều khiển Quản trị của Chủ nhà hàng (Real-time Dashboard)}
 \centering
 \includegraphics[width=0.95\textwidth]{figures/fig_ui_owner_dashboard.jpg}
 \end{figure}
 
-Hình 5.3 minh họa bảng điều khiển của chủ nhà hàng: Cột điều hướng bên trái cung cấp các mục quản lý: Bảng tổng quan, Đơn hàng, Thực đơn, Kho nguyên liệu, Danh mục món ăn, Sự kiện khuyến mãi và Hồ sơ nhà hàng. Khu vực nội dung hiển thị các thẻ chỉ số kinh doanh trong ngày (Số đơn hàng, Tổng doanh thu, Số món ăn hoạt động) cùng bảng đơn hàng trực tiếp với các nút chuyển đổi trạng thái giao vận (PENDING, OUT\_FOR\_DELIVERY, DELIVERED).
+Hình 5.3 minh họa bảng điều khiển thực tế của chủ nhà hàng (\textit{Tiệm Cơm Tấm Sài Gòn - Đặc Biệt}): Bên trái là thanh Sidebar cố định hài hòa dưới Navbar gồm đầy đủ các phân hệ nghiệp vụ (\textit{Tổng quan, Trợ lý AI Copilot, Đơn hàng, Thực đơn, Danh mục món, Nguyên liệu, Sự kiện, Thông tin quán}). Khu vực nội dung hiển thị công tắc trạng thái mở nhận đơn Online, thẻ liên kết nhanh AI Business Copilot, 4 thẻ KPI thời gian thực (Doanh thu \texttt{2,922,000đ}, 54 đơn hàng, 10 món ăn, cảnh báo nguyên liệu cạn kho), các biểu đồ doanh thu 7 ngày và cơ cấu đơn hàng vẽ bằng Recharts, cùng chỉ báo WebSocket ``Real-time Connected'' ở góc dưới màn hình.
 
-\subsection{Bảng Điều khiển Kiểm duyệt Toàn sàn của Super Admin}
+\subsection{Bảng Điều khiển Kiểm duyệt Đánh giá Toàn sàn của Super Admin}
 Giao diện dành riêng cho quản trị viên tối cao sàn thương mại được mô tả trong Hình 5.4:
 
-\begin{figure}{Giao diện Kiểm duyệt Đánh giá Toàn sàn của Super Admin}
+\begin{figure}{Giao diện Quản lý và Kiểm duyệt Đánh giá Toàn sàn của Super Admin}
 \centering
 \includegraphics[width=0.95\textwidth]{figures/fig_ui_superadmin.jpg}
 \end{figure}
 
-Hình 5.4 thể hiện phân hệ quản trị cấp cao của Super Admin: Phía trên là các chỉ số vận hành toàn sàn (Tổng số người dùng đăng ký, Số nhà hàng đối tác đang hoạt động, Tổng doanh thu GMV toàn sàn). Phía dưới là bảng kiểm duyệt đánh giá khách hàng (Review Moderation), cho phép Quản trị viên xem xét nội dung nhận xét và trực tiếp nhấn nút đỏ ``Delete Violation Review'' để xóa bỏ các bài viết spam hoặc vi phạm tiêu chuẩn cộng đồng.
+Hình 5.4 ghi nhận phân hệ kiểm duyệt của Super Admin: Thanh Sidebar bên trái cung cấp các mục điều hành cấp sàn (\textit{Tổng quan, Trợ lý AI Copilot, Người dùng, Đánh giá, Mã giảm giá, Doanh thu}). Giao diện cho phép lọc chọn từng nhà hàng đối tác trên toàn sàn (ví dụ: \textit{Tiệm Cơm Tấm Sài Gòn - Đặc Biệt (ID: 1)}), thống kê điểm trung bình (4.7/5 sao, 65 lượt đánh giá) và liệt kê chi tiết các bình luận kèm nhãn \texttt{Chip} tên món ăn được nhận xét cùng nút gỡ bỏ các đánh giá vi phạm quy chuẩn cộng đồng.
 
-\subsection{Màn hình Trợ lý Quản trị Thông minh AI Copilot (Restaurant AI Copilot Screen)}
-Giao diện trợ lý AI chuyên biệt cho chủ nhà hàng được minh họa trong Hình 5.5:
+\subsection{Màn hình Trợ lý Quản trị \& Tác tử Hành động AI Copilot}
+Giao diện trợ lý AI chuyên biệt cho quản trị viên được minh họa trong Hình 5.5:
 
-\begin{figure}{Giao diện Trợ lý Quản trị Thông minh AI Copilot của Nhà hàng}
+\begin{figure}{Giao diện Trợ lý Quản trị AI Copilot và Thẻ Tác tử Hành động 1-Click}
 \centering
 \includegraphics[width=0.95\textwidth]{figures/fig_ui_ai_copilot.jpg}
 \end{figure}
 
-Hình 5.5 minh họa phân hệ trợ lý thông minh dành cho chủ cơ sở: Phía trên là hàng thẻ chỉ số kinh doanh then chốt cập nhật theo thời gian thực (Tổng doanh thu trong ngày, Tổng số đơn đặt hàng, Cảnh báo nguyên liệu chạm ngưỡng tối thiểu). Khu vực trung tâm là giao diện trò chuyện đối thoại thông minh được định dạng đẹp mắt theo chuẩn Markdown, hỗ trợ hiển thị các đề xuất có cấu trúc từ AI (hoặc Động cơ Heuristic DSS dự phòng). Phía trên khung nhập câu hỏi là các gợi ý truy vấn nhanh 1-Click (Prompt Chips) như ``Đánh giá tổng quan hiệu quả kinh doanh tuần này'', ``Đề xuất chiến lược tăng doanh thu \& kích cầu món ế'', ``Cảnh báo nguyên liệu sắp hết \& rủi ro gián đoạn bếp'', và ``Gợi ý chương trình khuyến mãi giờ vàng tối ưu''.
+Hình 5.5 cho thấy màn hình \textbf{AI Business Copilot} đang vận hành thực tế: Phía trên là hàng 4 thẻ KPI đồng bộ tức thời từ MySQL (Doanh thu tích lũy \texttt{2.922.000 đ}, 34/54 đơn hoàn thành, điểm đánh giá \texttt{4.7/5.0}, cảnh báo \texttt{1 mục đang tắt}). Khu vực trung tâm hiển thị phân tích chi tiết định dạng Markdown kết hợp nổi bật là thẻ \textbf{``TÁC TỬ AI HÀNH ĐỘNG''} đề xuất tạm ngưng phục vụ món \textit{Cơm Sườn Bì Chả} do cạn nguyên liệu sườn cây, cung cấp nút hành động trực tiếp \textit{``Tác tử AI: Tạm khóa món ăn trên Menu''} để chủ quán thực thi ngay chỉ với 1 lần nhấn.
+
+\subsection{Giao diện Trợ lý Ẩm thực Khách hàng AI Concierge (Menu Catalog RAG)}
+Giao diện Widget Chatbot thông minh phục vụ khách hàng được minh họa trong Hình 5.6:
+
+\begin{figure}{Giao diện Trợ lý Ẩm thực Khách hàng AI Concierge với Thẻ Gợi ý Menu Catalog RAG}
+\centering
+\includegraphics[width=0.95\textwidth]{figures/fig_ui_chatbot_rag.jpg}
+\end{figure}
+
+Hình 5.6 minh họa cửa sổ nổi \textbf{Trợ Lý Ẩm Thực AI (Concierge)}: Ngay khi khách hàng bấm nút gợi ý \textit{``Gợi ý cơm trưa ngon hôm nay''}, bộ truy xuất Menu Catalog RAG kết xuất trực tiếp thẻ món ăn \textit{Cơm Sườn Bì Chả (50.000 đ)} kèm ảnh thực tế, tên quán, mẹo áp dụng mã \texttt{GIAM20K} và nút tương tác \textit{``Xem Quán \& Đặt Món Ngay''} dẫn thẳng tới thực đơn nhà hàng.
 
 % =========================================================================
 % CHƯƠNG 6: KẾT LUẬN VÀ HƯỚNG PHÁT TRIỂN
@@ -1581,15 +1658,15 @@ Hình 5.5 minh họa phân hệ trợ lý thông minh dành cho chủ cơ sở: 
 \subsection{Các Kết quả Đã Hoàn thành}
 Khóa luận tốt nghiệp với đề tài \textbf{``Nghiên cứu và phát triển nền tảng thương mại điện tử F\&B tích hợp quản trị thông minh''} đã hoàn thành xuất sắc toàn bộ các mục tiêu nghiên cứu và yêu cầu kỹ thuật đã đề ra ban đầu:
 \begin{enumerate}
-    \item \textbf{Xây dựng hoàn chỉnh kiến trúc ứng dụng Full-Stack hiện đại:} Hiện thực thành công hệ thống kết hợp giữa Java 17, Spring Boot 3.4.0 ở phía Backend và React 19, Redux Toolkit, Vite ở phía Frontend. Hệ thống đạt độ gắn kết cao, giao tiếp mượt mà thông qua chuẩn RESTful API và định dạng dữ liệu JSON.
-    \item \textbf{Hiện thực hóa cơ chế bảo mật và phân quyền đa tầng chặt chẽ:} Ứng dụng thành công Spring Security kết hợp JSON Web Token (JWT) cho xác thực phi trạng thái; triển khai cơ chế lọc và băm mật khẩu an toàn bằng BCrypt; áp dụng chính sách chặn triệt để nguy cơ leo thang đặc quyền quản trị viên từ các API công khai.
-    \item \textbf{Phát triển Động cơ kiểm soát mã giảm giá có điều kiện ràng buộc (Coupon Constraint Engine):} Giải quyết trọn vẹn bài toán khuyến mãi đa cấp độ (mã nhà hàng và mã toàn sàn) với ngưỡng đơn hàng tối thiểu; triển khai cơ chế tự động gỡ bỏ mã (Auto-removal) tại giao diện và thuật toán kiểm tra an toàn biên (\texttt{Math.max}, \texttt{Math.min}) tại máy chủ, ngăn chặn triệt để nguy cơ gian lận và lỗi số học.
-    \item \textbf{Tích hợp thành công Cổng thanh toán quốc tế Stripe:} Xây dựng luồng giao dịch điện tử chuẩn mực với Stripe Checkout Session và xử lý chuyển tiếp hai chiều an toàn, đảm bảo tính tuân thủ tiêu chuẩn an ninh thanh toán quốc tế PCI DSS.
-    \item \textbf{Hiện thực hóa truyền thông đơn hàng thời gian thực qua WebSocket \& Chuông thuật toán:} Loại bỏ hoàn toàn cơ chế kéo định kỳ HTTP Polling, đưa độ trễ nhận đơn hàng của nhà hàng xuống dưới 50ms, kết hợp chuông âm thanh điều chế thuật toán độc lập bằng Web Audio API không phụ thuộc tệp âm thanh bên ngoài.
-    \item \textbf{Xây dựng Trợ lý Quản trị Thông minh AI Copilot với kiến trúc DSS phòng thủ hai tầng:} Kết hợp sức mạnh phân tích ngôn ngữ tự nhiên của Google Gemini LLM với Động cơ Heuristic DSS dự phòng dựa trên dữ liệu kinh doanh nội bộ thời gian thực, đảm bảo tính sẵn sàng 100\% ngay cả khi gián đoạn mạng quốc tế.
-    \item \textbf{Phát triển phân hệ Quản lý Kho nguyên liệu Tự động (Smart Stock Depletion Engine):} Tự động khấu trừ và hoàn trả tồn kho nguyên liệu theo từng đơn hàng phát sinh hoặc bị hủy, lưu vết chi tiết vào nhật ký biến động kho \texttt{InventoryLog}.
-    \item \textbf{Thiết kế cơ sở dữ liệu quan hệ chuẩn hóa và cơ chế Auto-Seeding:} Xây dựng mô hình ERD với 21 bảng thực thể chuẩn 3NF, bảo đảm tính toàn vẹn giao dịch ACID và tính năng tự động nạp dữ liệu mẫu ban đầu nhanh chóng, tiện lợi cho việc trình diễn và kiểm thử.
-    \item \textbf{Trải nghiệm người dùng vượt trội với Dark Mode UI:} Thiết kế giao diện sang trọng, mượt mà trên nền tảng Material-UI và TailwindCSS, tối ưu hóa thao tác người dùng với Carousel tương tác ``Hôm nay ăn gì'', giỏ hàng động và các bảng quản trị chuyên nghiệp cho cả ba nhóm tác nhân.
+    \item \textbf{Xây dựng hoàn chỉnh kiến trúc ứng dụng Full-Stack hiện đại:} Hiện thực thành công hệ thống kết hợp giữa Java 17, Spring Boot 3.4.0 ở phía Backend và React 19, Redux Toolkit, Vite 8 ở phía Frontend. Hệ thống đạt độ gắn kết cao, hỗ trợ duyệt khám phá không cần đăng nhập (Guest Browsing) và cơ chế tự dọn dẹp token hết hạn an toàn.
+    \item \textbf{Hiện thực hóa cơ chế bảo mật và phân quyền đa tầng chặt chẽ:} Ứng dụng thành công Spring Security kết hợp JSON Web Token (JWT) cho xác thực phi trạng thái; triển khai cơ chế băm mật khẩu BCrypt và chính sách chặn triệt để leo thang đặc quyền quản trị viên từ các API công khai.
+    \item \textbf{Phát triển Động cơ kiểm soát mã giảm giá (Coupon Engine) \& Đồng bộ Sự kiện:} Giải quyết trọn vẹn bài toán khuyến mãi đa cấp độ (4 mã toàn sàn, 4 mã riêng nhà hàng tự động đồng bộ từ 4 sự kiện khuyến mãi); triển khai cơ chế tự động gỡ bỏ mã (Auto-removal) tại giao diện và thuật toán kiểm tra an toàn biên (\texttt{Math.max}, \texttt{Math.min}) tại máy chủ.
+    \item \textbf{Tích hợp Thanh toán Đa phương thức (Stripe Checkout \& COD) và Máy trạng thái Đơn hàng:} Xây dựng luồng thanh toán thẻ quốc tế Stripe chuẩn PCI DSS (với callback mở khóa an toàn), hỗ trợ song song thanh toán COD và xuất hóa đơn điện tử; thiết lập \textbf{Order State Guard} ngăn chuyển trạng thái trái quy trình.
+    \item \textbf{Hiện thực hóa truyền thông đơn hàng thời gian thực qua WebSocket \& Chuông thuật toán:} Loại bỏ hoàn toàn cơ chế kéo định kỳ HTTP Polling, đưa độ trễ nhận đơn hàng xuống còn 26,5ms (nhanh gấp 57,6 lần), luôn sắp xếp đơn hàng mới nhất lên đầu và tích hợp chuông âm thanh Web Audio API.
+    \item \textbf{Xây dựng Hệ sinh thái AI Đa tầng (Dual-Persona Agentic AI Copilot \& Menu Catalog RAG Chatbot):} Kết hợp \textbf{Google Gemini 2.5 Flash} và Động cơ Heuristic DSS dự phòng hai tầng (đạt độ sẵn sàng 100\%) kèm tính năng Tác tử AI 1-Click khóa món cạn kho/gỡ đánh giá vi phạm cho quản trị viên, cùng Widget Chatbot Menu Catalog RAG hỗ trợ thực khách đặt món nhanh qua deep-link.
+    \item \textbf{Phát triển phân hệ Quản lý Kho nguyên liệu Tự động (Smart Stock Depletion Engine):} Tự động khấu trừ và hoàn trả tồn kho nguyên liệu theo từng đơn hàng phát sinh hoặc bị hủy (bao gồm lúc chủ quán chuyển trạng thái hủy), ghi vết minh bạch vào nhật ký biến động kho \texttt{InventoryLog} với độ lệch tồn kho bằng 0\%.
+    \item \textbf{Thiết kế cơ sở dữ liệu chuẩn hóa và Hệ sinh thái dữ liệu thực tế:} Xây dựng mô hình ERD gồm 21 bảng chuẩn 3NF, bảo đảm tính toàn vẹn ACID cùng bộ dữ liệu thử nghiệm chuẩn thực tiễn (16 nhà hàng thuộc 3 thành phố, 82 món ăn ảnh thật, kịch bản khởi tạo tự động và bản sao lưu SQL \texttt{restore\_images\_and\_coupons.sql}).
+    \item \textbf{Trải nghiệm người dùng vượt trội với Dark Mode UI:} Thiết kế giao diện đồng bộ, mượt mà trên Material-UI 9, Recharts và TailwindCSS, tối ưu hóa thao tác với lưới 4 cột thích ứng, Carousel ``Hôm nay ăn gì?'', đánh giá theo từng món và thanh điều hướng quản trị nhất quán.
 \end{enumerate}
 
 \subsection{Đánh giá Ưu điểm Nổi bật của Hệ thống}

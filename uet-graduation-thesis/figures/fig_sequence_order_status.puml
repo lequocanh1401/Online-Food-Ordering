@@ -5,51 +5,48 @@ skinparam defaultFontName "Segoe UI"
 skinparam DefaultFontSize 12
 
 actor "Chủ nhà hàng\n(Restaurant Owner)" as owner
-participant "Admin Portal\n(Orders.jsx)" as adminUI
+participant "Admin Portal\n(OrderTable.jsx)" as adminUI
 participant "AdminOrderController\n(/api/admin/orders)" as adminOrderCtrl
-participant "OrderService" as orderSvc
-participant "RestaurantRepository" as restRepo
-participant "OrderRepository" as orderRepo
+participant "OrderServiceImpl\n(State Guard)" as orderSvc
+participant "IngredientsService" as ingSvc
+participant "OrderWebSocketHandler\n(/ws/orders)" as wsHandler
 database "MySQL Database" as db
 
-== Xem Danh sách Đơn hàng của Nhà hàng ==
+== Xem Danh sách Đơn hàng Mới nhất Lên đầu ==
 owner -> adminUI : Mở trang "Quản lý Đơn hàng" (/admin/restaurant/orders)
-adminUI -> adminOrderCtrl : GET /api/admin/order/restaurant/{restaurantId}?order_status=ALL
+adminUI -> adminOrderCtrl : GET /api/admin/order/restaurant/{restaurantId}
 activate adminOrderCtrl
-
 adminOrderCtrl -> orderSvc : getRestaurantsOrder(restaurantId, orderStatus)
-orderSvc -> orderRepo : findByRestaurantId(restaurantId)
-orderRepo -> db : SELECT * FROM orders WHERE restaurant_id = ?
-db --> orderRepo : List<Order>
-orderRepo --> orderSvc : List<Order>
+orderSvc -> db : SELECT * FROM orders WHERE restaurant_id = ?\nORDER BY createdAt DESC, id DESC
+db --> orderSvc : List<Order> (Sắp xếp mới nhất lên đầu)
 orderSvc --> adminOrderCtrl : List<Order>
-adminOrderCtrl --> adminUI : HTTP 200 OK (Danh sách đơn hàng)
+adminOrderCtrl --> adminUI : HTTP 200 OK
 deactivate adminOrderCtrl
-adminUI --> owner : Hiển thị bảng đơn hàng (Mã đơn, Món ăn, Khách hàng, Trạng thái)
+adminUI --> owner : Hiển thị bảng đơn hàng kèm nhãn STRIPE / COD
 
-== Cập nhật Trạng thái Xử lý Đơn hàng (Fulfillment) ==
-owner -> adminUI : Chọn đơn hàng & Click chuyển trạng thái (VD: "OUT_FOR_DELIVERY")
-adminUI -> adminOrderCtrl : PUT /api/admin/orders/{orderId}/{orderStatus}
+== Kiểm soát Máy Trạng thái & Cập nhật Giao vận ==
+owner -> adminUI : Chọn đơn & Chuyển trạng thái (PAID / OUT_FOR_DELIVERY / COMPLETED / CANCELLED)
+adminUI -> adminOrderCtrl : PUT /api/admin/order/{orderId}/{orderStatus}
 activate adminOrderCtrl
-
 adminOrderCtrl -> orderSvc : updateOrder(orderId, orderStatus)
 activate orderSvc
+orderSvc -> db : SELECT * FROM orders WHERE id = ?
+db --> orderSvc : order
 
-orderSvc -> orderRepo : findById(orderId)
-orderRepo -> db : SELECT * FROM orders WHERE id = ?
-db --> orderRepo : order
-
-orderSvc -> orderSvc : order.setOrderStatus("OUT_FOR_DELIVERY")
-orderSvc -> orderRepo : save(order)
-orderRepo -> db : UPDATE orders SET orderStatus = 'OUT_FOR_DELIVERY' WHERE id = ?
-db --> orderRepo : updatedOrder
-
-orderSvc --> adminOrderCtrl : updatedOrder
+alt Vi phạm Terminal State (đã COMPLETED hoặc CANCELLED)
+    orderSvc --> adminOrderCtrl : Exception("Đơn đã kết thúc, không thể đổi trạng thái!")
+else Đơn STRIPE đang PENDING nhưng nhảy cóc sang Giao/Hoàn thành
+    orderSvc --> adminOrderCtrl : Exception("Chờ khách thanh toán hoặc xác nhận PAID/CANCELLED!")
+else Chuyển đổi trạng thái hợp lệ
+    opt Chuyển sang CANCELLED
+        orderSvc -> ingSvc : restoreStockForOrder(order)\n(Hoàn trả tồn kho & ghi AUTO_RESTORE)
+    end
+    orderSvc -> db : UPDATE orders SET orderStatus = ? WHERE id = ?
+    orderSvc -> wsHandler : broadcastToRestaurant(STATUS_UPDATED)
+    orderSvc --> adminOrderCtrl : updatedOrder
+end
 deactivate orderSvc
-
-adminOrderCtrl --> adminUI : HTTP 200 OK (updatedOrder)
+adminOrderCtrl --> adminUI : Phản hồi kết quả cập nhật
 deactivate adminOrderCtrl
-
-adminUI -> adminUI : Cập nhật trạng thái đơn hàng trên bảng hiển thị
-adminUI --> owner : Thông báo thành công: "Trạng thái đơn hàng đã được cập nhật"
+adminUI --> owner : Cập nhật Badge & Thông báo trạng thái tức thì
 @enduml

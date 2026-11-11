@@ -1,0 +1,37 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam DefaultFontSize 12
+
+actor "Khách hàng / Khách vãng lai\n(Customer / Guest)" as customer
+participant "Giao diện Chat Widget\n(Chatbot.jsx)" as chatbotUI
+participant "Restaurant / Food / Coupon\nController (permitAll)" as publicCtrl
+database "MySQL Database" as db
+
+== 1. Nạp Ngữ cảnh Thực đơn & Khuyến mãi Thực tế (RAG Context Hydration) ==
+customer -> chatbotUI : Truy cập nền tảng & Mở cửa sổ "Trợ Lý Ẩm Thực AI (Concierge)"
+activate chatbotUI
+chatbotUI -> publicCtrl : GET /api/food/popular & GET /api/coupons (Không bắt buộc JWT)
+activate publicCtrl
+publicCtrl -> db : Truy vấn Top món bán chạy & Coupon đang hoạt động
+db --> publicCtrl : List<Food> (kèm ảnh, giá, nhà hàng), List<Coupon>
+publicCtrl --> chatbotUI : HTTP 200 OK (Dữ liệu ngữ cảnh thời gian thực)
+deactivate publicCtrl
+chatbotUI --> customer : Hiển thị lời chào & 5 nút gợi ý câu hỏi nhanh (Chips)
+deactivate chatbotUI
+
+== 2. Truy xuất Tăng cường Thực đơn & Điều hướng Đặt món (Menu Catalog RAG) ==
+customer -> chatbotUI : Chọn gợi ý / Nhập câu hỏi: "Gợi ý cơm trưa ngon hôm nay"
+activate chatbotUI
+chatbotUI -> chatbotUI : Phân tích ý định (Intent) & Truy xuất món khớp trong popularFoods
+chatbotUI -> chatbotUI : Đính kèm Coupon nổi bật (VD: GIAM20K) & Metadata Nhà hàng
+chatbotUI --> customer : Kết xuất Thẻ Gợi ý Tương tác (Ảnh món, Giá, Quán, Sao đánh giá)\nvà nút "Xem Quán & Đặt Món Ngay"
+deactivate chatbotUI
+
+opt Khách hàng nhấn "Xem Quán & Đặt Món Ngay"
+    customer -> chatbotUI : Click nút trên thẻ món ăn gợi ý
+    chatbotUI -> chatbotUI : Điều hướng tới /restaurant/{city}/{name}/{id}?foodId={id}
+    chatbotUI --> customer : Tự động mở trang nhà hàng, cuộn mượt tới đúng món & làm nổi bật (Highlight)
+end
+@enduml
