@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { Typography, TextField, Button } from '@mui/material';
+import { Typography, TextField, Button, Alert } from '@mui/material';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { loginUser, socialLogin } from '../../State/Authentication/Action';
 
 const GoogleIcon = () => (
@@ -31,6 +31,7 @@ const validationSchema = Yup.object().shape({
 export const LoginForm = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch(); // Khởi tạo người đưa thư của Redux
+    const { auth } = useSelector((store) => store);
 
     useEffect(() => {
         // Đọc hash params từ URL sau khi được Google / Facebook redirect về
@@ -95,6 +96,14 @@ export const LoginForm = () => {
             <Typography variant="h5" className="text-center font-semibold text-gray-800">
                 Đăng Nhập
             </Typography>
+
+            {auth.error && (
+                <Alert severity="error" sx={{ borderRadius: 2 }}>
+                    {typeof auth.error === 'string' && (auth.error.includes("401") || auth.error.toLowerCase().includes("badcredentials") || auth.error.toLowerCase().includes("invalid"))
+                        ? "Mật khẩu hoặc tài khoản không chính xác!"
+                        : (typeof auth.error === 'string' ? auth.error : "Đăng nhập thất bại. Vui lòng thử lại!")}
+                </Alert>
+            )}
             <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
                 {({ touched, errors }) => (
                     <Form className="space-y-4">

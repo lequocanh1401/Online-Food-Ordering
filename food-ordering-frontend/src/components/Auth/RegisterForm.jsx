@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { Typography, TextField, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Typography, TextField, Button, FormControl, InputLabel, Select, MenuItem, Alert } from '@mui/material';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { registerUser, socialLogin } from '../../State/Authentication/Action';
 
 const GoogleIcon = () => (
@@ -33,6 +33,7 @@ const validationSchema = Yup.object().shape({
 export const RegisterForm = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { auth } = useSelector((store) => store);
 
     useEffect(() => {
         // Đọc hash params từ URL sau khi được Google / Facebook redirect về
@@ -97,6 +98,14 @@ export const RegisterForm = () => {
             <Typography variant="h5" className="text-center font-semibold text-gray-800">
                 Đăng Ký Tài Khoản
             </Typography>
+
+            {auth.error && (
+                <Alert severity="error" sx={{ borderRadius: 2 }}>
+                    {typeof auth.error === 'string' && auth.error.toLowerCase().includes("email is already used")
+                        ? "Email này đã được sử dụng với tài khoản khác. Vui lòng chọn email khác!"
+                        : (typeof auth.error === 'string' ? auth.error : "Đăng ký thất bại. Vui lòng thử lại!")}
+                </Alert>
+            )}
             <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
                 {({ touched, errors, setFieldValue, values }) => (
                     <Form className="space-y-4">

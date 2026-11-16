@@ -15,12 +15,14 @@ export const Navbar = () => {
     const auth = useSelector(store => store.auth);
     const cart = useSelector(store => store.cart);
 
+    const isCustomer = !auth.user || auth.user.role === "ROLE_CUSTOMER";
+
     // Tự động kéo giỏ hàng khi người dùng đã đăng nhập thành công
     useEffect(() => {
-        if (jwt && auth.user) {
+        if (jwt && auth.user && isCustomer) {
             dispatch(findUserCart(jwt));
         }
-    }, [dispatch, jwt, auth.user]);
+    }, [dispatch, jwt, auth.user, isCustomer]);
 
     // Tính tổng số lượng tất cả món ăn trong giỏ
     const getCartItemsCount = () => {
@@ -31,8 +33,16 @@ export const Navbar = () => {
     const handleAvatarClick = () => {
         if (auth.user?.role === "ROLE_CUSTOMER") {
             navigate("/my-profile");
-        } else if (auth.user?.role === "ROLE_RESTAURANT_OWNER") {
+        } else if (auth.user?.role === "ROLE_RESTAURANT_OWNER" || auth.user?.role === "ROLE_ADMIN") {
             navigate("/admin/restaurant");
+        }
+    };
+
+    const handleLogoClick = () => {
+        if (auth.user?.role === "ROLE_RESTAURANT_OWNER" || auth.user?.role === "ROLE_ADMIN") {
+            navigate("/admin/restaurant");
+        } else {
+            navigate("/");
         }
     };
 
@@ -40,18 +50,20 @@ export const Navbar = () => {
         <Box className='px-5 z-50 py-[.8rem] bg-[#e91e63] lg:px-20 flex justify-between sticky top-0'>
             {/* Logo Góc Trái */}
             <div className='lg:mr-10 cursor-pointer flex items-center space-x-4'>
-                <li onClick={() => navigate("/")} className='logo font-semibold text-white text-2xl list-none'>
+                <li onClick={handleLogoClick} className='logo font-semibold text-white text-2xl list-none'>
                     Online Food Ordering
                 </li>
             </div>
 
             {/* Các Nút Chức Năng Góc Phải */}
             <div className='flex items-center space-x-2 lg:space-x-10'>
-                <div className=''>
-                    <IconButton onClick={() => navigate("/search")}>
-                        <SearchIcon sx={{ fontSize: "1.5rem", color: "white" }} />
-                    </IconButton>
-                </div>
+                {isCustomer && (
+                    <div className=''>
+                        <IconButton onClick={() => navigate("/search")}>
+                            <SearchIcon sx={{ fontSize: "1.5rem", color: "white" }} />
+                        </IconButton>
+                    </div>
+                )}
 
                 <div className=''>
                     {auth.user ? (
@@ -70,14 +82,16 @@ export const Navbar = () => {
                     )}
                 </div>
 
-                <div className=''>
-                    <IconButton onClick={() => navigate("/cart")}>
-                        {/* Huy hiệu hiện tổng số lượng món trong giỏ */}
-                        <Badge color="primary" badgeContent={getCartItemsCount()} max={99}>
-                            <ShoppingCartIcon sx={{ fontSize: "1.5rem", color: "white" }} />
-                        </Badge>
-                    </IconButton>
-                </div>
+                {isCustomer && (
+                    <div className=''>
+                        <IconButton onClick={() => navigate("/cart")}>
+                            {/* Huy hiệu hiện tổng số lượng món trong giỏ */}
+                            <Badge color="primary" badgeContent={getCartItemsCount()} max={99}>
+                                <ShoppingCartIcon sx={{ fontSize: "1.5rem", color: "white" }} />
+                            </Badge>
+                        </IconButton>
+                    </div>
+                )}
             </div>
 
         </Box>
