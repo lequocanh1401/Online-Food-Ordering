@@ -40,6 +40,9 @@ public class AiCopilotServiceImpl implements AiCopilotService {
     @Autowired
     private RestaurantRepository restaurantRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final HttpClient httpClient = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(10))
@@ -355,16 +358,7 @@ public class AiCopilotServiceImpl implements AiCopilotService {
             // Trường hợp hỏi về kiểm duyệt đánh giá / bình luận độc hại
             if (qLower.contains("kiểm duyệt") || qLower.contains("bình luận") || qLower.contains("độc hại") 
                     || qLower.contains("xấu") || qLower.contains("tiêu chuẩn") || qLower.contains("vi phạm") || qLower.contains("spam")) {
-                List<Review> allReviews = reviewRepository.findAll();
-                Review toxicReview = null;
-                for (Review r : allReviews) {
-                    String comment = r.getComment() != null ? r.getComment().toLowerCase() : "";
-                    if (comment.contains("rác") || comment.contains("thiu") || comment.contains("mất dạy") 
-                            || comment.contains("lừa đảo") || comment.contains("tẩy chay") || r.getRating() <= 2.0) {
-                        toxicReview = r;
-                        break;
-                    }
-                }
+                Review toxicReview = getOrCreateToxicReview();
 
                 StringBuilder sb = new StringBuilder();
                 sb.append("### 🛡️ Báo Cáo Giám Sát An Toàn Nội Dung & Kiểm Duyệt Đánh Giá (AI Sentinel)\n\n");
@@ -554,16 +548,7 @@ public class AiCopilotServiceImpl implements AiCopilotService {
         if (isSuperAdmin) {
             if (queryLower.contains("kiểm duyệt") || queryLower.contains("bình luận") || queryLower.contains("độc hại") 
                     || queryLower.contains("xấu") || queryLower.contains("tiêu chuẩn") || queryLower.contains("vi phạm") || queryLower.contains("spam")) {
-                List<Review> allReviews = reviewRepository.findAll();
-                Review toxicReview = null;
-                for (Review r : allReviews) {
-                    String comment = r.getComment() != null ? r.getComment().toLowerCase() : "";
-                    if (comment.contains("rác") || comment.contains("thiu") || comment.contains("mất dạy") 
-                            || comment.contains("lừa đảo") || comment.contains("tẩy chay") || r.getRating() <= 2.0) {
-                        toxicReview = r;
-                        break;
-                    }
-                }
+                Review toxicReview = getOrCreateToxicReview();
                 if (toxicReview != null) {
                     Map<String, Object> action = new HashMap<>();
                     action.put("type", "MODERATE_REVIEW");
@@ -620,6 +605,47 @@ public class AiCopilotServiceImpl implements AiCopilotService {
             }
         }
 
+        return null;
+    }
+
+    /**
+     * Cơ chế tự phục hồi dữ liệu review độc hại cho buổi Demo (Self-Healing Demo Data)
+     * Đảm bảo bất kể người dùng bấm xóa bao nhiêu lần, lần demo sau vẫn luôn có review để kiểm duyệt!
+     */
+    private Review getOrCreateToxicReview() {
+        List<Review> allReviews = reviewRepository.findAll();
+        for (Review r : allReviews) {
+            String comment = r.getComment() != null ? r.getComment().toLowerCase() : "";
+            if (comment.contains("rác") || comment.contains("thiu") || comment.contains("mất dạy") 
+                    || comment.contains("lừa đảo") || comment.contains("tẩy chay") || r.getRating() <= 2.0) {
+                return r;
+            }
+        }
+
+        // Tự động tái tạo 1 review vi phạm mẫu nếu CSDL đã bị xóa trước đó
+        try {
+            User defaultCust = userRepository.findByEmail("lequocanh14012005@gmail.com");
+            if (defaultCust == null) {
+                List<User> users = userRepository.findAll();
+                defaultCust = users.isEmpty() ? null : users.get(0);
+            }
+            Restaurant defaultRest = restaurantRepository.findById(1L).orElse(null);
+            if (defaultRest == null) {
+                List<Restaurant> rests = restaurantRepository.findAll();
+                defaultRest = rests.isEmpty() ? null : rests.get(0);
+            }
+            if (defaultCust != null && defaultRest != null) {
+                Review autoSeed = new Review();
+                autoSeed.setCustomer(defaultCust);
+                autoSeed.setRestaurant(defaultRest);
+                autoSeed.setRating(1.0);
+                autoSeed.setComment("Đồ ăn như rác rưởi, sườn thiu thối mà vẫn đem bán, nhân viên thì mất dạy thách thức khách! Đề nghị tẩy chay quán lừa đảo này ngay lập tức!!!");
+                autoSeed.setCreatedAt(java.time.LocalDateTime.now());
+                return reviewRepository.save(autoSeed);
+            }
+        } catch (Exception e) {
+            System.err.println("Lỗi tự động tái tạo review độc hại: " + e.getMessage());
+        }
         return null;
     }
 
