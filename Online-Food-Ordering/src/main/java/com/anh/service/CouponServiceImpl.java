@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -23,9 +24,15 @@ public class CouponServiceImpl implements CouponService {
         Restaurant restaurant = restaurantService.findRestaurantById(restaurantId);
         coupon.setRestaurant(restaurant);
         coupon.setActive(true);
-        // Kiểm tra xem mã này đã tồn tại cho nhà hàng này chưa
-        if (couponRepository.findByCodeAndRestaurantId(coupon.getCode(), restaurantId).isPresent()) {
-            throw new Exception("Coupon code already exists for this restaurant");
+        // Kiểm tra xem mã này đã tồn tại cho nhà hàng này chưa - nếu đã có thì cập nhật để hỗ trợ demo mượt mà
+        Optional<Coupon> existing = couponRepository.findByCodeAndRestaurantId(coupon.getCode(), restaurantId);
+        if (existing.isPresent()) {
+            Coupon c = existing.get();
+            c.setActive(true);
+            c.setDiscountType(coupon.getDiscountType());
+            c.setDiscountValue(coupon.getDiscountValue());
+            c.setMinimumOrderValue(coupon.getMinimumOrderValue());
+            return couponRepository.save(c);
         }
         return couponRepository.save(coupon);
     }
@@ -34,9 +41,15 @@ public class CouponServiceImpl implements CouponService {
     public Coupon createGlobalCoupon(Coupon coupon) throws Exception {
         coupon.setRestaurant(null);
         coupon.setActive(true);
-        // Kiểm tra xem mã này đã tồn tại chưa (toàn cục hoặc cho bất kì nhà hàng nào)
-        if (couponRepository.findByCode(coupon.getCode()).isPresent()) {
-            throw new Exception("Coupon code already exists");
+        // Kiểm tra xem mã này đã tồn tại chưa - nếu đã có thì cập nhật để hỗ trợ demo mượt mà
+        Optional<Coupon> existing = couponRepository.findByCode(coupon.getCode());
+        if (existing.isPresent()) {
+            Coupon c = existing.get();
+            c.setActive(true);
+            c.setDiscountType(coupon.getDiscountType());
+            c.setDiscountValue(coupon.getDiscountValue());
+            c.setMinimumOrderValue(coupon.getMinimumOrderValue());
+            return couponRepository.save(c);
         }
         return couponRepository.save(coupon);
     }

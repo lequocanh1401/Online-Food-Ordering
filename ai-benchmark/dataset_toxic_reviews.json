@@ -1,0 +1,1202 @@
+[
+  {
+    "id": 1,
+    "text": "Đồ ăn dở như c*t, phí tiền vcl",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 2,
+    "text": "Shop làm ăn như hạch, djt me lũ lừa đảo",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 3,
+    "text": "Món ăn như cc, đ*o hiểu sao quán vẫn mở cửa được",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 4,
+    "text": "Quán làm ăn như cc, giao thiếu đồ còn thái độ",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 5,
+    "text": "Nấu như cho chó ăn, đ*t con mẹ lũ vô lương tâm",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 6,
+    "text": "Cút mẹ chúng mày đi làm ăn cẩu thả clgt",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 7,
+    "text": "Bún chả gì mà như shit vậy, vứt vào sọt rác luôn",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 8,
+    "text": "Lũ nhân viên mất dạy đ!t mẹ thái độ lồi lõm",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 9,
+    "text": "Quán ngu như bò, đặt cơm sườn giao mẹ cơm gà",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 10,
+    "text": "Món ăn kinh tởm vcl, cạch mặt quán này đến già",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 11,
+    "text": "Thằng shipper và con chủ quán đều như l*n",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 12,
+    "text": "Bọn này làm ăn chộp giật vcl, đồ ôi thiu",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 13,
+    "text": "Ăn như đấm vào mồm, clgt này mà cũng bán được",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 14,
+    "text": "Dcm quán rẻ rách, giao hàng ngu học",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 15,
+    "text": "Mẹ kiếp giao trễ 2 tiếng đồ nguội tanh nguội ngắt",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 16,
+    "text": "D!t cụ tụi mày làm ăn tắc trách vcc",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 17,
+    "text": "Đm quán, ăn xong muốn ói hết ra ngoài",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 18,
+    "text": "Lũ lừa đảo bán đồ thiu, đcm lũ thất đức",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 19,
+    "text": "Món ăn dở ẹc, tởm lợm vkl không nuốt nổi",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 20,
+    "text": "Quán cùi bắp vl, cút khỏi app đi cho sạch",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 21,
+    "text": "Dmm bán hàng không có tâm gì hết",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 22,
+    "text": "Đồ ăn như rác rưởi, tốn tiền ngu vcl",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 23,
+    "text": "Thịt hôi rình như mùi xác chết dcm",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 24,
+    "text": "Quán chó má, gọi điện không thèm nghe máy",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 25,
+    "text": "Đkm lũ súc vật lừa gạt khách hàng",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 26,
+    "text": "Đồ ăn chua loét, dở tệ hại vl",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 27,
+    "text": "Món mặn chát như nước đái, vcl đầu bếp",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 28,
+    "text": "Đ*o thể nuốt nổi một miếng, quăng luôn vào thùng rác",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 29,
+    "text": "Phục vụ như ban ơn cho bố mày vậy",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 30,
+    "text": "Tẩy chay quán này gấp, đồ ăn bẩn vl",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 31,
+    "text": "Đm thất đức vừa thôi, đồ ôi đem bán cho khách",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 32,
+    "text": "Ăn một miếng muốn thổ tả vcl",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 33,
+    "text": "Mặt con nhân viên như đâm lê, dcm",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 34,
+    "text": "Bán đắt như cướp cạn, lũ thất đức vcl",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 35,
+    "text": "Trà sữa ngọt lịm như nước đường cống vl",
+    "label": "TOXIC",
+    "sub_category": "TEENCODE_VULGAR"
+  },
+  {
+    "id": 36,
+    "text": "Ăn xong đau bụng quằn quại đi cấp cứu cả đêm, quán làm ăn quá bẩn thỉu",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 37,
+    "text": "Có cả con gián to đùng trong tô phở bò, kinh hãi phát nôn",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 38,
+    "text": "Thịt gà bị thiu bốc mùi hôi thối mà vẫn giao cho khách ăn",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 39,
+    "text": "Cả nhà mình ăn xong đều bị ngộ độc thực phẩm tiêu chảy suốt đêm",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 40,
+    "text": "Thấy cả xác ruồi chết lẫn trong đĩa cơm sườn, quán bẩn không thể tả",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 41,
+    "text": "Sợi tóc dài ngoằng quấn quanh miếng thịt kho, quá mất vệ sinh",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 42,
+    "text": "Rau sống dính đầy bùn đất và sâu bọ còn sống ngoe nguẩy",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 43,
+    "text": "Cháo có dòi bọ lúc nhúc ở dưới đáy hộp, quán thất đức vô nhân đạo",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 44,
+    "text": "Ăn vào nổi mề đay dị ứng phải đi viện rửa ruột ngay lập tức",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 45,
+    "text": "Canh chua có con thạch sùng chết trôi lềnh bềnh, muốn ói tại chỗ",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 46,
+    "text": "Miếng sườn mốc xanh mốc đỏ bên trong mà dám đem nướng bán",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 47,
+    "text": "Bún có mùi nước cống thối rữa, suýt nữa thì nuốt vào bụng",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 48,
+    "text": "Chén nước chấm có nguyên con nhộng bò lổm ngổm",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 49,
+    "text": "Vừa cắn miếng thịt thì thấy bốc mùi chua nồng của đồ ôi để cả tuần",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 50,
+    "text": "Quán làm ăn bẩn thỉu coi thường tính mạng người khác, sẽ báo công an",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 51,
+    "text": "Chất lượng tồi tệ đến mức gây hại cho sức khỏe người tiêu dùng",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 52,
+    "text": "Bánh mì mốc meo đen sì bên trong pate",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 53,
+    "text": "Cơm bị thiu nhớt bầy nhầy mà cũng dám giao cho khách",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 54,
+    "text": "Phát hiện đinh rỉ sắt lẫn trong hộp gà chiên giòn, quá nguy hiểm",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 55,
+    "text": "Miếng thịt sống nguyên máu me tanh tưởi, ăn vào chỉ có nước đi viện",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 56,
+    "text": "Đầu bếp không mang bao tay ngoáy mũi rồi bốc đồ ăn cho khách",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 57,
+    "text": "Chén đũa dính đầy mỡ cũ cáu bẩn vàng khè",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 58,
+    "text": "Ăn xong nhập viện cấp cứu vì viêm dạ dày cấp tính",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 59,
+    "text": "Nước lèo dùng lại từ hôm trước chua lè thiu tanh",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 60,
+    "text": "Thức ăn có mùi thuốc trừ sâu hay hóa chất tẩy rửa nồng nặc",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 61,
+    "text": "Bắt gặp chuột chạy qua lại trên bàn làm đồ ăn của quán",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 62,
+    "text": "Đồ uống bốc mùi cống rãnh, uống vào đau bụng dữ dội",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 63,
+    "text": "Miếng nem chua mốc trắng hôi rình kinh tởm",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 64,
+    "text": "Ăn vào đi ngoài 10 lần trong đêm, tẩy chay quán bẩn",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 65,
+    "text": "Hộp canh bị chua sủi bọt trắng xóa",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 66,
+    "text": "Phát hiện đầu mẩu thuốc lá bên trong túi rau sống",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 67,
+    "text": "Thịt bò bốc mùi thối rữa tẩm ướp hương liệu che giấu",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 68,
+    "text": "Bán đồ ôi thiu giết người à, quán khốn nạn",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 69,
+    "text": "Chắc chắn sẽ đưa lên báo và thanh tra an toàn thực phẩm vào cuộc",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 70,
+    "text": "Đồ ăn có mảnh thủy tinh vỡ sắc nhọn bên trong cháo",
+    "label": "TOXIC",
+    "sub_category": "HEALTH_HAZARD"
+  },
+  {
+    "id": 71,
+    "text": "Quán phục vụ như hoàng gia ấy nhỉ, ăn xong cho thẳng vào phòng cấp cứu",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 72,
+    "text": "Nấu ăn thế này thì chúc quán sớm ngày phá sản đóng cửa vĩnh viễn nhé",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 73,
+    "text": "Đầu bếp quán này chắc học nghề ở bãi rác về mới nấu được hương vị tuyệt phẩm này",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 74,
+    "text": "Tưởng đồ ăn cho người ai ngờ chó nhà tôi ngửi xong còn chạy mất dép",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 75,
+    "text": "Dành cả thanh xuân chờ hộp cơm, nhận về như đồ thừa của người khác",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 76,
+    "text": "Bán đắt như tiệm 5 sao mà chất lượng ngang đồ ăn cho lợn",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 77,
+    "text": "Chắc đầu bếp nêm thuốc độc vào canh hay sao mà ăn xong tê hết cả lưỡi",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 78,
+    "text": "Chúc chủ quán mau dẹp tiệm để xã hội bớt đi một hiểm họa ẩm thực",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 79,
+    "text": "Phục vụ thượng đế bằng cách bắt khách chờ 2 tiếng rồi giao đồ cháy đen",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 80,
+    "text": "Một trải nghiệm ẩm thực rác rưởi không thể nào quên, xin cảm ơn quán",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 81,
+    "text": "Tài năng của quán là biến nguyên liệu tươi thành phân trong tích tắc",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 82,
+    "text": "Hy vọng cơ quan chức năng sớm ghé thăm để chủ quán được đi nghỉ dưỡng dài hạn",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 83,
+    "text": "Cơm khô như đá cuội, chắc quán khuyến mãi thêm dịch vụ trồng răng sứ",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 84,
+    "text": "Ăn một lần nhớ đến kiếp sau vì độ kinh khủng của nó",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 85,
+    "text": "Bát phở 70k ngập tràn nước lã và bột ngọt, đầu bếp thật có tâm ghê",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 86,
+    "text": "Chắc quán tính mở lò luyện đan hay sao mà thịt cháy thành than đen sì",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 87,
+    "text": "Nhân viên quán chắc mới ở trại về, nhìn khách như muốn ăn tươi nuốt sống",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 88,
+    "text": "Cảm ơn quán đã giúp tôi giảm cân thành công bằng món canh chua thối",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 89,
+    "text": "Quán này mà chấm 1 sao thì vẫn là quá nhân từ và rộng lượng",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 90,
+    "text": "Chất lượng đỉnh cao dưới đáy xã hội, không ai bằng được quán",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 91,
+    "text": "Món ăn xứng đáng được đưa vào sách đỏ về độ kinh dị",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 92,
+    "text": "Chủ quán nên chuyển nghề làm xiếc đi chứ nấu ăn làm nhục ngành ẩm thực quá",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 93,
+    "text": "Ăn xong phải đi mua bảo hiểm nhân thọ gấp",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 94,
+    "text": "Giao hàng chậm như rùa bò, đồ ăn nguội như nước đá",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 95,
+    "text": "Mong quán sớm dẹp tiệm để bà con lối xóm được nhờ",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 96,
+    "text": "Đồ ăn dở tới mức quạ tha ma bắt cũng không thèm đụng",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 97,
+    "text": "Quán có bí quyết gì mà nấu món nào cũng dở tệ hại được như thế",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 98,
+    "text": "Không biết là bán cơm hay bán thuốc xổ nữa",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 99,
+    "text": "Chắc đầu bếp say rượu lúc nấu nêm nguyên hũ muối vào nồi canh",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 100,
+    "text": "Món ăn thảm họa của thế kỷ 21, cạn lời với quán",
+    "label": "TOXIC",
+    "sub_category": "SARCASTIC_TOXIC"
+  },
+  {
+    "id": 101,
+    "text": "Món ăn hôm nay hơi nguội một chút, quán lưu ý bọc giấy bạc kỹ hơn nhé",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 102,
+    "text": "Giao hàng hơi chậm 15 phút nhưng bạn shipper rất lễ phép xin lỗi",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 103,
+    "text": "Nước phở hôm nay hơi mặn so với khẩu vị của mình, mong quán nêm nhạt bớt",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 104,
+    "text": "Cơm sườn hơi khô, nếu có thêm chén mỡ hành thì sẽ ngon hơn nhiều",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 105,
+    "text": "Giá 65k cho phần bún bò này mình thấy hơi cao so với mặt bằng chung",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 106,
+    "text": "Quán quên không bỏ ớt và chanh cho mình rồi, lần sau chú ý hơn nhé",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 107,
+    "text": "Hôm nay trà sữa hơi ngọt nhiều, lần sau mình dặn 50% đường quán nhớ làm đúng nha",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 108,
+    "text": "Phần gà rán hơi nhiều dầu mỡ xíu, ăn mau ngấy, mong quán để ráo dầu hơn",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 109,
+    "text": "Hộp canh bị đổ một ít ra ngoài túi nilong do đóng nắp chưa chặt",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 110,
+    "text": "Mì Ý hơi ít sốt bò bằm, ăn về cuối hơi bị khô mì",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 111,
+    "text": "Đồ ăn ổn nhưng giờ cao điểm làm món lâu quá, chờ gần 30 phút mới có",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 112,
+    "text": "Khoai tây chiên bị mềm do đậy kín hơi nước, quán nên chọc lỗ thông khí trên hộp",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 113,
+    "text": "Thịt bò hơi dai một chút, thái mỏng hơn thì sẽ dễ ăn hơn ạ",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 114,
+    "text": "Hôm nay quán quên không để muỗng đũa cho mình rồi",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 115,
+    "text": "Mình dặn không ăn hành mà bát vẫn có hành, lần sau kiểm tra kỹ note nha quán",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 116,
+    "text": "Bánh xèo bị ỉu do thời gian ship lâu, vị chấm thì vừa miệng",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 117,
+    "text": "Suất ăn hơi ít cơm, bạn nam ăn sẽ không đủ no",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 118,
+    "text": "Cốc trà sữa bị tan gần hết đá khi tới nơi, quán nên để đá riêng ra túi",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 119,
+    "text": "Nước lẩu hơi nhạt, mình phải nêm thêm ít hạt nêm mới vừa",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 120,
+    "text": "Nem rán hơi cứng một xíu, mềm hơn chút nữa sẽ chuẩn vị",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 121,
+    "text": "Quán nên đổi sang hộp giấy thân thiện với môi trường hơn hộp xốp",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 122,
+    "text": "Vị cà ri hơi cay nồng so với trẻ con, quán nên ghi rõ độ cay trên menu",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 123,
+    "text": "Miếng cá hồi hơi nhỏ so với giá tiền trên app",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 124,
+    "text": "Rau sống tươi sạch nhưng hơi ít, mong quán cho thêm nhiều rau",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 125,
+    "text": "Hôm nay quán đông khách nên shipper phải đứng đợi lâu tội nghiệp",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 126,
+    "text": "Bánh mì pate hơi ít sốt, bánh vỏ giòn ngon",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 127,
+    "text": "Đồ ăn ngon nhưng phí ship cao quá, quán nên hỗ trợ thêm mã freeship",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 128,
+    "text": "Trứng ốp la bị chín kỹ quá, mình thích ăn lòng đào hơn",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 129,
+    "text": "Trà sen vàng ngon nhưng thạch hơi ít",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 130,
+    "text": "Pizza đế mỏng giòn nhưng nhân xúc xích hơi mặn nhẹ",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 131,
+    "text": "Đồ uống đựng ly giấy dễ móp méo khi vận chuyển xa",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 132,
+    "text": "Gà popcorn giòn nhưng bột hơi dày thịt hơi mỏng",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 133,
+    "text": "Quán nên có thêm lựa chọn nước mắm ngọt cho khách miền Nam",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 134,
+    "text": "Cháo sườn ngon nhưng thịt băm hơi ít xíu",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 135,
+    "text": "Lần trước ăn rất ngon nhưng lần này hơi giảm phong độ xíu nha quán",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 136,
+    "text": "Thời gian chuẩn bị món của quán hơi lâu hơn dự kiến",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 137,
+    "text": "Bát bún hơi nguội làm giảm độ ngon của nước dùng",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 138,
+    "text": "Hộp đựng bằng nhựa mỏng quá cầm nóng tay",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 139,
+    "text": "Bánh bao kim sa nhân hơi đặc chưa chảy nhiều như hình",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 140,
+    "text": "Món sườn nướng hơi cháy sém chút ở viền ngoài",
+    "label": "NORMAL",
+    "sub_category": "CONSTRUCTIVE_CRITICISM"
+  },
+  {
+    "id": 141,
+    "text": "Món ăn rất ngon, đóng gói sạch sẽ cẩn thận, cho quán 5 sao nhé",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 142,
+    "text": "Sườn nướng than hoa thơm phức thịt mềm đậm đà, nước chấm tuyệt vời",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 143,
+    "text": "Phở bò tái nạm nước dùng trong ngọt thanh từ xương, 10 điểm",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 144,
+    "text": "Giao hàng siêu nhanh, đồ ăn nóng hổi vừa thổi vừa ăn",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 145,
+    "text": "Trà sữa macca thơm béo ngọt thanh trân châu dai giòn xuất sắc",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 146,
+    "text": "Quán làm đúng theo ghi chú không hành nhiều ớt, rất ưng ý",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 147,
+    "text": "Cơm sườn bà chả ăn bao năm vẫn giữ nguyên hương vị truyền thống",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 148,
+    "text": "Bánh mì thập cẩm pate béo ngậy ngập ngụa nhân giòn rụm",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 149,
+    "text": "Gà rán giòn tan bên ngoài mọng nước bên trong, bé nhà mình rất thích",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 150,
+    "text": "Pizza 4 cheeses phô mai kéo sợi thơm phức ăn kèm mật ong cực đỉnh",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 151,
+    "text": "Tô bún bò huế chất lượng bắp bò giòn sần sật chả cua thơm bùi",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 152,
+    "text": "Shipper thân thiện nhiệt tình giao tận cửa văn phòng",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 153,
+    "text": "Suất ăn đầy đặn nhiều thịt ăn no căng bụng, giá cả hợp lý",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 154,
+    "text": "Đồ uống mát lạnh sảng khoái giải nhiệt ngày hè cực đã",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 155,
+    "text": "Quán chu đáo tặng kèm quẩy nóng và kẹo cao su khử mùi",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 156,
+    "text": "Sashimi cá hồi tươi rói mềm tan trong miệng, rất đáng tiền",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 157,
+    "text": "Cháo sườn quẩy nóng thơm mùi tiêu hành lá ấm bụng ngày mưa",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 158,
+    "text": "Nem cua bể vỏ giòn nhân đẫm thịt cua bể đặc sản chuẩn vị",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 159,
+    "text": "Đóng gói đẹp mắt bằng hộp giấy sang xịn mịn thân thiện môi trường",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 160,
+    "text": "Món chay thanh đạm nước dùng nấm ngọt tự nhiên rất bổ dưỡng",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 161,
+    "text": "Trà đào cam sả thơm lừng miếng đào tươi giòn sần sật",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 162,
+    "text": "Highlands freeze trà xanh đỉnh chóp uống là nghiền",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 163,
+    "text": "Lẩu bò ngập tràn ba chỉ mỹ thịt tươi rau nấm đầy ắp",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 164,
+    "text": "Há cảo tôm vỏ mỏng trong veo tôm tươi giòn sần sật chuẩn vị hoa",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 165,
+    "text": "Một địa chỉ ăn uống tin cậy sẽ ủng hộ quán dài dài",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 166,
+    "text": "Thịt bò bít tết sốt tiêu đen mềm ngọt mọng nước 5 sao",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 167,
+    "text": "Bánh Tiramisu mềm mịn béo ngậy thơm nồng cacao cà phê",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 168,
+    "text": "Bánh xèo giòn rụm rau rừng ăn kèm tươi non không chê vào đâu được",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 169,
+    "text": "Nước mía ép tắc ngọt thanh thơm mát vị dịu êm",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 170,
+    "text": "Quán phục vụ chu đáo nhân viên tư vấn nhiệt tình",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 171,
+    "text": "Đồ ăn chuẩn vị mẹ nấu ngon không cưỡng lại được",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 172,
+    "text": "Mì udon sợi dai giòn nước tương thanh ngọt chuẩn nhật",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 173,
+    "text": "Món ăn trang trí bắt mắt nhìn là muốn ăn liền",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 174,
+    "text": "Rất hài lòng với dịch vụ và chất lượng của quán",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 175,
+    "text": "Món gà sốt tiêu cay nhẹ vừa miệng cả nhà đều khen",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 176,
+    "text": "Phần ăn trưa dinh dưỡng đầy đủ rau củ và thịt cá",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 177,
+    "text": "Đồ ăn ngon giá tốt nhất khu vực Cầu Giấy",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 178,
+    "text": "Trà sen vàng hạt sen bùi bở kem sữa sánh mịn",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 179,
+    "text": "Xíu mại tôm thịt béo ngậy chấm bánh mì ngon xỉu",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 180,
+    "text": "Chắc chắn sẽ giới thiệu cho bạn bè và đồng nghiệp cùng đặt",
+    "label": "NORMAL",
+    "sub_category": "PRAISE"
+  },
+  {
+    "id": 181,
+    "text": "Phần cơm này có kèm canh không vậy quán?",
+    "label": "NORMAL",
+    "sub_category": "NEUTRAL_QUESTION"
+  },
+  {
+    "id": 182,
+    "text": "Món lẩu 139k này cho mấy người ăn vậy ạ?",
+    "label": "NORMAL",
+    "sub_category": "NEUTRAL_QUESTION"
+  },
+  {
+    "id": 183,
+    "text": "Quán có xuất hóa đơn đỏ VAT cho công ty không?",
+    "label": "NORMAL",
+    "sub_category": "NEUTRAL_QUESTION"
+  },
+  {
+    "id": 184,
+    "text": "Trà ô long sữa có được chọn mức đường đá không quán ơi?",
+    "label": "NORMAL",
+    "sub_category": "NEUTRAL_QUESTION"
+  },
+  {
+    "id": 185,
+    "text": "Hôm nay quán mở cửa tới mấy giờ tối ạ?",
+    "label": "NORMAL",
+    "sub_category": "NEUTRAL_QUESTION"
+  },
+  {
+    "id": 186,
+    "text": "Suất combo obama gồm những món gì thế shop?",
+    "label": "NORMAL",
+    "sub_category": "NEUTRAL_QUESTION"
+  },
+  {
+    "id": 187,
+    "text": "Có chi nhánh nào ở quận Đống Đa không quán?",
+    "label": "NORMAL",
+    "sub_category": "NEUTRAL_QUESTION"
+  },
+  {
+    "id": 188,
+    "text": "Mình muốn đặt 30 suất ăn trưa vào ngày mai quán có nhận không?",
+    "label": "NORMAL",
+    "sub_category": "NEUTRAL_QUESTION"
+  },
+  {
+    "id": 189,
+    "text": "Nước phở này là ninh từ xương bò hay xương heo vậy?",
+    "label": "NORMAL",
+    "sub_category": "NEUTRAL_QUESTION"
+  },
+  {
+    "id": 190,
+    "text": "Cho mình hỏi quán có dùng dầu thực vật chiên không ạ?",
+    "label": "NORMAL",
+    "sub_category": "NEUTRAL_QUESTION"
+  },
+  {
+    "id": 191,
+    "text": "Bánh mì để được bao lâu nếu chưa ăn ngay?",
+    "label": "NORMAL",
+    "sub_category": "NEUTRAL_QUESTION"
+  },
+  {
+    "id": 192,
+    "text": "Món này có cay nhiều không vì nhà mình có em bé?",
+    "label": "NORMAL",
+    "sub_category": "NEUTRAL_QUESTION"
+  },
+  {
+    "id": 193,
+    "text": "Quán có bán thêm topping trân châu đường đen riêng không?",
+    "label": "NORMAL",
+    "sub_category": "NEUTRAL_QUESTION"
+  },
+  {
+    "id": 194,
+    "text": "Ship về Hà Đông mất khoảng bao nhiêu lâu vậy ạ?",
+    "label": "NORMAL",
+    "sub_category": "NEUTRAL_QUESTION"
+  },
+  {
+    "id": 195,
+    "text": "Phần ăn này phù hợp cho người ăn kiêng không?",
+    "label": "NORMAL",
+    "sub_category": "NEUTRAL_QUESTION"
+  },
+  {
+    "id": 196,
+    "text": "Gà rán này là cay hay không cay vậy shop?",
+    "label": "NORMAL",
+    "sub_category": "NEUTRAL_QUESTION"
+  },
+  {
+    "id": 197,
+    "text": "Quán có freeship cho đơn trên 300k không?",
+    "label": "NORMAL",
+    "sub_category": "NEUTRAL_QUESTION"
+  },
+  {
+    "id": 198,
+    "text": "Mình muốn ăn ít muối quán có nêm nhạt theo yêu cầu được không?",
+    "label": "NORMAL",
+    "sub_category": "NEUTRAL_QUESTION"
+  },
+  {
+    "id": 199,
+    "text": "Bánh ngọt này có chứa sữa tươi hay trứng không ạ?",
+    "label": "NORMAL",
+    "sub_category": "NEUTRAL_QUESTION"
+  },
+  {
+    "id": 200,
+    "text": "Combo 2 người này có nước uống kèm chưa vậy quán?",
+    "label": "NORMAL",
+    "sub_category": "NEUTRAL_QUESTION"
+  }
+]

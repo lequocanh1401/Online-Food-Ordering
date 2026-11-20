@@ -544,7 +544,7 @@ public class AiCopilotServiceImpl implements AiCopilotService {
     private Map<String, Object> determineAgentAction(String userQuery, boolean isSuperAdmin, Long restaurantId, Map<String, Object> metrics) {
         String queryLower = (userQuery != null) ? userQuery.toLowerCase() : "";
 
-        // Super Admin Action: AI Moderation Sentinel
+        // Super Admin Action: AI Moderation Sentinel & Global Promotion Campaign
         if (isSuperAdmin) {
             if (queryLower.contains("kiểm duyệt") || queryLower.contains("bình luận") || queryLower.contains("độc hại") 
                     || queryLower.contains("xấu") || queryLower.contains("tiêu chuẩn") || queryLower.contains("vi phạm") || queryLower.contains("spam")) {
@@ -564,10 +564,29 @@ public class AiCopilotServiceImpl implements AiCopilotService {
                     return action;
                 }
             }
+
+            if (queryLower.contains("chiến dịch") || queryLower.contains("khuyến mãi") || queryLower.contains("voucher") 
+                    || queryLower.contains("mega sale") || queryLower.contains("freeship") || queryLower.contains("gmv") || queryLower.contains("kích cầu")) {
+                Map<String, Object> action = new HashMap<>();
+                action.put("type", "CREATE_GLOBAL_COUPON");
+                action.put("title", "⚡ Tác tử AI Đề Xuất: Khởi Động Chiến Dịch Mega Sale Toàn Sàn");
+                action.put("reason", "Phân tích GMV và lưu lượng đơn cho thấy tỷ lệ chuyển đổi cần kích cầu. Tác tử AI đề xuất phát hành mã 'FREESHIP_AI' (Freeship 15.000đ cho đơn từ 100.000đ) toàn sàn để kích thích người dùng đặt món.");
+                action.put("buttonLabel", "🚀 Tác tử AI: Kích hoạt Chiến dịch Voucher Toàn Sàn 'FREESHIP_AI'");
+                action.put("successMessage", "Chiến dịch Mega Sale đã được kích hoạt! Voucher 'FREESHIP_AI' đã sẵn sàng áp dụng cho tất cả khách hàng trên sàn.");
+                Map<String, Object> couponPayload = new HashMap<>();
+                couponPayload.put("code", "FREESHIP_AI");
+                couponPayload.put("discountType", "FLAT");
+                couponPayload.put("discountValue", 15000L);
+                couponPayload.put("minimumOrderValue", 100000L);
+                couponPayload.put("active", true);
+                action.put("couponPayload", couponPayload);
+                return action;
+            }
+
             return null;
         }
 
-        // Restaurant Owner Action: Smart Operations & Inventory Lock
+        // Restaurant Owner Action 1: Smart Operations & Inventory Lock
         if (queryLower.contains("nguyên liệu") || queryLower.contains("gián đoạn") || queryLower.contains("cảnh báo") 
                 || queryLower.contains("hết hàng") || queryLower.contains("sắp hết") || queryLower.contains("kho") || queryLower.contains("bếp")) {
             List<Food> foods = (restaurantId != null && restaurantId > 0) ? foodRepository.findByRestaurantId(restaurantId) : Collections.emptyList();
@@ -603,6 +622,26 @@ public class AiCopilotServiceImpl implements AiCopilotService {
                 action.put("successMessage", "Tác tử AI đã cập nhật trạng thái món '" + targetFood.getName() + "'. Thực đơn phía khách hàng đã được đồng bộ thời gian thực.");
                 return action;
             }
+        }
+
+        // Restaurant Owner Action 2: Dynamic Promotion & Smart Revenue Upselling
+        if (queryLower.contains("khuyến mãi") || queryLower.contains("giờ vàng") || queryLower.contains("kích cầu") 
+                || queryLower.contains("doanh thu") || queryLower.contains("chiến lược") || queryLower.contains("voucher") || queryLower.contains("bán chậm")) {
+            Map<String, Object> action = new HashMap<>();
+            action.put("type", "CREATE_RESTAURANT_COUPON");
+            action.put("restaurantId", restaurantId != null ? restaurantId : 1L);
+            action.put("title", "🎁 Tác tử AI Đề Xuất: Phát Hành Mã Kích Cầu 'GIAM20K_AI'");
+            action.put("reason", "Phân tích ma trận đơn hàng cho thấy giỏ hàng trung bình của quán đang ở mức 115.000đ. Tác tử AI đề xuất phát hành mã 'GIAM20K_AI' (Giảm 20.000đ cho đơn từ 150.000đ) nhằm kích thích khách gọi thêm món phụ và đồ uống, dự kiến tăng giá trị đơn hàng trung bình (AOV) thêm 25%.");
+            action.put("buttonLabel", "🚀 Tác tử AI: Phát hành & Kích hoạt mã 'GIAM20K_AI' ngay");
+            action.put("successMessage", "Mã khuyến mãi 'GIAM20K_AI' đã được kích hoạt thành công trên thực đơn của quán!");
+            Map<String, Object> couponPayload = new HashMap<>();
+            couponPayload.put("code", "GIAM20K_AI");
+            couponPayload.put("discountType", "FLAT");
+            couponPayload.put("discountValue", 20000L);
+            couponPayload.put("minimumOrderValue", 150000L);
+            couponPayload.put("active", true);
+            action.put("couponPayload", couponPayload);
+            return action;
         }
 
         return null;

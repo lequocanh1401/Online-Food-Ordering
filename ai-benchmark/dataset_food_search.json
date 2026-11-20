@@ -1,0 +1,1321 @@
+[
+  {
+    "id": 1,
+    "query": "trời mưa lạnh thèm ăn gì ấm bụng cay cay",
+    "intent": {
+      "flavor": "cay",
+      "temperature": "nóng/ấm",
+      "meal_type": "món nước/món hầm"
+    },
+    "target_keywords": [
+      "bún bò huế",
+      "lẩu bò",
+      "phở bò",
+      "canh cải chua"
+    ],
+    "expected_food_ids": [
+      506,
+      342,
+      302,
+      408
+    ]
+  },
+  {
+    "id": 2,
+    "query": "món ăn chay thanh đạm giải nhiệt mùa hè",
+    "intent": {
+      "diet": "chay",
+      "temperature": "mát/thanh",
+      "flavor": "thanh đạm"
+    },
+    "target_keywords": [
+      "cao lầu chay",
+      "cơm chay",
+      "canh củ sen",
+      "trà hoa cúc"
+    ],
+    "expected_food_ids": [
+      552,
+      553,
+      555,
+      556
+    ]
+  },
+  {
+    "id": 3,
+    "query": "món nhiều đạm ít mỡ cho người tập gym sau buổi tập",
+    "intent": {
+      "nutrition": "high protein",
+      "diet": "low fat",
+      "meal_type": "thịt nạc"
+    },
+    "target_keywords": [
+      "steak",
+      "filet mignon",
+      "sashimi cá hồi",
+      "đùi gà",
+      "phở bò tái"
+    ],
+    "expected_food_ids": [
+      347,
+      348,
+      317,
+      406,
+      302
+    ]
+  },
+  {
+    "id": 4,
+    "query": "đồ ngọt ăn vặt xế chiều cho chị em văn phòng",
+    "intent": {
+      "meal_type": "ăn vặt/tráng miệng",
+      "flavor": "ngọt/béo"
+    },
+    "target_keywords": [
+      "tiramisu",
+      "trà đào cam sả",
+      "bánh mousse",
+      "trà sữa",
+      "bánh pie"
+    ],
+    "expected_food_ids": [
+      316,
+      456,
+      331,
+      502,
+      455
+    ]
+  },
+  {
+    "id": 5,
+    "query": "bữa trưa văn phòng nhanh gọn no lâu dưới 50k",
+    "intent": {
+      "price_max": 50000,
+      "occasion": "bữa trưa",
+      "speed": "nhanh"
+    },
+    "target_keywords": [
+      "cơm tấm ba rọi",
+      "bánh mì thập cẩm",
+      "mì ý",
+      "bánh mì thịt nướng"
+    ],
+    "expected_food_ids": [
+      403,
+      322,
+      453,
+      330
+    ]
+  },
+  {
+    "id": 6,
+    "query": "món nhậu tụ tập bạn bè uống bia mát lạnh cuối tuần",
+    "intent": {
+      "occasion": "nhậu/tụ tập",
+      "pairing": "bia/uống cồn",
+      "flavor": "đậm đà/giòn"
+    },
+    "target_keywords": [
+      "nem hải sản",
+      "ngô chiên bơ tỏi",
+      "đậu nành nhật",
+      "nem cua bể",
+      "gà popcorn"
+    ],
+    "expected_food_ids": [
+      310,
+      345,
+      320,
+      309,
+      338
+    ]
+  },
+  {
+    "id": 7,
+    "query": "đang ốm nhạt miệng cần món gì dễ nuốt thơm hành tiêu",
+    "intent": {
+      "health": "ốm/phục hồi",
+      "texture": "mềm/lỏng",
+      "temperature": "nóng"
+    },
+    "target_keywords": [
+      "cháo sườn",
+      "phở bò tái",
+      "canh củ sen",
+      "trà hoa cúc mật ong"
+    ],
+    "expected_food_ids": [
+      302,
+      555,
+      336
+    ]
+  },
+  {
+    "id": 8,
+    "query": "thèm pizza phô mai béo ngậy đẫm cheese",
+    "intent": {
+      "category": "pizza",
+      "flavor": "phô mai/béo ngậy"
+    },
+    "target_keywords": [
+      "pizza 4 cheeses",
+      "burrata",
+      "khoai tây lắc phô mai"
+    ],
+    "expected_food_ids": [
+      312,
+      313,
+      454
+    ]
+  },
+  {
+    "id": 9,
+    "query": "món gì chua chua ngọt ngọt dễ ăn đỡ ngấy dầu mỡ",
+    "intent": {
+      "flavor": "chua ngọt",
+      "attribute": "giải ngấy"
+    },
+    "target_keywords": [
+      "canh cải chua nấu sườn",
+      "nước sấu đá",
+      "bánh mousse đào",
+      "canh khổ qua"
+    ],
+    "expected_food_ids": [
+      408,
+      326,
+      331,
+      407
+    ]
+  },
+  {
+    "id": 10,
+    "query": "nước uống giải nhiệt thanh mát không ga không cồn",
+    "intent": {
+      "category": "đồ uống",
+      "attribute": "thanh mát/healthy"
+    },
+    "target_keywords": [
+      "trà hoa cúc",
+      "nước mía ép tắc",
+      "trà cung đình huế",
+      "sữa bắp hạt sen"
+    ],
+    "expected_food_ids": [
+      336,
+      410,
+      509,
+      325
+    ]
+  },
+  {
+    "id": 11,
+    "query": "món gà chiên giòn rụm cho trẻ con kèm khoai tây",
+    "intent": {
+      "audience": "trẻ em",
+      "flavor": "giòn/ngọt nhẹ"
+    },
+    "target_keywords": [
+      "combo gà giòn",
+      "gà popcorn",
+      "khoai tây chiên",
+      "mì ý jollibee"
+    ],
+    "expected_food_ids": [
+      337,
+      338,
+      340,
+      453
+    ]
+  },
+  {
+    "id": 12,
+    "query": "đồ ăn đặc sản huế chuẩn vị cố đô cay nồng",
+    "intent": {
+      "cuisine": "huế",
+      "flavor": "đậm đà/cay nồng"
+    },
+    "target_keywords": [
+      "bún bò huế",
+      "bánh bột lọc",
+      "trà cung đình"
+    ],
+    "expected_food_ids": [
+      506,
+      507,
+      508,
+      509
+    ]
+  },
+  {
+    "id": 13,
+    "query": "muốn ăn lẩu buffet thịt bò thỏa thích cùng người yêu",
+    "intent": {
+      "category": "lẩu",
+      "occasion": "hẹn hò/2 người"
+    },
+    "target_keywords": [
+      "buffet lẩu bò 139k",
+      "buffet lẩu hải sản",
+      "ba chỉ bò mỹ"
+    ],
+    "expected_food_ids": [
+      342,
+      343,
+      344
+    ]
+  },
+  {
+    "id": 14,
+    "query": "bánh ngọt kiểu pháp ăn kèm cà phê sáng",
+    "intent": {
+      "meal_type": "bữa sáng",
+      "category": "bánh & cà phê"
+    },
+    "target_keywords": [
+      "bánh croissant nướng bơ pháp",
+      "phin sữa đá",
+      "cà phê sữa đá"
+    ],
+    "expected_food_ids": [
+      505,
+      327,
+      457
+    ]
+  },
+  {
+    "id": 15,
+    "query": "hải sản tươi sống chất lượng cao tôm mực cua",
+    "intent": {
+      "ingredient": "hải sản",
+      "quality": "tươi sống"
+    },
+    "target_keywords": [
+      "nem cua bể",
+      "nem hải sản",
+      "buffet lẩu hải sản",
+      "há cảo tôm",
+      "mì ý sốt kem cua"
+    ],
+    "expected_food_ids": [
+      309,
+      310,
+      343,
+      332,
+      314
+    ]
+  },
+  {
+    "id": 16,
+    "query": "thức uống matcha trà xanh đá xay thanh mát",
+    "intent": {
+      "flavor": "matcha/trà xanh",
+      "type": "đá xay/kem"
+    },
+    "target_keywords": [
+      "freeze trà xanh",
+      "kem trà xanh matcha"
+    ],
+    "expected_food_ids": [
+      329,
+      321
+    ]
+  },
+  {
+    "id": 17,
+    "query": "cơm trưa có thịt nướng than thơm lừng truyền thống",
+    "intent": {
+      "meal_type": "cơm trưa",
+      "cooking_style": "nướng than hoa"
+    },
+    "target_keywords": [
+      "cơm sườn bà chả",
+      "cơm sườn cây nướng mật ong",
+      "cơm tấm ba rọi"
+    ],
+    "expected_food_ids": [
+      1,
+      402,
+      403
+    ]
+  },
+  {
+    "id": 18,
+    "query": "dimsum điểm tâm chuẩn vị người hoa hấp nóng",
+    "intent": {
+      "cuisine": "trung hoa/dimsum",
+      "cooking_style": "hấp"
+    },
+    "target_keywords": [
+      "há cảo tôm",
+      "xíu mại tôm thịt",
+      "bánh bao kim sa",
+      "chân gà hấp tàu xì"
+    ],
+    "expected_food_ids": [
+      332,
+      333,
+      334,
+      335
+    ]
+  },
+  {
+    "id": 19,
+    "query": "món ăn cao cấp sang trọng cho tiệc tiếp đối tác",
+    "intent": {
+      "tier": "cao cấp/fine dining",
+      "category": "steak/vang"
+    },
+    "target_keywords": [
+      "ribeye steak",
+      "filet mignon",
+      "ly vang đỏ cabernet",
+      "cá hồi nướng than"
+    ],
+    "expected_food_ids": [
+      347,
+      348,
+      351,
+      349
+    ]
+  },
+  {
+    "id": 20,
+    "query": "đồ ăn nhẹ buổi sáng thơm mùi bơ sữa tiện mang đi",
+    "intent": {
+      "meal_type": "sáng",
+      "convenience": "mang đi",
+      "flavor": "thơm bơ"
+    },
+    "target_keywords": [
+      "bánh mì gà xé bơ",
+      "bánh mì thịt nướng sả",
+      "bánh croissant"
+    ],
+    "expected_food_ids": [
+      323,
+      324,
+      505
+    ]
+  },
+  {
+    "id": 21,
+    "query": "tìm món ngọt bùi thơm ngậy thích hợp cho bữa xế đói bụng giá cả sinh viên",
+    "intent": {
+      "flavor": "ngọt bùi thơm ngậy",
+      "occasion": "bữa xế đói bụng",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 22,
+    "query": "tìm món chua thanh thanh thích hợp cho ăn trưa nhanh giá cả sinh viên",
+    "intent": {
+      "flavor": "chua thanh thanh",
+      "occasion": "ăn trưa nhanh",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 23,
+    "query": "tìm món mặn mòi đậm đà thích hợp cho họp nhóm học bài giá cả sinh viên",
+    "intent": {
+      "flavor": "mặn mòi đậm đà",
+      "occasion": "họp nhóm học bài",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 24,
+    "query": "tìm món cay xè lưỡi thích hợp cho ăn đêm muộn giá cả sinh viên",
+    "intent": {
+      "flavor": "cay xè lưỡi",
+      "occasion": "ăn đêm muộn",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 25,
+    "query": "tìm món ngọt bùi thơm ngậy thích hợp cho bữa xế đói bụng giá cả sinh viên",
+    "intent": {
+      "flavor": "ngọt bùi thơm ngậy",
+      "occasion": "bữa xế đói bụng",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 26,
+    "query": "tìm món chua thanh thanh thích hợp cho ăn trưa nhanh giá cả sinh viên",
+    "intent": {
+      "flavor": "chua thanh thanh",
+      "occasion": "ăn trưa nhanh",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 27,
+    "query": "tìm món mặn mòi đậm đà thích hợp cho họp nhóm học bài giá cả sinh viên",
+    "intent": {
+      "flavor": "mặn mòi đậm đà",
+      "occasion": "họp nhóm học bài",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 28,
+    "query": "tìm món cay xè lưỡi thích hợp cho ăn đêm muộn giá cả sinh viên",
+    "intent": {
+      "flavor": "cay xè lưỡi",
+      "occasion": "ăn đêm muộn",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 29,
+    "query": "tìm món ngọt bùi thơm ngậy thích hợp cho bữa xế đói bụng giá cả sinh viên",
+    "intent": {
+      "flavor": "ngọt bùi thơm ngậy",
+      "occasion": "bữa xế đói bụng",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 30,
+    "query": "tìm món chua thanh thanh thích hợp cho ăn trưa nhanh giá cả sinh viên",
+    "intent": {
+      "flavor": "chua thanh thanh",
+      "occasion": "ăn trưa nhanh",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 31,
+    "query": "tìm món mặn mòi đậm đà thích hợp cho họp nhóm học bài giá cả sinh viên",
+    "intent": {
+      "flavor": "mặn mòi đậm đà",
+      "occasion": "họp nhóm học bài",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 32,
+    "query": "tìm món cay xè lưỡi thích hợp cho ăn đêm muộn giá cả sinh viên",
+    "intent": {
+      "flavor": "cay xè lưỡi",
+      "occasion": "ăn đêm muộn",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 33,
+    "query": "tìm món ngọt bùi thơm ngậy thích hợp cho bữa xế đói bụng giá cả sinh viên",
+    "intent": {
+      "flavor": "ngọt bùi thơm ngậy",
+      "occasion": "bữa xế đói bụng",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 34,
+    "query": "tìm món chua thanh thanh thích hợp cho ăn trưa nhanh giá cả sinh viên",
+    "intent": {
+      "flavor": "chua thanh thanh",
+      "occasion": "ăn trưa nhanh",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 35,
+    "query": "tìm món mặn mòi đậm đà thích hợp cho họp nhóm học bài giá cả sinh viên",
+    "intent": {
+      "flavor": "mặn mòi đậm đà",
+      "occasion": "họp nhóm học bài",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 36,
+    "query": "tìm món cay xè lưỡi thích hợp cho ăn đêm muộn giá cả sinh viên",
+    "intent": {
+      "flavor": "cay xè lưỡi",
+      "occasion": "ăn đêm muộn",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 37,
+    "query": "tìm món ngọt bùi thơm ngậy thích hợp cho bữa xế đói bụng giá cả sinh viên",
+    "intent": {
+      "flavor": "ngọt bùi thơm ngậy",
+      "occasion": "bữa xế đói bụng",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 38,
+    "query": "tìm món chua thanh thanh thích hợp cho ăn trưa nhanh giá cả sinh viên",
+    "intent": {
+      "flavor": "chua thanh thanh",
+      "occasion": "ăn trưa nhanh",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 39,
+    "query": "tìm món mặn mòi đậm đà thích hợp cho họp nhóm học bài giá cả sinh viên",
+    "intent": {
+      "flavor": "mặn mòi đậm đà",
+      "occasion": "họp nhóm học bài",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 40,
+    "query": "tìm món cay xè lưỡi thích hợp cho ăn đêm muộn giá cả sinh viên",
+    "intent": {
+      "flavor": "cay xè lưỡi",
+      "occasion": "ăn đêm muộn",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 41,
+    "query": "tìm món ngọt bùi thơm ngậy thích hợp cho bữa xế đói bụng giá cả sinh viên",
+    "intent": {
+      "flavor": "ngọt bùi thơm ngậy",
+      "occasion": "bữa xế đói bụng",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 42,
+    "query": "tìm món chua thanh thanh thích hợp cho ăn trưa nhanh giá cả sinh viên",
+    "intent": {
+      "flavor": "chua thanh thanh",
+      "occasion": "ăn trưa nhanh",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 43,
+    "query": "tìm món mặn mòi đậm đà thích hợp cho họp nhóm học bài giá cả sinh viên",
+    "intent": {
+      "flavor": "mặn mòi đậm đà",
+      "occasion": "họp nhóm học bài",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 44,
+    "query": "tìm món cay xè lưỡi thích hợp cho ăn đêm muộn giá cả sinh viên",
+    "intent": {
+      "flavor": "cay xè lưỡi",
+      "occasion": "ăn đêm muộn",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 45,
+    "query": "tìm món ngọt bùi thơm ngậy thích hợp cho bữa xế đói bụng giá cả sinh viên",
+    "intent": {
+      "flavor": "ngọt bùi thơm ngậy",
+      "occasion": "bữa xế đói bụng",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 46,
+    "query": "tìm món chua thanh thanh thích hợp cho ăn trưa nhanh giá cả sinh viên",
+    "intent": {
+      "flavor": "chua thanh thanh",
+      "occasion": "ăn trưa nhanh",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 47,
+    "query": "tìm món mặn mòi đậm đà thích hợp cho họp nhóm học bài giá cả sinh viên",
+    "intent": {
+      "flavor": "mặn mòi đậm đà",
+      "occasion": "họp nhóm học bài",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 48,
+    "query": "tìm món cay xè lưỡi thích hợp cho ăn đêm muộn giá cả sinh viên",
+    "intent": {
+      "flavor": "cay xè lưỡi",
+      "occasion": "ăn đêm muộn",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 49,
+    "query": "tìm món ngọt bùi thơm ngậy thích hợp cho bữa xế đói bụng giá cả sinh viên",
+    "intent": {
+      "flavor": "ngọt bùi thơm ngậy",
+      "occasion": "bữa xế đói bụng",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 50,
+    "query": "tìm món chua thanh thanh thích hợp cho ăn trưa nhanh giá cả sinh viên",
+    "intent": {
+      "flavor": "chua thanh thanh",
+      "occasion": "ăn trưa nhanh",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 51,
+    "query": "tìm món mặn mòi đậm đà thích hợp cho họp nhóm học bài giá cả sinh viên",
+    "intent": {
+      "flavor": "mặn mòi đậm đà",
+      "occasion": "họp nhóm học bài",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 52,
+    "query": "tìm món cay xè lưỡi thích hợp cho ăn đêm muộn giá cả sinh viên",
+    "intent": {
+      "flavor": "cay xè lưỡi",
+      "occasion": "ăn đêm muộn",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 53,
+    "query": "tìm món ngọt bùi thơm ngậy thích hợp cho bữa xế đói bụng giá cả sinh viên",
+    "intent": {
+      "flavor": "ngọt bùi thơm ngậy",
+      "occasion": "bữa xế đói bụng",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 54,
+    "query": "tìm món chua thanh thanh thích hợp cho ăn trưa nhanh giá cả sinh viên",
+    "intent": {
+      "flavor": "chua thanh thanh",
+      "occasion": "ăn trưa nhanh",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 55,
+    "query": "tìm món mặn mòi đậm đà thích hợp cho họp nhóm học bài giá cả sinh viên",
+    "intent": {
+      "flavor": "mặn mòi đậm đà",
+      "occasion": "họp nhóm học bài",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 56,
+    "query": "tìm món cay xè lưỡi thích hợp cho ăn đêm muộn giá cả sinh viên",
+    "intent": {
+      "flavor": "cay xè lưỡi",
+      "occasion": "ăn đêm muộn",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 57,
+    "query": "tìm món ngọt bùi thơm ngậy thích hợp cho bữa xế đói bụng giá cả sinh viên",
+    "intent": {
+      "flavor": "ngọt bùi thơm ngậy",
+      "occasion": "bữa xế đói bụng",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 58,
+    "query": "tìm món chua thanh thanh thích hợp cho ăn trưa nhanh giá cả sinh viên",
+    "intent": {
+      "flavor": "chua thanh thanh",
+      "occasion": "ăn trưa nhanh",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 59,
+    "query": "tìm món mặn mòi đậm đà thích hợp cho họp nhóm học bài giá cả sinh viên",
+    "intent": {
+      "flavor": "mặn mòi đậm đà",
+      "occasion": "họp nhóm học bài",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  },
+  {
+    "id": 60,
+    "query": "tìm món cay xè lưỡi thích hợp cho ăn đêm muộn giá cả sinh viên",
+    "intent": {
+      "flavor": "cay xè lưỡi",
+      "occasion": "ăn đêm muộn",
+      "budget": "sinh viên"
+    },
+    "target_keywords": [
+      "cơm sườn",
+      "bún chả",
+      "mì ý",
+      "bánh mì",
+      "trà sữa"
+    ],
+    "expected_food_ids": [
+      1,
+      308,
+      453,
+      322,
+      502
+    ]
+  }
+]

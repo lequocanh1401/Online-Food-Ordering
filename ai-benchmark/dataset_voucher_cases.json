@@ -1,0 +1,2248 @@
+[
+  {
+    "test_id": 1,
+    "cart_total": 75000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": null,
+    "ground_truth_discount": 0,
+    "upsell_opportunity": {
+      "target_coupon": "GIAM10K",
+      "target_min_spend": 100000,
+      "gap_to_spend": 25000,
+      "extra_discount": 10000,
+      "benefit_explanation": "Thêm món từ 25,000đ để dùng mã GIAM10K (giảm 10,000đ)"
+    }
+  },
+  {
+    "test_id": 2,
+    "cart_total": 85000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "FREESHIP15",
+    "ground_truth_discount": 15000,
+    "upsell_opportunity": {
+      "target_coupon": "GIAM10K",
+      "target_min_spend": 100000,
+      "gap_to_spend": 15000,
+      "extra_discount": -5000,
+      "benefit_explanation": "Thêm món từ 15,000đ để dùng mã GIAM10K (giảm 10,000đ)"
+    }
+  },
+  {
+    "test_id": 3,
+    "cart_total": 98000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "FREESHIP15",
+    "ground_truth_discount": 15000,
+    "upsell_opportunity": {
+      "target_coupon": "GIAM10K",
+      "target_min_spend": 100000,
+      "gap_to_spend": 2000,
+      "extra_discount": -5000,
+      "benefit_explanation": "Thêm món từ 2,000đ để dùng mã GIAM10K (giảm 10,000đ)"
+    }
+  },
+  {
+    "test_id": 4,
+    "cart_total": 110000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "FREESHIP15",
+    "ground_truth_discount": 15000,
+    "upsell_opportunity": {
+      "target_coupon": "SALE10P",
+      "target_min_spend": 120000,
+      "gap_to_spend": 10000,
+      "extra_discount": -3000,
+      "benefit_explanation": "Thêm món từ 10,000đ để dùng mã SALE10P (giảm 12,000đ)"
+    }
+  },
+  {
+    "test_id": 5,
+    "cart_total": 115000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "FREESHIP15",
+    "ground_truth_discount": 15000,
+    "upsell_opportunity": {
+      "target_coupon": "GIAM20K",
+      "target_min_spend": 150000,
+      "gap_to_spend": 35000,
+      "extra_discount": 5000,
+      "benefit_explanation": "Thêm món từ 35,000đ để dùng mã GIAM20K (giảm 20,000đ)"
+    }
+  },
+  {
+    "test_id": 6,
+    "cart_total": 135000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "FREESHIP15",
+    "ground_truth_discount": 15000,
+    "upsell_opportunity": {
+      "target_coupon": "GIAM20K",
+      "target_min_spend": 150000,
+      "gap_to_spend": 15000,
+      "extra_discount": 5000,
+      "benefit_explanation": "Thêm món từ 15,000đ để dùng mã GIAM20K (giảm 20,000đ)"
+    }
+  },
+  {
+    "test_id": 7,
+    "cart_total": 145000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "FREESHIP15",
+    "ground_truth_discount": 15000,
+    "upsell_opportunity": {
+      "target_coupon": "GIAM20K",
+      "target_min_spend": 150000,
+      "gap_to_spend": 5000,
+      "extra_discount": 5000,
+      "benefit_explanation": "Thêm món từ 5,000đ để dùng mã GIAM20K (giảm 20,000đ)"
+    }
+  },
+  {
+    "test_id": 8,
+    "cart_total": 160000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "GIAM20K",
+    "ground_truth_discount": 20000,
+    "upsell_opportunity": null
+  },
+  {
+    "test_id": 9,
+    "cart_total": 185000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "GIAM20K",
+    "ground_truth_discount": 20000,
+    "upsell_opportunity": {
+      "target_coupon": "SALE20P",
+      "target_min_spend": 200000,
+      "gap_to_spend": 15000,
+      "extra_discount": 20000,
+      "benefit_explanation": "Thêm món từ 15,000đ để dùng mã SALE20P (giảm 40,000đ)"
+    }
+  },
+  {
+    "test_id": 10,
+    "cart_total": 195000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "GIAM20K",
+    "ground_truth_discount": 20000,
+    "upsell_opportunity": {
+      "target_coupon": "SALE20P",
+      "target_min_spend": 200000,
+      "gap_to_spend": 5000,
+      "extra_discount": 20000,
+      "benefit_explanation": "Thêm món từ 5,000đ để dùng mã SALE20P (giảm 40,000đ)"
+    }
+  },
+  {
+    "test_id": 11,
+    "cart_total": 210000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "SALE20P",
+    "ground_truth_discount": 42000,
+    "upsell_opportunity": null
+  },
+  {
+    "test_id": 12,
+    "cart_total": 235000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "SALE20P",
+    "ground_truth_discount": 47000,
+    "upsell_opportunity": {
+      "target_coupon": "GIAM50K",
+      "target_min_spend": 250000,
+      "gap_to_spend": 15000,
+      "extra_discount": 3000,
+      "benefit_explanation": "Thêm món từ 15,000đ để dùng mã GIAM50K (giảm 50,000đ)"
+    }
+  },
+  {
+    "test_id": 13,
+    "cart_total": 245000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "SALE20P",
+    "ground_truth_discount": 49000,
+    "upsell_opportunity": {
+      "target_coupon": "GIAM50K",
+      "target_min_spend": 250000,
+      "gap_to_spend": 5000,
+      "extra_discount": 1000,
+      "benefit_explanation": "Thêm món từ 5,000đ để dùng mã GIAM50K (giảm 50,000đ)"
+    }
+  },
+  {
+    "test_id": 14,
+    "cart_total": 260000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "SALE20P",
+    "ground_truth_discount": 52000,
+    "upsell_opportunity": null
+  },
+  {
+    "test_id": 15,
+    "cart_total": 280000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "SALE20P",
+    "ground_truth_discount": 56000,
+    "upsell_opportunity": null
+  },
+  {
+    "test_id": 16,
+    "cart_total": 310000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "SALE20P",
+    "ground_truth_discount": 60000,
+    "upsell_opportunity": null
+  },
+  {
+    "test_id": 17,
+    "cart_total": 350000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "SALE20P",
+    "ground_truth_discount": 60000,
+    "upsell_opportunity": null
+  },
+  {
+    "test_id": 18,
+    "cart_total": 420000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "SALE20P",
+    "ground_truth_discount": 60000,
+    "upsell_opportunity": null
+  },
+  {
+    "test_id": 19,
+    "cart_total": 500000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "SALE20P",
+    "ground_truth_discount": 60000,
+    "upsell_opportunity": null
+  },
+  {
+    "test_id": 20,
+    "cart_total": 650000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "SALE20P",
+    "ground_truth_discount": 60000,
+    "upsell_opportunity": null
+  },
+  {
+    "test_id": 21,
+    "cart_total": 90000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "FREESHIP15",
+    "ground_truth_discount": 15000,
+    "upsell_opportunity": {
+      "target_coupon": "GIAM10K",
+      "target_min_spend": 100000,
+      "gap_to_spend": 10000,
+      "extra_discount": -5000,
+      "benefit_explanation": "Thêm món từ 10,000đ để dùng mã GIAM10K (giảm 10,000đ)"
+    }
+  },
+  {
+    "test_id": 22,
+    "cart_total": 105000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "FREESHIP15",
+    "ground_truth_discount": 15000,
+    "upsell_opportunity": {
+      "target_coupon": "SALE10P",
+      "target_min_spend": 120000,
+      "gap_to_spend": 15000,
+      "extra_discount": -3000,
+      "benefit_explanation": "Thêm món từ 15,000đ để dùng mã SALE10P (giảm 12,000đ)"
+    }
+  },
+  {
+    "test_id": 23,
+    "cart_total": 118000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "FREESHIP15",
+    "ground_truth_discount": 15000,
+    "upsell_opportunity": {
+      "target_coupon": "GIAM20K",
+      "target_min_spend": 150000,
+      "gap_to_spend": 32000,
+      "extra_discount": 5000,
+      "benefit_explanation": "Thêm món từ 32,000đ để dùng mã GIAM20K (giảm 20,000đ)"
+    }
+  },
+  {
+    "test_id": 24,
+    "cart_total": 130000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "FREESHIP15",
+    "ground_truth_discount": 15000,
+    "upsell_opportunity": {
+      "target_coupon": "GIAM20K",
+      "target_min_spend": 150000,
+      "gap_to_spend": 20000,
+      "extra_discount": 5000,
+      "benefit_explanation": "Thêm món từ 20,000đ để dùng mã GIAM20K (giảm 20,000đ)"
+    }
+  },
+  {
+    "test_id": 25,
+    "cart_total": 148000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "FREESHIP15",
+    "ground_truth_discount": 15000,
+    "upsell_opportunity": {
+      "target_coupon": "GIAM20K",
+      "target_min_spend": 150000,
+      "gap_to_spend": 2000,
+      "extra_discount": 5000,
+      "benefit_explanation": "Thêm món từ 2,000đ để dùng mã GIAM20K (giảm 20,000đ)"
+    }
+  },
+  {
+    "test_id": 26,
+    "cart_total": 175000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "GIAM20K",
+    "ground_truth_discount": 20000,
+    "upsell_opportunity": {
+      "target_coupon": "SALE20P",
+      "target_min_spend": 200000,
+      "gap_to_spend": 25000,
+      "extra_discount": 20000,
+      "benefit_explanation": "Thêm món từ 25,000đ để dùng mã SALE20P (giảm 40,000đ)"
+    }
+  },
+  {
+    "test_id": 27,
+    "cart_total": 198000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "GIAM20K",
+    "ground_truth_discount": 20000,
+    "upsell_opportunity": {
+      "target_coupon": "SALE20P",
+      "target_min_spend": 200000,
+      "gap_to_spend": 2000,
+      "extra_discount": 20000,
+      "benefit_explanation": "Thêm món từ 2,000đ để dùng mã SALE20P (giảm 40,000đ)"
+    }
+  },
+  {
+    "test_id": 28,
+    "cart_total": 205000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "SALE20P",
+    "ground_truth_discount": 41000,
+    "upsell_opportunity": null
+  },
+  {
+    "test_id": 29,
+    "cart_total": 220000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "SALE20P",
+    "ground_truth_discount": 44000,
+    "upsell_opportunity": {
+      "target_coupon": "GIAM50K",
+      "target_min_spend": 250000,
+      "gap_to_spend": 30000,
+      "extra_discount": 6000,
+      "benefit_explanation": "Thêm món từ 30,000đ để dùng mã GIAM50K (giảm 50,000đ)"
+    }
+  },
+  {
+    "test_id": 30,
+    "cart_total": 240000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "SALE20P",
+    "ground_truth_discount": 48000,
+    "upsell_opportunity": {
+      "target_coupon": "GIAM50K",
+      "target_min_spend": 250000,
+      "gap_to_spend": 10000,
+      "extra_discount": 2000,
+      "benefit_explanation": "Thêm món từ 10,000đ để dùng mã GIAM50K (giảm 50,000đ)"
+    }
+  },
+  {
+    "test_id": 31,
+    "cart_total": 248000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "SALE20P",
+    "ground_truth_discount": 49600,
+    "upsell_opportunity": {
+      "target_coupon": "GIAM50K",
+      "target_min_spend": 250000,
+      "gap_to_spend": 2000,
+      "extra_discount": 400,
+      "benefit_explanation": "Thêm món từ 2,000đ để dùng mã GIAM50K (giảm 50,000đ)"
+    }
+  },
+  {
+    "test_id": 32,
+    "cart_total": 270000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "SALE20P",
+    "ground_truth_discount": 54000,
+    "upsell_opportunity": null
+  },
+  {
+    "test_id": 33,
+    "cart_total": 290000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "SALE20P",
+    "ground_truth_discount": 58000,
+    "upsell_opportunity": null
+  },
+  {
+    "test_id": 34,
+    "cart_total": 320000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "SALE20P",
+    "ground_truth_discount": 60000,
+    "upsell_opportunity": null
+  },
+  {
+    "test_id": 35,
+    "cart_total": 380000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "SALE20P",
+    "ground_truth_discount": 60000,
+    "upsell_opportunity": null
+  },
+  {
+    "test_id": 36,
+    "cart_total": 450000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "SALE20P",
+    "ground_truth_discount": 60000,
+    "upsell_opportunity": null
+  },
+  {
+    "test_id": 37,
+    "cart_total": 520000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "SALE20P",
+    "ground_truth_discount": 60000,
+    "upsell_opportunity": null
+  },
+  {
+    "test_id": 38,
+    "cart_total": 580000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "SALE20P",
+    "ground_truth_discount": 60000,
+    "upsell_opportunity": null
+  },
+  {
+    "test_id": 39,
+    "cart_total": 720000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "SALE20P",
+    "ground_truth_discount": 60000,
+    "upsell_opportunity": null
+  },
+  {
+    "test_id": 40,
+    "cart_total": 850000,
+    "available_coupons": [
+      {
+        "code": "GIAM10K",
+        "type": "FLAT",
+        "value": 10000,
+        "min_spend": 100000,
+        "desc": "Giảm 10k đơn từ 100k"
+      },
+      {
+        "code": "GIAM20K",
+        "type": "FLAT",
+        "value": 20000,
+        "min_spend": 150000,
+        "desc": "Giảm 20k đơn từ 150k"
+      },
+      {
+        "code": "GIAM50K",
+        "type": "FLAT",
+        "value": 50000,
+        "min_spend": 250000,
+        "desc": "Giảm 50k đơn từ 250k"
+      },
+      {
+        "code": "SALE10P",
+        "type": "PERCENTAGE",
+        "value": 10,
+        "min_spend": 120000,
+        "max_cap": 25000,
+        "desc": "Giảm 10% tối đa 25k từ 120k"
+      },
+      {
+        "code": "SALE20P",
+        "type": "PERCENTAGE",
+        "value": 20,
+        "min_spend": 200000,
+        "max_cap": 60000,
+        "desc": "Giảm 20% tối đa 60k từ 200k"
+      },
+      {
+        "code": "FREESHIP15",
+        "type": "FLAT",
+        "value": 15000,
+        "min_spend": 80000,
+        "desc": "Freeship 15k đơn từ 80k"
+      }
+    ],
+    "ground_truth_best_coupon": "SALE20P",
+    "ground_truth_discount": 60000,
+    "upsell_opportunity": null
+  }
+]

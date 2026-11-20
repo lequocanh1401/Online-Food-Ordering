@@ -234,6 +234,16 @@ export const AiCopilot = () => {
                     headers: jwt ? { Authorization: `Bearer ${jwt}` } : {}
                 });
                 setExecutedActionIds(prev => ({ ...prev, [msgIndex]: true }));
+            } else if (action.type === 'CREATE_RESTAURANT_COUPON') {
+                await axios.post(`${API_URL}/api/admin/coupons/restaurant/${action.restaurantId}`, action.couponPayload, {
+                    headers: jwt ? { Authorization: `Bearer ${jwt}` } : {}
+                });
+                setExecutedActionIds(prev => ({ ...prev, [msgIndex]: true }));
+            } else if (action.type === 'CREATE_GLOBAL_COUPON') {
+                await axios.post(`${API_URL}/api/admin/coupons/global`, action.couponPayload, {
+                    headers: jwt ? { Authorization: `Bearer ${jwt}` } : {}
+                });
+                setExecutedActionIds(prev => ({ ...prev, [msgIndex]: true }));
             }
         } catch (err) {
             console.error("Lỗi thực thi Tác tử AI:", err);
