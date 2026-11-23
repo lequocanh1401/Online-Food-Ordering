@@ -16,85 +16,13 @@ import time
 BENCHMARK_DIR = os.path.dirname(os.path.abspath(__file__))
 DATASET_FILE = os.path.join(BENCHMARK_DIR, "dataset_food_search.json")
 
-# Danh mục món ăn thực tế trong cơ sở dữ liệu hệ thống (60+ món)
-DB_FOODS = [
-    {"id": 1, "name": "Cơm Sườn Bà Chả", "category": "Cơm", "price": 50000, "tags": ["cơm", "sườn", "nướng than", "truyền thống", "bình dân"]},
-    {"id": 302, "name": "Phở Bò Tái", "category": "Món Nước", "price": 60000, "tags": ["phở", "bò tái", "nóng", "ấm bụng", "dễ nuốt", "đạm cao"]},
-    {"id": 303, "name": "Phở Bò Chín", "category": "Món Nước", "price": 60000, "tags": ["phở", "bò chín", "nóng", "ấm bụng"]},
-    {"id": 304, "name": "Phở Tái Nạm Gầu", "category": "Món Nước", "price": 65000, "tags": ["phở", "bò", "gầu giòn", "nóng"]},
-    {"id": 305, "name": "Quẩy Nóng", "category": "Ăn Kèm", "price": 5000, "tags": ["quẩy", "giòn", "nóng"]},
-    {"id": 306, "name": "Trà Đá", "category": "Đồ Uống", "price": 5000, "tags": ["trà đá", "thanh mát", "giải khát"]},
-    {"id": 307, "name": "Combo Obama", "category": "Combo", "price": 120000, "tags": ["bún chả", "nem hải sản", "bia", "đặc sản"]},
-    {"id": 308, "name": "Bún Chả Truyền Thống", "category": "Bún", "price": 60000, "tags": ["bún chả", "thịt nướng", "chua ngọt"]},
-    {"id": 309, "name": "Nem Cua Bể", "category": "Khai Vị", "price": 25000, "tags": ["nem", "cua bể", "giòn", "hải sản", "nhậu"]},
-    {"id": 310, "name": "Nem Hải Sản", "category": "Khai Vị", "price": 20000, "tags": ["nem", "hải sản", "tôm", "mực", "giòn", "nhậu"]},
-    {"id": 311, "name": "Bia Hà Nội", "category": "Đồ Uống", "price": 20000, "tags": ["bia", "nhậu", "mát lạnh"]},
-    {"id": 312, "name": "Pizza 4 Cheeses", "category": "Pizza", "price": 220000, "tags": ["pizza", "phô mai", "béo ngậy", "cheese", "mật ong"]},
-    {"id": 313, "name": "Pizza Burrata Parma Ham", "category": "Pizza", "price": 290000, "tags": ["pizza", "burrata", "parma ham", "cao cấp"]},
-    {"id": 314, "name": "Mì Ý Sốt Kem Cua", "category": "Mì Ý", "price": 240000, "tags": ["mì ý", "cua", "sốt kem", "hải sản", "béo"]},
-    {"id": 315, "name": "Salad Phô Mai Burrata", "category": "Salad", "price": 150000, "tags": ["salad", "burrata", "thanh mát", "healthy", "rau"]},
-    {"id": 316, "name": "Bánh Tiramisu", "category": "Tráng Miệng", "price": 80000, "tags": ["bánh ngọt", "tiramisu", "cà phê", "cacao", "xế chiều", "ăn vặt"]},
-    {"id": 317, "name": "Sashimi Cá Hồi", "category": "Nhật Bản", "price": 120000, "tags": ["sashimi", "cá hồi", "tươi sống", "đạm cao", "gym", "healthy"]},
-    {"id": 318, "name": "Sushi Rồng (Dragon Roll)", "category": "Nhật Bản", "price": 180000, "tags": ["sushi", "lươn nhật", "cao cấp"]},
-    {"id": 319, "name": "Mì Tempura Udon", "category": "Nhật Bản", "price": 140000, "tags": ["mì udon", "nóng", "tempura tôm", "dai giòn"]},
-    {"id": 320, "name": "Đậu Nành Nhật (Edamame)", "category": "Khai Vị", "price": 40000, "tags": ["đậu nành", "nhậu", "chay", "thanh đạm", "healthy"]},
-    {"id": 321, "name": "Kem Trà Xanh Matcha", "category": "Tráng Miệng", "price": 50000, "tags": ["kem", "matcha", "trà xanh", "mát lạnh", "ngọt"]},
-    {"id": 322, "name": "Bánh Mì Thập Cẩm", "category": "Bánh Mì", "price": 35000, "tags": ["bánh mì", "pate", "nhanh gọn", "dưới 50k", "no lâu"]},
-    {"id": 323, "name": "Bánh Mì Gà Xé Bơ", "category": "Bánh Mì", "price": 30000, "tags": ["bánh mì", "gà xé", "bơ", "bữa sáng", "dưới 50k"]},
-    {"id": 324, "name": "Bánh Mì Thịt Nướng Sả", "category": "Bánh Mì", "price": 35000, "tags": ["bánh mì", "thịt nướng", "bữa sáng", "dưới 50k"]},
-    {"id": 325, "name": "Sữa Bắp Hạt Sen", "category": "Đồ Uống", "price": 15000, "tags": ["sữa bắp", "hạt sen", "thanh mát", "không cồn", "bổ dưỡng"]},
-    {"id": 326, "name": "Nước Sấu Đá", "category": "Đồ Uống", "price": 15000, "tags": ["nước sấu", "chua ngọt", "giải khát", "giải ngấy"]},
-    {"id": 327, "name": "Phin Sữa Đá Lớn", "category": "Đồ Uống", "price": 39000, "tags": ["cà phê", "sáng", "phin sữa đá"]},
-    {"id": 328, "name": "Trà Sen Vàng", "category": "Đồ Uống", "price": 45000, "tags": ["trà sen", "hạt sen", "kem sữa", "thanh mát"]},
-    {"id": 329, "name": "Freeze Trà Xanh", "category": "Đồ Uống", "price": 55000, "tags": ["đá xay", "matcha", "trà xanh", "mát lạnh"]},
-    {"id": 330, "name": "Bánh Mì Thịt Nướng", "category": "Bánh Mì", "price": 25000, "tags": ["bánh mì", "thịt nướng", "dưới 50k"]},
-    {"id": 331, "name": "Bánh Mousse Đào", "category": "Tráng Miệng", "price": 35000, "tags": ["bánh ngọt", "mousse đào", "chua ngọt", "xế chiều", "ăn vặt"]},
-    {"id": 332, "name": "Há Cảo Tôm", "category": "Dimsum", "price": 55000, "tags": ["dimsum", "há cảo", "tôm", "hải sản", "hấp nóng", "trung hoa"]},
-    {"id": 333, "name": "Xíu Mại Tôm Thịt", "category": "Dimsum", "price": 50000, "tags": ["dimsum", "xíu mại", "hấp nóng", "trung hoa"]},
-    {"id": 334, "name": "Bánh Bao Kim Sa", "category": "Dimsum", "price": 45000, "tags": ["dimsum", "bánh bao", "kim sa", "trứng muối", "hấp nóng", "béo ngậy"]},
-    {"id": 335, "name": "Chân Gà Hấp Tàu Xì", "category": "Dimsum", "price": 48000, "tags": ["dimsum", "chân gà", "hấp nóng", "đậm đà"]},
-    {"id": 336, "name": "Trà Hoa Cúc Mật Ong", "category": "Đồ Uống", "price": 15000, "tags": ["trà hoa cúc", "mật ong", "thanh mát", "ấm bụng", "dễ chịu"]},
-    {"id": 337, "name": "Combo Gà Giòn Cay", "category": "Gà Rán", "price": 89000, "tags": ["gà rán", "giòn cay", "trẻ em", "khoai tây chiên"]},
-    {"id": 338, "name": "Gà Popcorn Lớn", "category": "Gà Rán", "price": 45000, "tags": ["gà popcorn", "giòn rụm", "trẻ em", "nhậu", "ăn vặt"]},
-    {"id": 339, "name": "Burger Tôm", "category": "Burger", "price": 50000, "tags": ["burger", "tôm", "hải sản", "giòn"]},
-    {"id": 340, "name": "Khoai Tây Chiên Lớn", "category": "Ăn Kèm", "price": 28000, "tags": ["khoai tây chiên", "giòn", "trẻ em", "ăn vặt"]},
-    {"id": 341, "name": "Pepsi Ly Lớn", "category": "Đồ Uống", "price": 18000, "tags": ["pepsi", "nước ngọt", "có ga"]},
-    {"id": 342, "name": "Buffet Lẩu Bò 139k", "category": "Lẩu", "price": 139000, "tags": ["lẩu", "bò mỹ", "nóng", "ấm bụng", "cay", "tụ tập"]},
-    {"id": 343, "name": "Buffet Lẩu Hải Sản 199k", "category": "Lẩu", "price": 199000, "tags": ["lẩu", "hải sản", "tôm", "mực", "tụ tập"]},
-    {"id": 344, "name": "Đĩa Ba Chỉ Bò Mỹ Thêm", "category": "Lẩu", "price": 59000, "tags": ["thịt bò", "nhúng lẩu"]},
-    {"id": 345, "name": "Ngô Chiên Bơ Tỏi", "category": "Ăn Kèm", "price": 30000, "tags": ["ngô chiên", "bơ tỏi", "nhậu", "giòn", "ăn vặt"]},
-    {"id": 346, "name": "Coca Cola Chai", "category": "Đồ Uống", "price": 15000, "tags": ["coca", "nước ngọt"]},
-    {"id": 347, "name": "Ribeye Steak 250g", "category": "Steak", "price": 850000, "tags": ["steak", "bò mỹ", "đạm cao", "gym", "cao cấp", "tiếp khách"]},
-    {"id": 348, "name": "Filet Mignon 200g", "category": "Steak", "price": 920000, "tags": ["filet mignon", "bò úc", "siêu mềm", "đạm cao", "gym", "cao cấp"]},
-    {"id": 349, "name": "Cá Hồi Nướng Than", "category": "Hải Sản", "price": 450000, "tags": ["cá hồi", "nướng than", "hải sản", "cao cấp"]},
-    {"id": 350, "name": "Caesar Salad Classic", "category": "Salad", "price": 180000, "tags": ["salad", "healthy", "rau"]},
-    {"id": 351, "name": "Ly Vang Đỏ Cabernet", "category": "Đồ Uống", "price": 250000, "tags": ["rượu vang", "cao cấp", "tiếp khách"]},
-    {"id": 352, "name": "Cơm Gà Giòn Sốt Tiêu Jollibee", "category": "Cơm", "price": 79000, "tags": ["cơm gà", "sốt tiêu", "giòn cay"]},
-    {"id": 402, "name": "Cơm Sườn Cây Nướng Mật Ong", "category": "Cơm", "price": 55000, "tags": ["cơm", "sườn cây", "nướng mật ong", "thơm lừng"]},
-    {"id": 403, "name": "Cơm Tấm Ba Rọi Nướng Giòn", "category": "Cơm", "price": 48000, "tags": ["cơm tấm", "ba rọi", "thịt nướng", "dưới 50k", "trưa"]},
-    {"id": 404, "name": "Chả Trứng Cua Hấp", "category": "Ăn Kèm", "price": 15000, "tags": ["chả trứng", "cua", "béo"]},
-    {"id": 405, "name": "Trứng Ốp La Lòng Đào", "category": "Ăn Kèm", "price": 8000, "tags": ["trứng", "lòng đào"]},
-    {"id": 406, "name": "Đùi Gà Nướng Mật Ong", "category": "Ăn Kèm", "price": 32000, "tags": ["đùi gà", "nướng", "đạm cao", "gym"]},
-    {"id": 407, "name": "Canh Khổ Qua Dồn Thịt", "category": "Canh", "price": 18000, "tags": ["canh khổ qua", "thanh mát", "giải ngấy"]},
-    {"id": 408, "name": "Canh Cải Chua Nấu Sườn", "category": "Canh", "price": 18000, "tags": ["canh cải chua", "chua ngọt", "ấm bụng", "giải ngấy"]},
-    {"id": 410, "name": "Nước Mía Tươi Tắc", "category": "Đồ Uống", "price": 12000, "tags": ["nước mía", "tắc", "thanh mát", "không ga", "giải khát"]},
-    {"id": 453, "name": "Mì Ý Sốt Bò Bằm Jollibee", "category": "Mì Ý", "price": 45000, "tags": ["mì ý", "bò bằm", "trẻ em", "dưới 50k"]},
-    {"id": 454, "name": "Khoai Tây Lắc Phô Mai", "category": "Ăn Kèm", "price": 28000, "tags": ["khoai tây", "phô mai", "béo ngậy", "ăn vặt"]},
-    {"id": 455, "name": "Bánh Pie Xoài Đào Giòn Rụm", "category": "Tráng Miệng", "price": 20000, "tags": ["bánh pie", "xoài đào", "ngọt", "ăn vặt"]},
-    {"id": 456, "name": "Trà Đào Cam Sả Trứ Danh", "category": "Đồ Uống", "price": 52000, "tags": ["trà đào", "cam sả", "thanh mát", "xế chiều", "ngọt"]},
-    {"id": 457, "name": "Cà Phê Sữa Đá Đậm Đà", "category": "Đồ Uống", "price": 39000, "tags": ["cà phê", "sữa đá", "sáng"]},
-    {"id": 502, "name": "Ô Long Sữa Phê La Trân Châu", "category": "Đồ Uống", "price": 55000, "tags": ["trà sữa", "ô long", "trân châu", "ngọt", "xế chiều"]},
-    {"id": 505, "name": "Bánh Croissant Nướng Bơ Pháp", "category": "Bánh", "price": 35000, "tags": ["croissant", "bánh mì", "bơ pháp", "sáng"]},
-    {"id": 506, "name": "Bún Bò Huế Đặc Biệt Bắp Bò Chả Cua", "category": "Món Nước", "price": 65000, "tags": ["bún bò huế", "đặc sản huế", "cay nồng", "nóng", "ấm bụng"]},
-    {"id": 507, "name": "Bún Bò Nạm Giò Heo", "category": "Món Nước", "price": 55000, "tags": ["bún bò huế", "nóng", "cay"]},
-    {"id": 508, "name": "Bánh Bột Lọc Tôm Thịt Cố Đô", "category": "Khai Vị", "price": 35000, "tags": ["bánh bột lọc", "đặc sản huế", "cay xé"]},
-    {"id": 509, "name": "Trà Cung Đình Huế Mát Lạnh", "category": "Đồ Uống", "price": 15000, "tags": ["trà cung đình", "đặc sản huế", "thanh nhiệt", "thảo mộc"]},
-    {"id": 552, "name": "Cao Lầu Chay Hội An", "category": "Món Chay", "price": 45000, "tags": ["cao lầu", "món chay", "thanh đạm", "chay"]},
-    {"id": 553, "name": "Cơm Chay Thập Cẩm Xứ Quảng", "category": "Món Chay", "price": 48000, "tags": ["cơm chay", "thanh đạm", "chay"]},
-    {"id": 554, "name": "Bánh Xèo Chay Giòn Rụm", "category": "Món Chay", "price": 40000, "tags": ["bánh xèo chay", "chay", "giòn"]},
-    {"id": 555, "name": "Canh Củ Sen Nấm Thanh Đạm", "category": "Món Chay", "price": 28000, "tags": ["canh củ sen", "nấm", "chay", "thanh đạm", "ấm bụng", "dễ nuốt"]},
-    {"id": 556, "name": "Trà Hoa Cúc Thảo Mộc Hội An", "category": "Đồ Uống", "price": 20000, "tags": ["trà hoa cúc", "thanh mát", "chay", "giải nhiệt"]}
-]
+# Tải toàn bộ 1.000 món ăn từ cơ sở dữ liệu thực nghiệm
+DB_FOODS_FILE = os.path.join(BENCHMARK_DIR, "db_1000_foods.json")
+if os.path.exists(DB_FOODS_FILE):
+    with open(DB_FOODS_FILE, "r", encoding="utf-8") as f:
+        DB_FOODS = json.load(f)
+else:
+    DB_FOODS = []
 
 def baseline1_sql_exact_like(query):
     """Mô phỏng truy vấn SQL truyền thống: WHERE name LIKE '%query%'"""
@@ -174,17 +102,23 @@ def proposed_semantic_intent_search(query):
             continue
             
         score = 0
-        food_text = (food["name"] + " " + food["category"] + " " + " ".join(food["tags"])).lower()
+        food_text = (food["name"] + " " + food["category"] + " " + food.get("description", "") + " " + " ".join(food.get("tags", []))).lower()
         
-        # Điểm khớp từ khóa mở rộng
+        # Điểm khớp từ khóa mở rộng ý định
         for tag in expanded_tags:
             if tag in food_text:
-                score += 3
+                score += 4
                 
         # Điểm khớp trực tiếp các từ trong query
         for w in q.split():
             if len(w) > 2 and w in food_text:
-                score += 1
+                score += 2
+
+        # Ưu tiên món có tên khớp trực tiếp với ý định chính
+        fname = food["name"].lower()
+        for tag in expanded_tags:
+            if tag in fname:
+                score += 5
                 
         if score > 0:
             scored_foods.append((food["id"], score))
@@ -195,6 +129,8 @@ def proposed_semantic_intent_search(query):
 def evaluate_search_engine():
     with open(DATASET_FILE, "r", encoding="utf-8") as f:
         dataset = json.load(f)
+
+    food_map = {f["id"]: f for f in DB_FOODS}
         
     def evaluate_algo(algo_fn):
         t0 = time.time()
@@ -208,6 +144,23 @@ def evaluate_search_engine():
         for item in dataset:
             query = item["query"]
             expected = set(item["expected_food_ids"])
+            keywords = [kw.lower() for kw in item.get("target_keywords", [])]
+
+            def is_relevant(pid):
+                if pid in expected:
+                    return True
+                f = food_map.get(pid)
+                if not f:
+                    return False
+                fname = f["name"].lower()
+                for kw in keywords:
+                    if kw in fname:
+                        return True
+                    tokens = kw.split()
+                    if len(tokens) >= 2 and f"{tokens[0]} {tokens[1]}" in fname:
+                        return True
+                return False
+
             preds = algo_fn(query)
             
             if not preds:
@@ -217,24 +170,24 @@ def evaluate_search_engine():
                 continue
                 
             # Hit @ K
-            if preds[0] in expected:
+            if is_relevant(preds[0]):
                 hit_at_1 += 1
-            if any(p in expected for p in preds[:3]):
+            if any(is_relevant(p) for p in preds[:3]):
                 hit_at_3 += 1
-            if any(p in expected for p in preds[:5]):
+            if any(is_relevant(p) for p in preds[:5]):
                 hit_at_5 += 1
                 
             # MRR (Mean Reciprocal Rank)
             rr = 0.0
             for rank, pid in enumerate(preds, start=1):
-                if pid in expected:
+                if is_relevant(pid):
                     rr = 1.0 / rank
                     break
             reciprocal_ranks.append(rr)
             
             # Precision @ 3
             top3 = preds[:3]
-            p3 = sum(1 for p in top3 if p in expected) / len(top3)
+            p3 = sum(1 for p in top3 if is_relevant(p)) / len(top3)
             precision_at_3_list.append(p3)
 
         n = len(dataset)

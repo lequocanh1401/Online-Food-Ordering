@@ -30,3 +30,11 @@ Tham khảo/
 *.rar
 
 
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Duplicate downloaded PDFs
+*__*_.pdf
+*(*).pdf
