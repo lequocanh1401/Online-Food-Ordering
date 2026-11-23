@@ -492,7 +492,7 @@ Dưới đây là các bảng đặc tả chi tiết cho 11 ca sử dụng quan 
   2. Hệ thống truy vấn `/api/admin/order/restaurant/{id}` (sắp xếp `ORDER BY createdAt DESC, id DESC`).
   3. Bảng hiển thị danh sách đơn kèm huy hiệu `STRIPE`/`COD` và trạng thái hiện tại.
   4. Chủ quán chọn cập nhật trạng thái tuần tự (`PAID` $\to$ `OUT_FOR_DELIVERY` $\to$ `COMPLETED` hoặc `CANCELLED`).
-  5. Hệ thống gọi API `PUT /api/admin/order/{orderId}/{orderStatus}`.
+  5. Hệ thống gửi yêu cầu API qua phương thức `PUT /api/admin/order/{id}/{status}` kèm tham số trạng thái mới.
   6. Máy chủ áp dụng **Order State Guard**: chặn sửa đơn kết thúc và chặn đơn Stripe chưa thanh toán nhảy cóc; lưu trạng thái mới và phát sóng WebSocket.
 * **Luồng thay thế:**
   * 4a. Chủ quán hủy đơn (`CANCELLED`): Kích hoạt `restoreStockForOrder(order)` hoàn trả nguyên liệu vào kho và ghi log `AUTO_RESTORE`.
