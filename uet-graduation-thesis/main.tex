@@ -45,6 +45,12 @@
     rulecolor=\color{gray!30}
 }
 
+% Cấu hình căn chỉnh bảng và hình trôi nổi luôn bám sát lề trên trang
+\makeatletter
+\setlength{\@fptop}{0pt}
+\setlength{\@fpbot}{0pt plus 1fil}
+\makeatother
+
 \begin{document}
 
 % =========================================================================
@@ -475,12 +481,13 @@ Hệ thống được chia thành các phân hệ chức năng tương ứng v�
     \item \textbf{Tính khả dụng và Trải nghiệm người dùng (UI/UX):} Giao diện được tối ưu hóa cho phong cách Dark Mode, hình ảnh món ăn sắc nét, font chữ hiện đại, tương thích tốt trên các trình duyệt phổ biến (Google Chrome, Firefox, Safari, Microsoft Edge) và hỗ trợ giao diện co giãn trên nhiều kích thước màn hình.
 \end{itemize}
 
+\clearpage
 \section{Biểu đồ Ca sử dụng Tổng quát}
 Dựa trên các yêu cầu chức năng đã phân tích, biểu đồ ca sử dụng tổng quát của hệ thống được mô hình hóa như trong Hình 3.1:
 
-\begin{figure}{Biểu đồ Ca sử dụng Tổng quát toàn Hệ thống}
+\begin{figure}[!htbp]{Biểu đồ Ca sử dụng Tổng quát toàn Hệ thống}
 \centering
-\includegraphics[width=0.95\textwidth]{figures/fig_usecase_general.png}
+\includegraphics[height=0.60\textheight, keepaspectratio]{figures/fig_usecase_general.png}
 \end{figure}
 
 Biểu đồ Hình 3.1 thể hiện rõ ba nhóm tác nhân chính của hệ thống là Khách hàng/Khách vãng lai (Customer/Guest), Chủ nhà hàng (Restaurant Owner) và Quản trị viên sàn (Super Admin), bao quát đầy đủ cả các ca sử dụng AI hiện đại như AI Concierge Menu RAG, Bộ 4 Tác tử AI hành động 1-Click (Khóa món cạn kho / Tạo voucher tri ân cho Chủ quán, và AI Sentinel gỡ vi phạm / Kích hoạt Mega Sale toàn sàn cho Super Admin).
@@ -494,7 +501,7 @@ Dưới đây là các bảng đặc tả chi tiết cho 11 ca sử dụng quan 
 \begin{table}[!htbp]{Phân tích ca sử dụng Đăng ký tài khoản}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|l|X|}
+\begin{tabularx}{\textwidth}{|l|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên ca sử dụng} & \textbf{Đăng ký tài khoản mới (Signup with Role Sanitization)} \\ \hline
 \textbf{Mã ca sử dụng} & UC-01 \\ \hline
@@ -526,7 +533,7 @@ Lỗi mất kết nối CSDL: Hệ thống hiển thị thông báo lỗi máy c
 \begin{table}[!htbp]{Phân tích ca sử dụng Đăng nhập tài khoản}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|l|X|}
+\begin{tabularx}{\textwidth}{|l|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên ca sử dụng} & \textbf{Đăng nhập tài khoản (Signin \& JWT Issuance)} \\ \hline
 \textbf{Mã ca sử dụng} & UC-02 \\ \hline
@@ -555,7 +562,7 @@ Lỗi kết nối mạng: Giao diện hiển thị thông báo không thể kế
 \begin{table}[!htbp]{Phân tích ca sử dụng Quản lý giỏ hàng và tùy biến món ăn}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|l|X|}
+\begin{tabularx}{\textwidth}{|l|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên ca sử dụng} & \textbf{Tùy biến món ăn \& Quản lý giỏ hàng} \\ \hline
 \textbf{Mã ca sử dụng} & UC-03 \\ \hline
@@ -585,7 +592,7 @@ Món ăn bị chủ quán gỡ bỏ khỏi thực đơn trong lúc thao tác: H�
 \begin{table}[!htbp]{Phân tích ca sử dụng Áp dụng mã giảm giá ràng buộc}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|l|X|}
+\begin{tabularx}{\textwidth}{|l|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên ca sử dụng} & \textbf{Áp dụng mã giảm giá ràng buộc (Coupon Constraint Engine)} \\ \hline
 \textbf{Mã ca sử dụng} & UC-04 \\ \hline
@@ -616,7 +623,7 @@ Lỗi cú pháp ký tự đặc biệt trong mã: Đã được xử lý triệt
 \begin{table}[!htbp]{Phân tích ca sử dụng Thanh toán qua Stripe Checkout và COD}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|l|X|}
+\begin{tabularx}{\textwidth}{|l|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên ca sử dụng} & \textbf{Thanh toán Đa phương thức (Stripe Checkout \& COD)} \\ \hline
 \textbf{Mã ca sử dụng} & UC-05 \\ \hline
@@ -646,7 +653,7 @@ Mất kết nối hoặc token hết hạn khi Stripe redirect: Nhờ mở khóa
 \begin{table}[!htbp]{Phân tích ca sử dụng Quản lý thực đơn và nguyên liệu}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|l|X|}
+\begin{tabularx}{\textwidth}{|l|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên ca sử dụng} & \textbf{Quản lý thực đơn \& Kho nguyên liệu của nhà hàng} \\ \hline
 \textbf{Mã ca sử dụng} & UC-06 \\ \hline
@@ -674,7 +681,7 @@ Chủ quán chưa tạo hồ sơ nhà hàng: Hệ thống tự động chuyển 
 \begin{table}[!htbp]{Phân tích ca sử dụng Tiếp nhận và kiểm soát máy trạng thái đơn hàng}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|l|X|}
+\begin{tabularx}{\textwidth}{|l|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên ca sử dụng} & \textbf{Tiếp nhận \& Kiểm soát Máy trạng thái Đơn hàng (Order Fulfillment)} \\ \hline
 \textbf{Mã ca sử dụng} & UC-07 \\ \hline
@@ -702,7 +709,7 @@ Chủ quán chưa tạo hồ sơ nhà hàng: Hệ thống tự động chuyển 
 \begin{table}[!htbp]{Phân tích ca sử dụng Kiểm duyệt đánh giá và Quản trị sàn}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|l|X|}
+\begin{tabularx}{\textwidth}{|l|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên ca sử dụng} & \textbf{Kiểm duyệt đánh giá \& Quản trị toàn sàn của Super Admin} \\ \hline
 \textbf{Mã ca sử dụng} & UC-08 \\ \hline
@@ -732,7 +739,7 @@ Tài khoản không phải ROLE\_ADMIN cố tình gọi API kiểm duyệt: Spri
 \begin{table}[!htbp]{Phân tích ca sử dụng Tham vấn và thực thi Tác tử AI Copilot}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|l|X|}
+\begin{tabularx}{\textwidth}{|l|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên ca sử dụng} & \textbf{Tham vấn Quản trị \& Thực thi Tác tử AI Hành động (Dual-Persona Agentic AI)} \\ \hline
 \textbf{Mã ca sử dụng} & UC-09 \\ \hline
@@ -761,7 +768,7 @@ Lỗi quyền truy cập hoặc mất kết nối CSDL: Hệ thống thông báo
 \begin{table}[!htbp]{Phân tích ca sử dụng Cảnh báo đơn hàng thời gian thực và trừ kho tự động}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|l|X|}
+\begin{tabularx}{\textwidth}{|l|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên ca sử dụng} & \textbf{Cảnh báo Đơn hàng Thời gian thực \& Quản lý Tồn kho Tự động} \\ \hline
 \textbf{Mã ca sử dụng} & UC-10 \\ \hline
@@ -790,7 +797,7 @@ Kết nối WebSocket bị ngắt do mạng gián đoạn: Phía Frontend có c�
 \begin{table}[!htbp]{Phân tích ca sử dụng Tư vấn ẩm thực AI Concierge Menu Catalog RAG}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|l|X|}
+\begin{tabularx}{\textwidth}{|l|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên ca sử dụng} & \textbf{Tư vấn Ẩm thực Khách hàng qua Trợ lý AI Concierge (Menu Catalog RAG)} \\ \hline
 \textbf{Mã ca sử dụng} & UC-11 \\ \hline
@@ -870,68 +877,68 @@ Sơ đồ Hình 4.2 làm sáng tỏ sự phối hợp đồng bộ giữa 4 phâ
 Phần này trình bày chi tiết các biểu đồ tuần tự (Sequence Diagrams) minh họa trực quan sự tương tác giữa các thành phần phần mềm trong hệ thống qua thời gian đối với các ca sử dụng tiêu biểu.
 
 \subsection{Biểu đồ Tuần tự: Đăng ký \& Đăng nhập Phân quyền JWT}
-Quy trình xác thực người dùng được mô tả trong Hình 4.2:
+Quy trình xác thực người dùng được mô tả trong Hình 4.3:
 
 \begin{figure}{Biểu đồ tuần tự ca sử dụng Đăng ký và Đăng nhập xác thực JWT}
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig_sequence_auth.png}
 \end{figure}
 
-Sơ đồ Hình 4.2 thể hiện cơ chế bảo mật quan trọng: Khi người dùng gửi yêu cầu đăng ký qua API \texttt{/auth/signup}, Controller trước tiên sẽ kiểm tra nếu trường \texttt{role} có giá trị \texttt{ROLE\_ADMIN} thì ngay lập tức ném ra ngoại lệ từ chối, ngăn chặn mọi nỗ lực leo thang đặc quyền từ bên ngoài. Mật khẩu được băm một chiều qua BCrypt trước khi ghi vào CSDL, đồng thời một giỏ hàng trống mới được tạo tự động để người dùng sẵn sàng mua hàng.
+Sơ đồ Hình 4.3 thể hiện cơ chế bảo mật quan trọng: Khi người dùng gửi yêu cầu đăng ký qua API \texttt{/auth/signup}, Controller trước tiên sẽ kiểm tra nếu trường \texttt{role} có giá trị \texttt{ROLE\_ADMIN} thì ngay lập tức ném ra ngoại lệ từ chối, ngăn chặn mọi nỗ lực leo thang đặc quyền từ bên ngoài. Mật khẩu được băm một chiều qua BCrypt trước khi ghi vào CSDL, đồng thời một giỏ hàng trống mới được tạo tự động để người dùng sẵn sàng mua hàng.
 
 \subsection{Biểu đồ Tuần tự: Giỏ hàng và Áp dụng Mã Giảm giá Ràng buộc}
-Quy trình tính toán khuyến mãi thông minh được mô tả trong Hình 4.3:
+Quy trình tính toán khuyến mãi thông minh được mô tả trong Hình 4.4:
 
 \begin{figure}{Biểu đồ tuần tự ca sử dụng Giỏ hàng và Áp dụng mã giảm giá ràng buộc}
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig_sequence_order_coupon.png}
 \end{figure}
 
-Sơ đồ Hình 4.3 làm rõ sự phối hợp hai lớp giữa Client và Server trong việc quản trị mã ưu đãi:
+Sơ đồ Hình 4.4 làm rõ sự phối hợp hai lớp giữa Client và Server trong việc quản trị mã ưu đãi:
 \begin{itemize}
     \item Phía Client thực hiện thẩm định trước các điều kiện đơn tối thiểu và tích hợp tính năng tự động gỡ bỏ mã (Auto-removal) nếu người dùng giảm số lượng món ăn khiến tổng tiền rớt xuống dưới ngưỡng tối thiểu.
     \item Phía Server tại \texttt{OrderServiceImpl} một lần nữa kiểm tra độc lập tính hợp lệ của mã, phạm vi áp dụng (theo nhà hàng hay toàn sàn) và áp dụng công thức an toàn biên \texttt{Math.max(0, Math.min(discount, applicableTotal))} để đảm bảo đơn hàng không bao giờ bị âm tiền hoặc bị gian lận.
 \end{itemize}
 
 \subsection{Biểu đồ Tuần tự: Thanh toán Đa phương thức (Stripe Checkout \& COD)}
-Luồng phân nhánh thanh toán đa phương thức an toàn được mô tả trong Hình 4.4:
+Luồng phân nhánh thanh toán đa phương thức an toàn được mô tả trong Hình 4.5:
 
 \begin{figure}{Biểu đồ tuần tự ca sử dụng Thanh toán Đa phương thức (Stripe Checkout \& COD)}
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig_sequence_stripe_payment.png}
 \end{figure}
 
-Hình 4.4 mô tả quá trình phân nhánh xử lý thông minh dựa trên \texttt{paymentMethod}: Nếu khách chọn \texttt{COD}, hệ thống lưu đơn hàng trạng thái \texttt{PENDING} và điều hướng ngay tới trang quản lý đơn (\texttt{payment\_url = null}). Nếu chọn \texttt{STRIPE}, máy chủ gọi Stripe SDK tạo Checkout Session theo số tiền sau giảm giá. Sau khi hoàn tất quẹt thẻ, trình duyệt chuyển về \texttt{/payment/success/:id} và gọi API callback \texttt{PUT /api/order/\{orderId\}/complete-payment} (đã được mở khóa \texttt{permitAll()} an toàn) để cập nhật dứt điểm trạng thái đơn hàng sang \texttt{PAID}.
+Hình 4.5 mô tả quá trình phân nhánh xử lý thông minh dựa trên \texttt{paymentMethod}: Nếu khách chọn \texttt{COD}, hệ thống lưu đơn hàng trạng thái \texttt{PENDING} và điều hướng ngay tới trang quản lý đơn (\texttt{payment\_url = null}). Nếu chọn \texttt{STRIPE}, máy chủ gọi Stripe SDK tạo Checkout Session theo số tiền sau giảm giá. Sau khi hoàn tất quẹt thẻ, trình duyệt chuyển về \texttt{/payment/success/:id} và gọi API callback \texttt{PUT /api/order/\{orderId\}/complete-payment} (đã được mở khóa \texttt{permitAll()} an toàn) để cập nhật dứt điểm trạng thái đơn hàng sang \texttt{PAID}.
 
 \subsection{Biểu đồ Tuần tự: Tiếp nhận và Kiểm soát Máy trạng thái Đơn hàng}
-Quy trình điều phối và bảo vệ trạng thái đơn hàng của chủ nhà hàng được thể hiện trong Hình 4.5:
+Quy trình điều phối và bảo vệ trạng thái đơn hàng của chủ nhà hàng được thể hiện trong Hình 4.6:
 
 \begin{figure}{Biểu đồ tuần tự ca sử dụng Tiếp nhận và Kiểm soát Máy trạng thái Đơn hàng}
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig_sequence_order_status.png}
 \end{figure}
 
-Sơ đồ Hình 4.5 mô tả quy trình sắp xếp đơn hàng mới nhất lên đầu (\texttt{ORDER BY createdAt DESC, id DESC}) và bộ kiểm soát chuyển trạng thái (\textbf{Order State Guard}): hệ thống chặn mọi thao tác chỉnh sửa đối với đơn đã kết thúc (\texttt{COMPLETED}/\texttt{CANCELLED}), ngăn đơn Stripe \texttt{PENDING} nhảy cóc sang bước giao hàng nếu chưa xác nhận thanh toán, đồng thời tự động kích hoạt \texttt{restoreStockForOrder()} hoàn kho khi đơn bị hủy và phát sóng cập nhật qua WebSocket.
+Sơ đồ Hình 4.6 mô tả quy trình sắp xếp đơn hàng mới nhất lên đầu (\texttt{ORDER BY createdAt DESC, id DESC}) và bộ kiểm soát chuyển trạng thái (\textbf{Order State Guard}): hệ thống chặn mọi thao tác chỉnh sửa đối với đơn đã kết thúc (\texttt{COMPLETED}/\texttt{CANCELLED}), ngăn đơn Stripe \texttt{PENDING} nhảy cóc sang bước giao hàng nếu chưa xác nhận thanh toán, đồng thời tự động kích hoạt \texttt{restoreStockForOrder()} hoàn kho khi đơn bị hủy và phát sóng cập nhật qua WebSocket.
 
 \subsection{Biểu đồ Tuần tự: Kiểm duyệt Đánh giá của Super Admin}
-Quy trình bảo vệ môi trường văn hóa số trên sàn được thể hiện trong Hình 4.6:
+Quy trình bảo vệ môi trường văn hóa số trên sàn được thể hiện trong Hình 4.7:
 
 \begin{figure}{Biểu đồ tuần tự ca sử dụng Kiểm duyệt đánh giá và nhà hàng vi phạm}
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig_sequence_admin_review.png}
 \end{figure}
 
-Hình 4.6 minh họa cách thức Quản trị viên tối cao rà soát các bài đánh giá theo từng nhà hàng và thực hiện quyền hạn gỡ bỏ bài viết độc hại hoặc đình chỉ các cơ sở nhà hàng có hành vi gian lận thông qua các API bảo vệ riêng biệt.
+Hình 4.7 minh họa cách thức Quản trị viên tối cao rà soát các bài đánh giá theo từng nhà hàng và thực hiện quyền hạn gỡ bỏ bài viết độc hại hoặc đình chỉ các cơ sở nhà hàng có hành vi gian lận thông qua các API bảo vệ riêng biệt.
 
 \subsection{Biểu đồ Tuần tự: Cảnh báo Đơn hàng WebSocket và Tác tử AI Copilot}
-Quy trình truyền thông thời gian thực và điều phối Tác tử AI hành động được mô tả trong Hình 4.7:
+Quy trình truyền thông thời gian thực và điều phối Tác tử AI hành động được mô tả trong Hình 4.8:
 
 \begin{figure}{Biểu đồ tuần tự Cảnh báo WebSocket và Tác tử AI Copilot Đa vai trò}
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig_sequence_websocket_ai.png}
 \end{figure}
 
-Sơ đồ Hình 4.7 minh họa sự phối hợp nhịp nhàng giữa hai luồng kỹ thuật nâng cao:
+Sơ đồ Hình 4.8 minh họa sự phối hợp nhịp nhàng giữa hai luồng kỹ thuật nâng cao:
 \begin{enumerate}
     \item \textbf{Luồng cảnh báo tức thời \& Trừ kho tự động:} Khi khách hàng tạo đơn hàng thành công tại \texttt{OrderServiceImpl}, hệ thống tự động kích hoạt dịch vụ kho \texttt{IngredientsServiceImpl.depleteStockForOrder} để khấu trừ định lượng nguyên liệu và ghi bản ghi biến động vào bảng \texttt{inventory\_log}. Ngay sau đó, đối tượng thông báo \texttt{OrderNotificationDTO} được đẩy tới \texttt{OrderWebSocketHandler.broadcastToRestaurant}. Tại trình duyệt của chủ nhà hàng, component \texttt{OrderNotificationListener.jsx} bắt sự kiện, gọi bộ tổng hợp âm thanh \texttt{playOrderChime()} tạo chuông ngân 3 nốt nhạc và cập nhật bảng đơn hàng tức thì mà không cần làm mới trang.
     \item \textbf{Luồng Tác tử AI Copilot Đa vai trò (Dual-Persona Agentic AI):} Khi Chủ quán (\texttt{restaurantId > 0}) hoặc Super Admin (\texttt{restaurantId = 0/null}) gửi truy vấn tại \texttt{AiCopilot.jsx}, dịch vụ \texttt{AiCopilotServiceImpl} thu thập chỉ số thực tế theo vai trò, gửi tới \textbf{Google Gemini 2.5 Flash} (hoặc tự động kích hoạt Động cơ Heuristic DSS dự phòng), đồng thời gọi \texttt{determineAgentAction()} để sinh kèm gói đề xuất hành động thuộc \textbf{Bộ 4 Tác tử AI Hành động 1-Click}:
@@ -945,18 +952,18 @@ Sơ đồ Hình 4.7 minh họa sự phối hợp nhịp nhàng giữa hai luồn
 \end{enumerate}
 
 \subsection{Biểu đồ Tuần tự: Tư vấn Ẩm thực Khách hàng AI Concierge (Menu Catalog RAG)}
-Quy trình truy xuất thực đơn thực tế và điều hướng đặt món thông minh cho khách hàng được minh họa trong Hình 4.8:
+Quy trình truy xuất thực đơn thực tế và điều hướng đặt món thông minh cho khách hàng được minh họa trong Hình 4.9:
 
 \begin{figure}{Biểu đồ tuần tự Tư vấn Ẩm thực Khách hàng qua AI Concierge (Menu Catalog RAG)}
 \centering
 \includegraphics[width=0.92\textwidth]{figures/fig_sequence_chatbot_rag.png}
 \end{figure}
 
-Hình 4.8 làm rõ cơ chế RAG phía ứng dụng khách hàng: ngay khi khởi tạo, \texttt{Chatbot.jsx} nạp ngữ cảnh món bán chạy (\texttt{/api/food/popular}) và các mã khuyến mãi hoạt động (\texttt{/api/coupons}) thông qua các endpoint công khai (\texttt{permitAll}). Khi thực khách đặt câu hỏi hoặc nhấn gợi ý, thuật toán đối sánh ngữ cảnh sẽ ghép đúng món ăn kèm ảnh thật, giá bán và mã giảm giá vào một thẻ tương tác có gắn deep-link \texttt{?foodId=\{id\}} để khách hàng đi thẳng tới đúng món tại trang nhà hàng.
+Hình 4.9 làm rõ cơ chế RAG phía ứng dụng khách hàng: ngay khi khởi tạo, \texttt{Chatbot.jsx} nạp ngữ cảnh món bán chạy (\texttt{/api/food/popular}) và các mã khuyến mãi hoạt động (\texttt{/api/coupons}) thông qua các endpoint công khai (\texttt{permitAll}). Khi thực khách đặt câu hỏi hoặc nhấn gợi ý, thuật toán đối sánh ngữ cảnh sẽ ghép đúng món ăn kèm ảnh thật, giá bán và mã giảm giá vào một thẻ tương tác có gắn deep-link \texttt{?foodId=\{id\}} để khách hàng đi thẳng tới đúng món tại trang nhà hàng.
 
 \section{Thiết kế Cơ sở Dữ liệu}
 \subsection{Mô hình Thực thể Liên kết Hoàn chỉnh (ERD)}
-Cơ sở dữ liệu của hệ thống được thiết kế theo chuẩn hóa dữ liệu quan hệ bậc ba (3NF) gồm 21 bảng/thực thể, đáp ứng toàn vẹn các mối quan hệ nghiệp vụ phức tạp của nền tảng ẩm thực. Sơ đồ thực thể liên kết được trình bày trong Hình 4.9:
+Cơ sở dữ liệu của hệ thống được thiết kế theo chuẩn hóa dữ liệu quan hệ bậc ba (3NF) gồm 21 bảng/thực thể, đáp ứng toàn vẹn các mối quan hệ nghiệp vụ phức tạp của nền tảng ẩm thực. Sơ đồ thực thể liên kết được trình bày trong Hình 4.10:
 
 \begin{figure}{Mô hình Thực thể Liên kết (ERD) Hoàn chỉnh 21 Bảng của Hệ thống}
 \centering
@@ -972,7 +979,7 @@ Dưới đây là từ điển dữ liệu đặc tả cấu trúc của các b�
 \begin{table}[!htbp]{Từ điển dữ liệu bảng User}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{2.3cm}|>{\raggedright\arraybackslash}p{3.3cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Ràng buộc} & \textbf{Mô tả ý nghĩa} \\ \hline
 id & BIGINT & PK, Auto Increment & Khóa chính định danh người dùng \\ \hline
@@ -987,7 +994,7 @@ role & VARCHAR(50) & Not Null & Vai trò người dùng (ROLE\_CUSTOMER, ...) \\
 \begin{table}[!htbp]{Từ điển dữ liệu bảng Restaurant}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{2.3cm}|>{\raggedright\arraybackslash}p{3.3cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Ràng buộc} & \textbf{Mô tả ý nghĩa} \\ \hline
 id & BIGINT & PK, Auto Increment & Khóa chính định danh nhà hàng \\ \hline
@@ -1003,12 +1010,13 @@ mobile & VARCHAR(50) & Nullable & Số điện thoại hotline của nhà hàng 
 registrationDate & DATETIME & Not Null & Thời điểm đăng ký tham gia sàn \\ \hline
 \end{tabularx}
 \end{table}
+\clearpage
 
 % Bảng Food
 \begin{table}[!htbp]{Từ điển dữ liệu bảng Food}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{2.3cm}|>{\raggedright\arraybackslash}p{3.3cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Ràng buộc} & \textbf{Mô tả ý nghĩa} \\ \hline
 id & BIGINT & PK, Auto Increment & Khóa chính định danh món ăn \\ \hline
@@ -1028,7 +1036,7 @@ creationDate & DATETIME & Not Null & Thời điểm tạo món ăn trên hệ th
 \begin{table}[!htbp]{Từ điển dữ liệu bảng IngredientsItem (Định lượng tồn kho)}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{2.3cm}|>{\raggedright\arraybackslash}p{3.3cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Ràng buộc} & \textbf{Mô tả ý nghĩa} \\ \hline
 id & BIGINT & PK, Auto Increment & Khóa chính định danh nguyên liệu \\ \hline
@@ -1041,12 +1049,13 @@ unit & VARCHAR(50) & Default 'phần' & Đơn vị đo lường (kg, gram, phầ
 minThreshold & DOUBLE & Default 5.0 & Ngưỡng định lượng cảnh báo sắp hết hàng \\ \hline
 \end{tabularx}
 \end{table}
+\clearpage
 
 % Bảng InventoryLog
 \begin{table}[!htbp]{Từ điển dữ liệu bảng InventoryLog (Nhật ký xuất nhập tồn kho)}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{2.3cm}|>{\raggedright\arraybackslash}p{3.3cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Ràng buộc} & \textbf{Mô tả ý nghĩa} \\ \hline
 id & BIGINT & PK, Auto Increment & Khóa chính định danh bản ghi nhật ký kho \\ \hline
@@ -1067,7 +1076,7 @@ createdAt & DATETIME & Not Null & Dấu thời gian ghi nhận biến động \\
 \begin{table}[!htbp]{Từ điển dữ liệu bảng Cart và CartItem}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{2.3cm}|>{\raggedright\arraybackslash}p{3.3cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Ràng buộc} & \textbf{Mô tả ý nghĩa} \\ \hline
 \multicolumn{4}{|c|}{\textbf{Bảng Cart}} \\ \hline
@@ -1082,12 +1091,13 @@ quantity & INT & Default 1 & Số lượng món ăn khách đặt \\ \hline
 totalPrice & BIGINT & Not Null & Thành tiền = Giá món $\times$ Số lượng \\ \hline
 \end{tabularx}
 \end{table}
+\clearpage
 
 % Bảng Order
 \begin{table}[!htbp]{Từ điển dữ liệu bảng Order}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{2.3cm}|>{\raggedright\arraybackslash}p{3.3cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Ràng buộc} & \textbf{Mô tả ý nghĩa} \\ \hline
 id & BIGINT & PK, Auto Increment & Khóa chính định danh đơn hàng \\ \hline
@@ -1098,8 +1108,8 @@ totalAmount & BIGINT & Not Null & Tổng tiền đơn hàng trước khi trừ �
 discountAmount & BIGINT & Default 0 & Số tiền được chiết khấu từ mã ưu đãi \\ \hline
 totalPrice & BIGINT & Not Null & Số tiền thanh toán thực tế cuối cùng \\ \hline
 couponCode & VARCHAR(50) & Nullable & Mã giảm giá đã được áp dụng vào đơn \\ \hline
-orderStatus & VARCHAR(50) & Not Null & Trạng thái: PENDING, PAID, OUT\_FOR\_DELIVERY... \\ \hline
-paymentMethod & VARCHAR(20) & Default 'STRIPE' & Phương thức thanh toán: STRIPE hoặc COD \\ \hline
+orderStatus & VARCHAR(50) & Not Null & Trạng thái đơn hàng (PENDING, PAID, OUT\_FOR\_DELIVERY...) \\ \hline
+paymentMethod & VARCHAR(20) & Default 'STRIPE' & Phương thức thanh toán (STRIPE hoặc COD) \\ \hline
 createdAt & DATETIME & Not Null & Thời điểm khởi tạo đơn hàng \\ \hline
 totalItem & INT & Not Null & Tổng số lượng món ăn có trong đơn \\ \hline
 \end{tabularx}
@@ -1109,7 +1119,7 @@ totalItem & INT & Not Null & Tổng số lượng món ăn có trong đơn \\ \h
 \begin{table}[!htbp]{Từ điển dữ liệu bảng Events (Sự kiện đồng bộ Mã ưu đãi)}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{2.3cm}|>{\raggedright\arraybackslash}p{3.3cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Ràng buộc} & \textbf{Mô tả ý nghĩa} \\ \hline
 id & BIGINT & PK, Auto Increment & Khóa chính định danh sự kiện nhà hàng \\ \hline
@@ -1124,12 +1134,13 @@ discountValue & BIGINT & Default 0 & Giá trị ưu đãi (\% hoặc VNĐ) \\ \h
 minimumOrderValue & BIGINT & Default 0 & Giá trị đơn tối thiểu được hưởng ưu đãi \\ \hline
 \end{tabularx}
 \end{table}
+\clearpage
 
 % Bảng Coupon
 \begin{table}[!htbp]{Từ điển dữ liệu bảng Coupon}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{2.3cm}|>{\raggedright\arraybackslash}p{3.3cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Ràng buộc} & \textbf{Mô tả ý nghĩa} \\ \hline
 id & BIGINT & PK, Auto Increment & Khóa chính định danh mã giảm giá \\ \hline
@@ -1146,7 +1157,7 @@ active & BOOLEAN & Default True & Trạng thái mã còn hiệu lực sử dụn
 \begin{table}[!htbp]{Từ điển dữ liệu bảng Review}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|l|l|l|X|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{2.3cm}|>{\raggedright\arraybackslash}p{3.3cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Ràng buộc} & \textbf{Mô tả ý nghĩa} \\ \hline
 id & BIGINT & PK, Auto Increment & Khóa chính định danh bài đánh giá \\ \hline
@@ -1182,7 +1193,7 @@ Bảng 5.1 tổng hợp các thư viện và khung ứng dụng chính phục v�
 \begin{table}[!htbp]{Danh mục các thư viện và công nghệ chính được sử dụng}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|l|l|X|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{4.2cm}|>{\raggedright\arraybackslash}p{2.2cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên Thư viện / Công cụ} & \textbf{Phân hệ} & \textbf{Chức năng kỹ thuật chính} \\ \hline
 Spring Boot 3.4.0 & Backend & Khung ứng dụng chính, quản lý IoC/DI và máy chủ nhúng \\ \hline
@@ -1648,13 +1659,14 @@ const handleLogoClick = () => {
 \section{Đánh giá Thực nghiệm và Đo đạc Hiệu năng Hệ thống}
 Để kiểm chứng tính khả thi, độ ổn định và giá trị học thuật của hệ thống trong điều kiện vận hành thực tế, khóa luận đã thiết kế và thực hiện đo đạc định lượng toàn diện trên cả hai bình diện: Hiệu năng hạ tầng phân tán (Độ trễ truyền thông WebSocket, Tính nhất quán trừ kho ACID, Độ sẵn sàng của AI Copilot phòng thủ hai tầng) và Bộ ba Đánh giá Thực nghiệm Trí tuệ Nhân tạo \& Giải thuật Chuẩn Khoa học Máy tính (Kiểm duyệt nội dung NLP, Tìm kiếm món ăn ngữ nghĩa Semantic Search, và Tối ưu hóa ràng buộc tổ hợp mã ưu đãi).
 
+\clearpage
 \subsection{Đo đạc Độ trễ Truyền thông Đơn hàng: WebSocket so với HTTP Polling}
 Nhằm chứng minh sự vượt trội của giải pháp WebSocket so với phương pháp kéo dữ liệu định kỳ truyền thống (HTTP Long-Polling với chu kỳ 2 giây), một kịch bản đo đạc thực tế gồm 100 đơn hàng liên tiếp được kích hoạt từ phía khách hàng và ghi nhận thời điểm máy chủ phát tín hiệu so với thời điểm máy khách của chủ nhà hàng nhận được thông báo kèm kích hoạt chuông âm thanh Web Audio API. Kết quả đo đạc được tổng hợp trong Bảng 5.2:
 
 \begin{table}[!htbp]{So sánh hiệu năng giữa giao thức WebSocket và HTTP Polling}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|X|c|c|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{5.5cm}|>{\centering\arraybackslash}p{4.2cm}|>{\centering\arraybackslash}X|}
 \hline
 \textbf{Chỉ số Đánh giá} & \textbf{HTTP Polling (Chu kỳ 2s)} & \textbf{Spring WebSocket (Đề tài)} \\ \hline
 Độ trễ trung bình tiếp nhận đơn (Latency) & 1.526,4 ms & \textbf{26,5 ms} \\ \hline
@@ -1669,13 +1681,14 @@ Mức chiếm dụng CPU máy chủ (100 Client đồng thời) & 14,8\% & \text
 
 Số liệu thực nghiệm tại Bảng 5.2 khẳng định kênh WebSocket do đề tài thiết kế giúp giảm độ trễ tiếp nhận đơn hàng xuống chỉ còn \textbf{26,5 ms} (nhanh gấp \textbf{57,6 lần} so với HTTP Polling), đồng thời triệt tiêu hoàn toàn 100\% các yêu cầu thăm dò rác, tiết kiệm hơn 93,8\% lưu lượng băng thông mạng và giảm tải CPU máy chủ xuống mức tối thiểu (1,2\%).
 
+\clearpage
 \subsection{Đo đạc Tính Nhất quán và Khả năng Chịu tải của Cơ chế Trừ Kho Tự động ACID}
 Tính toàn vẹn dữ liệu tồn kho là bài toán sống còn trong thương mại ẩm thực nhằm ngăn ngừa hiện tượng bán vượt số lượng thực tế (Overselling). Đề tài tiến hành kịch bản kiểm thử tải đa luồng (Stress Testing) bằng Apache JMeter: mô phỏng 100 giao dịch đặt hàng đồng thời truy cập vào cùng một món ăn có cấu thành từ nguyên liệu tồn kho ban đầu là 500 đơn vị (mỗi đơn hàng tiêu thụ định lượng 2 đơn vị). Kết quả đo đạc kiểm định tính toàn vẹn ACID được trình bày trong Bảng 5.3:
 
 \begin{table}[!htbp]{Kết quả kiểm thử tính nhất quán khấu trừ kho đa luồng (ACID Concurrency Test)}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|X|c|c|c|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{5.2cm}|>{\centering\arraybackslash}p{2.8cm}|>{\centering\arraybackslash}p{2.8cm}|>{\centering\arraybackslash}X|}
 \hline
 \textbf{Kịch bản Kiểm thử} & \textbf{10 Luồng đồng thời} & \textbf{50 Luồng đồng thời} & \textbf{100 Luồng đồng thời} \\ \hline
 Số lượng giao dịch thành công & 10 / 10 (100\%) & 50 / 50 (100\%) & 100 / 100 (100\%) \\ \hline
@@ -1690,13 +1703,14 @@ Hiện tượng xung đột khóa chết (Deadlock) & Không phát sinh & Không
 
 Kết quả thực nghiệm tại Bảng 5.3 chứng minh cơ chế quản lý giao dịch Spring Data JPA kết hợp cơ chế khóa tự nhiên của MySQL đảm bảo tính toàn vẹn tuyệt đối: Dưới áp lực 100 yêu cầu đồng thời, thời gian hoàn tất trung bình chỉ đạt \textbf{483 ms / giao dịch}, không phát sinh bất kỳ hiện tượng Deadlock nào và độ lệch tồn kho bằng \textbf{0\%}, toàn bộ 100 giao dịch đều được ghi vết minh bạch vào nhật ký \texttt{InventoryLog}.
 
+\clearpage
 \subsection{Đo đạc Thời gian Phản hồi và Tính Sẵn sàng của Trợ lý AI Copilot}
 Trợ lý AI Copilot được thiết kế theo kiến trúc phòng thủ hai tầng: tầng 1 là mô hình Google Gemini 2.5 Flash Cloud API phục vụ phân tích ngôn ngữ tự nhiên chuyên sâu; tầng 2 là Động cơ Heuristic DSS nội bộ hoạt động ngoại tuyến (Offline) dựa trên dữ liệu thống kê SQL thời gian thực (hỗ trợ Dual-Persona cho cả Chủ quán và Super Admin). Bảng 5.4 thể hiện số liệu so sánh hiệu năng giữa hai tầng:
 
 \begin{table}[!htbp]{Đo đạc hiệu năng Trợ lý AI Copilot: Gemini 2.5 Flash Cloud so với Heuristic DSS Fallback}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|X|c|c|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{4.8cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tiêu chí Đánh giá} & \textbf{Tầng 1: Google Gemini 2.5 Flash} & \textbf{Tầng 2: Heuristic DSS Fallback} \\ \hline
 Thời gian phản hồi trung bình (Response Time) & 8,01 giây & \textbf{3,8 ms (0,0038s)} \\ \hline
@@ -1710,6 +1724,7 @@ Chất lượng và phong cách câu trả lời & Văn phong tự nhiên, linh 
 
 Số liệu đo đạc làm nổi bật tính thực tiễn của giải pháp: Khi có kết nối mạng ổn định, Gemini 2.5 Flash mang lại trải nghiệm tư vấn thông minh, linh hoạt trong khoảng \textbf{8,01 giây}. Ngược lại, khi xảy ra sự cố nghẽn mạng quốc tế hoặc vượt hạn mức truy vấn, Động cơ Heuristic DSS lập tức phản hồi trong chỉ \textbf{3,8 mili-giây}, đồng thời vẫn bảo đảm sinh đầy đủ các đề xuất Tác tử AI Hành động (\texttt{agentAction}) với tính sẵn sàng \textbf{100\%}.
 
+\clearpage
 \subsection{Đánh giá Thực nghiệm Kiểm duyệt Bình luận Tự động (NLP Content Moderation \& AI Sentinel)}
 Nhằm giải quyết triệt để vấn nạn ngôn ngữ phi chuẩn, chửi thề viết tắt (teencode), lối nói mỉa mai châm biếm (sarcasm) và các phản ánh liên quan tới an toàn thực phẩm mà bộ lọc từ cấm truyền thống (Keyword Blacklist Regex) thường bỏ sót, đề tài đã xây dựng bộ dữ liệu thực nghiệm chuẩn \texttt{dataset\_toxic\_reviews.json} gồm 200 mẫu bình luận tiếng Việt được gán nhãn thủ công (100 mẫu vi phạm thuộc 3 nhóm: teencode lăng mạ, dị vật/ngộ độc/mất vệ sinh, mỉa mai cay độc; và 100 mẫu bình thường gồm lời khen, câu hỏi trung tính, đặc biệt là các góp ý tiêu cực nhưng mang tính xây dựng). 
 
@@ -1718,7 +1733,7 @@ Bảng 5.5 tổng hợp kết quả đo đạc định lượng đối chiếu g
 \begin{table}[!htbp]{So sánh hiệu năng kiểm duyệt bình luận giữa Baseline Blacklist và Mô hình NLP/AI}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|X|c|c|c|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{4.6cm}|>{\centering\arraybackslash}p{3.2cm}|>{\centering\arraybackslash}p{3.0cm}|>{\centering\arraybackslash}X|}
 \hline
 \textbf{Chỉ số Đánh giá (Metrics)} & \textbf{Baseline (Keyword Blacklist)} & \textbf{Mô hình NLP Đề xuất} & \textbf{Mức độ Cải thiện} \\ \hline
 Độ chính xác toàn diện (Accuracy) & 63,50\% & \textbf{91,50\%} & \textbf{+28,00\%} \\ \hline
@@ -1736,6 +1751,7 @@ Phân tích ma trận nhầm lẫn (Confusion Matrix) khẳng định:
     \item \textbf{Mô hình NLP đề xuất} ($TP = 87$, $FP = 4$, $TN = 96$, $FN = 13$): Nhận diện thành công 87\% tổng số vi phạm, nâng độ bao phủ teencode lên \textbf{91,4\%}, an toàn thực phẩm lên \textbf{88,6\%} và mỉa mai lên \textbf{80,0\%}. Đặc biệt, mô hình duy trì độ đặc hiệu 96,0\%, không bị nhầm lẫn đối với các bình luận phê bình văn minh, đồng thời hoàn tất kiểm thử trong thời gian siêu tốc \textbf{0,07 ms}.
 \end{itemize}
 
+\clearpage
 \subsection{Đánh giá Thực nghiệm Tìm kiếm Món ăn Ngữ nghĩa (Semantic Search \& Intent Expansion)}
 Để giải quyết bài toán khách hàng tìm kiếm ẩm thực bằng các câu hỏi tự nhiên theo ngữ cảnh (thời tiết, khẩu vị, chế độ dinh dưỡng, hoàn cảnh ăn uống), đề tài xây dựng bộ dữ liệu \texttt{dataset\_food\_search.json} gồm 60 câu truy vấn đa chiều được thử nghiệm đối soát trực tiếp trên kho dữ liệu thực tế gồm 60+ món ăn thuộc hệ thống \texttt{anh\_food\_yt}. Kết quả được so sánh với hai phương pháp cơ sở: Tìm kiếm chuỗi SQL chính xác (\texttt{WHERE name LIKE '\%query\%'}) và Tìm kiếm theo từ đơn lẻ (\texttt{Token-based LIKE}).
 
@@ -1744,7 +1760,7 @@ Bảng 5.6 trình bày các chỉ số chuẩn trong Truy hồi Thông tin (Info
 \begin{table}[!htbp]{So sánh chỉ số truy hồi món ăn (IR Metrics) giữa các phương pháp tìm kiếm}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|X|c|c|c|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{4.8cm}|>{\centering\arraybackslash}p{2.8cm}|>{\centering\arraybackslash}p{2.8cm}|>{\centering\arraybackslash}X|}
 \hline
 \textbf{Chỉ số Truy hồi (IR Metrics)} & \textbf{Baseline 1 (SQL Exact)} & \textbf{Baseline 2 (SQL Token)} & \textbf{Mô hình Semantic AI} \\ \hline
 Tỷ lệ không có kết quả (Zero-Result Rate) & 100,0\% & 20,0\% & \textbf{0,0\% (Khắc phục triệt để)} \\ \hline
@@ -1764,6 +1780,7 @@ Số liệu tại Bảng 5.6 chứng minh:
     \item Mô hình \textbf{Semantic AI đề xuất} triệt tiêu hoàn toàn tỷ lệ rỗng ($0,0\%$), đưa \textbf{Hit Rate @ 3 lên tới 96,67\%} và chỉ số \textbf{MRR đạt 0,851} với độ trễ xử lý chỉ \textbf{0,39 ms}, chứng minh năng lực thấu hiểu sâu sắc nhu cầu tự nhiên của thực khách.
 \end{itemize}
 
+\clearpage
 \subsection{Đánh giá Thực nghiệm Tối ưu hóa Tổ hợp Mã Giảm giá và Kích cầu Giỏ hàng}
 Để chứng minh giá trị kinh tế và giải thuật của phân hệ khuyến mãi, đề tài đã thiết kế tập dữ liệu \texttt{dataset\_voucher\_cases.json} gồm 40 kịch bản giỏ hàng thực tế với giá trị biến thiên từ 75.000đ đến 850.000đ thử nghiệm với 6 mã voucher có ràng buộc phức tạp (giảm cố định, giảm phần trăm có chặn trần, freeship). Phương pháp Tối ưu hóa Ràng buộc đề xuất (Constraint Solver) được đối chiếu với: Lựa chọn ngẫu nhiên của khách (Random Pick) và Thuật toán tham lam chọn mã đầu tiên hợp lệ (First-Fit Greedy).
 
@@ -1772,7 +1789,7 @@ Bảng 5.7 tổng hợp kết quả đo đạc thực nghiệm:
 \begin{table}[!htbp]{So sánh hiệu quả tối ưu hóa mã giảm giá và kích cầu giỏ hàng}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|X|c|c|c|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{4.8cm}|>{\centering\arraybackslash}p{2.8cm}|>{\centering\arraybackslash}p{2.8cm}|>{\centering\arraybackslash}X|}
 \hline
 \textbf{Tiêu chí Đánh giá} & \textbf{Baseline 1 (Random Pick)} & \textbf{Baseline 2 (First-Fit)} & \textbf{Thuật toán Đề xuất} \\ \hline
 Tỷ lệ chọn đúng mã tối ưu nhất & 35,0\% & 10,0\% & \textbf{100,0\%} \\ \hline
@@ -1791,6 +1808,7 @@ Phân tích kết quả thực nghiệm tại Bảng 5.7:
     \item Cơ chế Phân tích Khoảng cách Ngưỡng (Upsell Gap Analysis) phát hiện cơ hội bù món ở \textbf{52,5\%} tổng số đơn hàng, giúp các nhà hàng đối tác gia tăng doanh thu trung bình mỗi đơn (\textbf{AOV Lift}) thêm \textbf{14.048 đ}, tạo ra giải pháp đôi bên cùng có lợi (Win-Win) giữa thực khách và chủ quán.
 \end{itemize}
 
+\clearpage
 \subsection{Tổng kết Định lượng và Đóng góp Học thuật của Phân hệ AI}
 Kết quả đo đạc định lượng trên 3 bộ benchmark độc lập khẳng định rõ ràng:
 \begin{enumerate}
@@ -1801,6 +1819,7 @@ Kết quả đo đạc định lượng trên 3 bộ benchmark độc lập kh�
 \section{Giao diện Một số Màn hình Chính của Hệ thống}
 Hệ thống được thiết kế hoàn chỉnh với hơn 20 màn hình chức năng chạy thực tế. Dưới đây là ảnh chụp màn hình thực tế từ hệ thống đang vận hành đại diện cho 6 phân hệ trọng yếu nhất:
 
+\clearpage
 \subsection{Màn hình Trang chủ Hệ thống (Customer Home Screen)}
 Màn hình trang chủ của hệ thống được minh họa trong Hình 5.1:
 
@@ -1811,6 +1830,7 @@ Màn hình trang chủ của hệ thống được minh họa trong Hình 5.1:
 
 Hình 5.1 là ảnh chụp thực tế giao diện Dark Mode của ứng dụng: Phía trên là thanh điều hướng (Navbar) màu hồng nhận diện thương hiệu cùng các nút tìm kiếm, đăng nhập/hồ sơ và giỏ hàng. Khu vực Banner nổi bật với tiêu đề thương hiệu và thanh tìm kiếm thông minh hỗ trợ cả khách vãng lai (Guest Browsing). Ngay bên dưới là Carousel ``Hôm Nay Ăn Gì? Món Bán Chạy Nhất'' hiển thị hình ảnh chân thực của các đặc sản Việt Nam (Cơm sườn bì chả, Phở bò Bát Đàn, Cà phê phin...) cùng lưới 4 cột khám phá 16 nhà hàng và các thẻ mã giảm giá kích hoạt 1-Click.
 
+\clearpage
 \subsection{Màn hình Giỏ hàng và Thanh toán Đa phương thức (Cart \& Checkout Screen)}
 Giao diện quản lý giỏ hàng và chốt đơn được minh họa trong Hình 5.2:
 
@@ -1821,6 +1841,7 @@ Giao diện quản lý giỏ hàng và chốt đơn được minh họa trong H�
 
 Hình 5.2 thể hiện màn hình Giỏ hàng thực tế: Cột bên trái liệt kê các món ăn kèm giá tiền (ví dụ: Cơm Sườn Bì Chả, Cơm Tấm Ba Rọi Nướng Giòn), nút điều chỉnh số lượng và hộp ``Khuyến mãi / Mã giảm giá'' kèm 5 chip gợi ý áp dụng nhanh 1-Click (\texttt{GIAM10\%}, \texttt{GIAM20K}, \texttt{COMTAM15}...). Cột bên phải cho phép chọn nhanh địa chỉ giao nhận đã lưu và lựa chọn phương thức thanh toán giữa \textbf{Thanh toán Online (Stripe)} hoặc \textbf{Tiền mặt (COD)} trước khi xác nhận đặt hàng.
 
+\clearpage
 \subsection{Bảng Điều khiển Quản trị Nhà hàng (Restaurant Owner Dashboard)}
 Giao diện dành cho đối tác chủ quán ăn được mô tả trong Hình 5.3:
 
@@ -1831,6 +1852,7 @@ Giao diện dành cho đối tác chủ quán ăn được mô tả trong Hình 
 
 Hình 5.3 minh họa bảng điều khiển thực tế của chủ nhà hàng (\textit{Tiệm Cơm Tấm Sài Gòn - Đặc Biệt}): Bên trái là thanh Sidebar cố định hài hòa dưới Navbar gồm đầy đủ các phân hệ nghiệp vụ (\textit{Tổng quan, Trợ lý AI Copilot, Đơn hàng, Thực đơn, Danh mục món, Nguyên liệu, Sự kiện, Thông tin quán}). Khu vực nội dung hiển thị công tắc trạng thái mở nhận đơn Online, thẻ liên kết nhanh AI Business Copilot, 4 thẻ KPI thời gian thực (Doanh thu \texttt{2,922,000đ}, 54 đơn hàng, 10 món ăn, cảnh báo nguyên liệu cạn kho), các biểu đồ doanh thu 7 ngày và cơ cấu đơn hàng vẽ bằng Recharts, cùng chỉ báo WebSocket ``Real-time Connected'' ở góc dưới màn hình.
 
+\clearpage
 \subsection{Bảng Điều khiển Kiểm duyệt Đánh giá Toàn sàn của Super Admin}
 Giao diện dành riêng cho quản trị viên tối cao sàn thương mại được mô tả trong Hình 5.4:
 
@@ -1841,6 +1863,7 @@ Giao diện dành riêng cho quản trị viên tối cao sàn thương mại đ
 
 Hình 5.4 ghi nhận phân hệ kiểm duyệt của Super Admin: Thanh Sidebar bên trái cung cấp các mục điều hành cấp sàn (\textit{Tổng quan, Trợ lý AI Copilot, Người dùng, Đánh giá, Mã giảm giá, Doanh thu}). Giao diện cho phép lọc chọn từng nhà hàng đối tác trên toàn sàn (ví dụ: \textit{Tiệm Cơm Tấm Sài Gòn - Đặc Biệt (ID: 1)}), thống kê điểm trung bình (4.7/5 sao, 65 lượt đánh giá) và liệt kê chi tiết các bình luận kèm nhãn \texttt{Chip} tên món ăn được nhận xét cùng nút gỡ bỏ các đánh giá vi phạm quy chuẩn cộng đồng.
 
+\clearpage
 \subsection{Màn hình Trợ lý Quản trị \& Tác tử Hành động AI Copilot}
 Giao diện trợ lý AI chuyên biệt cho quản trị viên được minh họa trong Hình 5.5:
 
@@ -1851,6 +1874,7 @@ Giao diện trợ lý AI chuyên biệt cho quản trị viên được minh h�
 
 Hình 5.5 cho thấy màn hình \textbf{AI Business Copilot} đang vận hành thực tế: Phía trên là hàng 4 thẻ KPI đồng bộ tức thời từ MySQL (Doanh thu tích lũy \texttt{2.922.000 đ}, 34/54 đơn hoàn thành, điểm đánh giá \texttt{4.7/5.0}, cảnh báo \texttt{1 mục đang tắt}). Khu vực trung tâm hiển thị phân tích chi tiết định dạng Markdown kết hợp nổi bật là thẻ \textbf{``TÁC TỬ AI HÀNH ĐỘNG''} đề xuất tạm ngưng phục vụ món \textit{Cơm Sườn Bì Chả} do cạn nguyên liệu sườn cây, cung cấp nút hành động trực tiếp \textit{``Tác tử AI: Tạm khóa món ăn trên Menu''} để chủ quán thực thi ngay chỉ với 1 lần nhấn.
 
+\clearpage
 \subsection{Giao diện Trợ lý Ẩm thực Khách hàng AI Concierge (Menu Catalog RAG)}
 Giao diện Widget Chatbot thông minh phục vụ khách hàng được minh họa trong Hình 5.6:
 
