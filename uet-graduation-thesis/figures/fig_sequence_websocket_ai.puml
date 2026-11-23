@@ -33,7 +33,7 @@ else Quá hạn / Mất kết nối / Chưa cấu hình Key
     aiSvc -> aiSvc : generateHeuristicBusinessInsight() (Fallback DSS < 5ms)
 end
 
-aiSvc -> aiSvc : determineAgentAction()\n-> Sinh payload LOCK_FOOD_AVAILABILITY (Owner)\nhoặc MODERATE_REVIEW (Super Admin)
+aiSvc -> aiSvc : determineAgentAction()\n-> Sinh payload LOCK_FOOD_AVAILABILITY / CREATE_RESTAURANT_COUPON (Owner)\nhoặc MODERATE_REVIEW / CREATE_GLOBAL_COUPON (Super Admin)
 aiSvc --> clientUI : HTTP 200 OK (AiChatResponse + agentAction)
 deactivate aiSvc
 
@@ -44,9 +44,15 @@ opt Người dùng nhấn nút thực thi Tác tử AI 1-Click
     alt Owner: Tạm khóa món cạn kho
         clientUI -> coreCtrl : PUT /api/admin/food/{foodId}
         coreCtrl -> db : Cập nhật available = false (Đồng bộ Menu khách)
-    else Super Admin: Gỡ đánh giá vi phạm
+    else Owner: Phát hành mã tri ân khách hàng
+        clientUI -> coreCtrl : POST /api/admin/coupons/restaurant/{restaurantId}
+        coreCtrl -> db : Lưu / Cập nhật mã TRIAN_AI (Giảm 15%)
+    else Super Admin: Gỡ đánh giá vi phạm (Kèm Self-healing Sentinel)
         clientUI -> coreCtrl : DELETE /api/reviews/{reviewId}
         coreCtrl -> db : Xóa Review vi phạm & Phục hồi CSAT
+    else Super Admin: Kích hoạt Mega Sale toàn sàn
+        clientUI -> coreCtrl : POST /api/admin/coupons/global
+        coreCtrl -> db : Lưu / Cập nhật mã FREESHIP_AI (Freeship 15k)
     end
     coreCtrl --> clientUI : HTTP 200 OK -> Hiển thị xác nhận đã thực thi
 end

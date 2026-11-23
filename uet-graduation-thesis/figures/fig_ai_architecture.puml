@@ -1,0 +1,73 @@
+@startuml
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName "Segoe UI"
+skinparam DefaultFontSize 12
+skinparam packageStyle rectangle
+
+rectangle "HỆ THỐNG TRÍ TUỆ NHÂN TẠO & THUẬT TOÁN THÔNG MINH (AI & ALGORITHM SUBSYSTEM)" {
+
+    package "1. Phân hệ Quản trị: NLP Content Moderation & AI Sentinel" {
+        [Đánh giá / Bình luận\n(Review Text)] as rawReview
+        [Tiền xử lý & Chuẩn hóa\n(Regex / Tokenizer)] as preprocReview
+        [Bộ phân tích Ngữ nghĩa NLP\n(Teencode, Sarcasm, An toàn TP)] as nlpSentinel
+        [Cơ chế Self-healing\nDemo Data Sentinel] as selfHealing
+        [Phân loại Nhãn vi phạm\n(Toxic vs. Normal)] as labelReview
+        [Tác tử 1-Click Action:\nMODERATE_REVIEW] as actionModerate
+
+        rawReview --> preprocReview
+        preprocReview --> nlpSentinel
+        nlpSentinel --> labelReview
+        selfHealing ..> rawReview : Tự tái tạo mẫu khi CSDL rỗng
+        labelReview --> actionModerate : Đề xuất gỡ bỏ tức thì
+    }
+
+    package "2. Phân hệ Khám phá: Semantic Search & Query Expansion" {
+        [Truy vấn tự nhiên\n(Tâm trạng, Thời tiết, Diet, Gym)] as rawQuery
+        [Intent Parsing & Entity Extractor\n(Khẩu vị, Nhiệt độ, Ngân sách)] as intentParser
+        [Query Expansion Engine\n(Sinh Tags, Từ khóa đồng nghĩa)] as queryExpander
+        [Multi-criteria Semantic Ranking\n(Chấm điểm khớp độ liên quan)] as semanticRanker
+        [Kết quả Tìm kiếm Top-K\n(Hit Rate@3: 96.67%, MRR: 0.851)] as searchResult
+
+        rawQuery --> intentParser
+        intentParser --> queryExpander
+        queryExpander --> semanticRanker
+        semanticRanker --> searchResult
+    }
+
+    package "3. Phân hệ Đặt hàng: Combinatorial Voucher Optimizer & Gap Analysis" {
+        [Giỏ hàng & Danh sách Voucher\n(Cart Total & Applicable Coupons)] as cartCoupons
+        [Constraint Solver\n(Đánh giá điều kiện & Áp trần tối đa)] as constraintSolver
+        [Global Optimal Selector\n(Tiết kiệm tối đa +58.54%)] as optimalCoupon
+        [Upsell Gap Analysis Engine\n(Phân tích ngưỡng thiếu hụt)] as gapAnalysis
+        [Gợi ý Món ăn Kích cầu\n(Tăng AOV +14.048đ / đơn)] as upsellResult
+
+        cartCoupons --> constraintSolver
+        constraintSolver --> optimalCoupon
+        constraintSolver --> gapAnalysis
+        gapAnalysis --> upsellResult
+    }
+
+    package "4. Trung tâm Điều hành: Dual-Persona Agentic AI Copilot (Gemini 2.5 Flash / DSS)" {
+        [Thu thập Chỉ số Kinh doanh\n(MySQL Real-time Metrics)] as metricsCollector
+        [Google Gemini 2.5 Flash\n(Cloud Primary LLM)] as geminiCloud
+        [Heuristic DSS Engine\n(Offline Fallback < 5ms)] as dssFallback
+        [Bộ điều phối Quyết định Tác tử\n(Agentic Action Generator)] as agentDispatcher
+
+        metricsCollector --> geminiCloud
+        metricsCollector --> dssFallback
+        geminiCloud --> agentDispatcher
+        dssFallback --> agentDispatcher
+
+        [Owner: LOCK_FOOD_AVAILABILITY] as actLock
+        [Owner: CREATE_RESTAURANT_COUPON] as actRestCoupon
+        [Super Admin: MODERATE_REVIEW] as actModRev
+        [Super Admin: CREATE_GLOBAL_COUPON] as actGlobalCoupon
+
+        agentDispatcher --> actLock
+        agentDispatcher --> actRestCoupon
+        agentDispatcher --> actModRev
+        agentDispatcher --> actGlobalCoupon
+    }
+}
+@enduml

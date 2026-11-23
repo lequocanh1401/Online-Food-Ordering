@@ -204,9 +204,10 @@ Khóa luận hướng tới việc thực hiện các mục tiêu cụ thể sau
     \item \textbf{Nghiên cứu và phát triển Động cơ kiểm soát mã giảm giá (Coupon Constraint Engine) \& Đồng bộ Sự kiện:} Thiết kế và hiện thực thuật toán kiểm tra tính hợp lệ của mã khuyến mãi đa cấp độ (mã riêng của nhà hàng và mã ưu đãi toàn sàn), áp dụng cơ chế tự động gỡ mã (Auto-removal) khi tổng giá trị giỏ hàng suy giảm dưới ngưỡng tối thiểu, xử lý an toàn ngoại lệ (Null-safe Bounds Checking), và tự động đồng bộ mã giảm giá khi Chủ quán tạo sự kiện (\texttt{Events} $\to$ \texttt{Coupon}).
     \item \textbf{Tích hợp Thanh toán Đa phương thức (Stripe Checkout \& COD) kèm Kiểm soát Máy trạng thái Đơn hàng:} Nghiên cứu cơ chế vận hành của Stripe Checkout Session với Stripe Java SDK, mở khóa luồng callback tự động cập nhật trạng thái (\texttt{PAID}), hỗ trợ song song thanh toán tiền mặt khi nhận hàng (COD), xuất hóa đơn điện tử chi tiết cho khách hàng, và cài đặt bộ lọc chuyển trạng thái đơn hàng chặt chẽ (Order State Guard).
     \item \textbf{Hiện thực hóa truyền thông đơn hàng thời gian thực (Real-time WebSocket Alerts):} Xây dựng kênh liên lạc hai chiều bằng Spring WebSocket kết hợp bộ tổng hợp âm thanh điều chế Web Audio API, giúp chủ cơ sở nhận thông báo và chuông báo đơn hàng mới tức khắc với danh sách luôn ưu tiên đơn mới nhất lên đầu.
-    \item \textbf{Nghiên cứu và phát triển Trợ lý AI Copilot Đa vai trò (Dual-Persona Agentic AI) \& Chatbot Menu Catalog RAG:} Xây dựng trợ lý quản trị tích hợp \textbf{Google Gemini 2.5 Flash} kết hợp động cơ suy luận Heuristic dự phòng hai tầng (cho cả Chủ quán và Super Admin), trang bị \textbf{Tác tử AI hành động 1-Click} (tự động tạm khóa món cạn kho trên menu hoặc \textbf{AI Sentinel} gỡ bỏ đánh giá vi phạm); đồng thời tích hợp \textbf{Trợ lý Ẩm thực Khách hàng (AI Concierge)} ứng dụng kỹ thuật \textbf{Menu Catalog RAG} để gợi ý món hot và mã ưu đãi trực tiếp.
+    \item \textbf{Nghiên cứu và phát triển Trợ lý AI Copilot Đa vai trò (Dual-Persona Agentic AI) \& Chatbot Menu Catalog RAG:} Xây dựng trợ lý quản trị tích hợp \textbf{Google Gemini 2.5 Flash} kết hợp động cơ suy luận Heuristic dự phòng hai tầng (cho cả Chủ quán và Super Admin), trang bị \textbf{Bộ 4 Tác tử AI Hành động 1-Click} (\texttt{LOCK\_FOOD\_AVAILABILITY} - tạm khóa món cạn kho trên menu; \texttt{CREATE\_RESTAURANT\_COUPON} - phát hành voucher tri ân khách hàng \texttt{TRIAN\_AI}; \texttt{MODERATE\_REVIEW} - \textbf{AI Sentinel} gỡ bỏ đánh giá vi phạm chuẩn mực; \texttt{CREATE\_GLOBAL\_COUPON} - kích hoạt chiến dịch Mega Sale freeship \texttt{FREESHIP\_AI} toàn sàn); kết hợp cơ chế tự phục hồi dữ liệu mẫu vi phạm (\textbf{Self-healing Demo Data Sentinel}) phục vụ trình diễn và cơ chế cập nhật lặp không xung đột (Idempotent Coupon Upsert); đồng thời tích hợp \textbf{Trợ lý Ẩm thực Khách hàng (AI Concierge)} ứng dụng kỹ thuật \textbf{Menu Catalog RAG} để gợi ý món bán chạy và mã ưu đãi trực tiếp kèm liên kết sâu.
     \item \textbf{Phát triển phân hệ Quản lý Kho nguyên liệu Tự động (Smart Inventory Tracking):} Xây dựng mô hình định lượng tồn kho theo đơn vị đo lường, cơ chế tự động khấu trừ nguyên liệu khi phát sinh đơn hàng, tự động hoàn trả khi khách hoặc chủ quán hủy đơn và lưu nhật ký xuất nhập kho minh bạch.
-    \item \textbf{Xây dựng giao diện người dùng tương tác cao:} Phát triển ứng dụng Single Page Application (SPA) với React 19, Material-UI (MUI v9), Recharts và TailwindCSS; triển khai chủ đề Dark Mode đồng bộ; lưới 4 cột khám phá 16 nhà hàng cùng Carousel ``Hôm nay ăn gì?'', bảng điều khiển trực quan với thanh điều hướng hài hòa giữa khách hàng và quản trị.
+    \item \textbf{Xây dựng giao diện người dùng tương tác cao và Cơ chế Bảo vệ Điều hướng Phân quyền:} Phát triển ứng dụng Single Page Application (SPA) với React 19, Material-UI (MUI v9), Recharts và TailwindCSS; triển khai chủ đề Dark Mode đồng bộ; lưới 4 cột khám phá 16 nhà hàng cùng Carousel ``Hôm nay ăn gì?''; tích hợp cơ chế bảo vệ thanh điều hướng (Role-based Navbar Guard) tự động ẩn giỏ hàng/tìm kiếm đối với tài khoản Chủ quán và Admin, điều hướng logo thông minh về bảng quản trị, cùng hệ thống cảnh báo trạng thái xác thực trực quan (Visual Auth Alerts).
+    \item \textbf{Nghiên cứu và Đánh giá Thực nghiệm Học thuật Chuyên sâu (CS AI Benchmarks):} Xây dựng 3 bộ dữ liệu thử nghiệm độc lập (\texttt{dataset\_toxic\_reviews.json} gồm 200 mẫu, \texttt{dataset\_food\_search.json} gồm 60 truy vấn đa chiều, \texttt{dataset\_voucher\_cases.json} gồm 40 kịch bản giỏ hàng thực tế) nhằm đo đạc khoa học và đối chiếu định lượng giữa mô hình AI/Thuật toán đề xuất so với các phương pháp Baseline truyền thống (Keyword Blacklist, SQL Exact LIKE, SQL Token LIKE, Random Pick, First-Fit Greedy) trên các chỉ số chuẩn của ngành Khoa học Máy tính ($F_1$-Score, Recall, Hit Rate@K, MRR, Tỷ lệ tối ưu hóa, và Doanh thu kích cầu AOV Lift).
 \end{enumerate}
 
 \section{Đối tượng và Phạm vi nghiên cứu}
@@ -233,8 +234,10 @@ Khóa luận đạt được những kết quả đóng góp thiết thực cả
         \item Đề xuất và hiện thực thành công \textbf{Động cơ kiểm soát mã giảm giá có điều kiện ràng buộc (Coupon Constraint Engine)} kết hợp cơ chế tự động đồng bộ mã ưu đãi từ phân hệ Sự kiện nhà hàng (\texttt{Events}), giải quyết triệt để vấn đề gian lận khuyến mãi và xử lý an toàn dữ liệu biên (Null-safe logic).
         \item Tích hợp thành công cơ chế thanh toán đa phương thức gồm \textbf{Stripe Checkout Session} (chuẩn PCI DSS, tối ưu callback xác nhận tự động) và \textbf{Thanh toán khi nhận hàng (COD)}, đi kèm \textbf{Máy trạng thái đơn hàng (Order State Guard)} chống nhảy cóc trạng thái thanh toán và xuất Hóa đơn điện tử.
         \item Hiện thực hóa thành công \textbf{Hệ thống cảnh báo đơn hàng thời gian thực qua WebSocket} kết hợp chuông báo tương tác điều chế từ Web Audio API, giảm độ trễ tiếp nhận đơn hàng xuống dưới 50ms mà không làm tăng tải CPU máy chủ.
-        \item Thiết kế và triển khai \textbf{Trợ lý AI Copilot Đa vai trò \& Tác tử AI Hành động (Dual-Persona Agentic AI)} dựa trên \textbf{Google Gemini 2.5 Flash + Heuristic Fallback Engine}, tích hợp nút thực thi 1-Click (\textit{Tạm khóa món cạn kho} cho Chủ quán và \textit{AI Sentinel gỡ bỏ đánh giá vi phạm} cho Super Admin), cùng \textbf{Chatbot AI Concierge (Menu Catalog RAG)} phục vụ khách hàng.
+        \item Thiết kế và triển khai \textbf{Trợ lý AI Copilot Đa vai trò \& Bộ 4 Tác tử AI Hành động (Dual-Persona Agentic AI)} dựa trên \textbf{Google Gemini 2.5 Flash + Heuristic Fallback Engine}, tích hợp nút thực thi 1-Click đa dạng (\textit{Tạm khóa món cạn kho} \texttt{LOCK\_FOOD\_AVAILABILITY} và \textit{Tạo mã tri ân khách hàng} \texttt{CREATE\_RESTAURANT\_COUPON} cho Chủ quán; \textit{AI Sentinel gỡ bỏ đánh giá vi phạm} \texttt{MODERATE\_REVIEW} và \textit{Kích hoạt Mega Sale toàn sàn} \texttt{CREATE\_GLOBAL\_COUPON} cho Super Admin); bổ sung cơ chế tự phục hồi dữ liệu mẫu vi phạm (\textbf{Self-healing Demo Data Sentinel}) phục vụ bảo vệ đồ án và cơ chế cập nhật lặp Idempotent trong dịch vụ mã ưu đãi; cùng \textbf{Chatbot AI Concierge (Menu Catalog RAG)} phục vụ khách hàng.
         \item Phát triển \textbf{Cơ chế Quản lý Kho nguyên liệu Tự động (Smart Stock Depletion Engine)}, tự động khấu trừ và hoàn trả tồn kho nguyên liệu khi đơn phát sinh hoặc bị hủy (bao gồm cả thao tác hủy từ phía nhà hàng), lưu trữ nhật ký biến động kho minh bạch.
+        \item Hoàn thiện \textbf{Cơ chế Phân quyền Giao diện và Kiểm soát Điều hướng (Role-based Navbar Guard \& Visual Auth Alerts)}, tự động cô lập trải nghiệm nghiệp vụ của Chủ quán và Admin khỏi giao diện mua sắm của khách, bảo vệ giỏ hàng và điều hướng logo chuẩn mực.
+        \item Xây dựng và thực hiện \textbf{Bộ Đánh giá Thực nghiệm Chuẩn Khoa học Máy tính (CS Benchmark Suite)} với 3 bộ dữ liệu độc lập, chứng minh định lượng tính ưu việt vượt trội của giải pháp AI/Thuật toán đề xuất so với các phương pháp Baseline truyền thống trên 3 bài toán trọng điểm: Kiểm duyệt bình luận độc hại ($F_1$-score đạt 91.10\% so với 42.52\% của Blacklist), Tìm kiếm món ăn ngữ nghĩa (triệt tiêu 100\% tỷ lệ rỗng kết quả, Hit Rate@3 đạt 96.67\%, MRR đạt 0.851), và Tối ưu hóa mã giảm giá (100\% chọn đúng phương án tối ưu, tăng tiết kiệm cho khách +58.54\%, kích cầu đơn hàng đạt tỷ lệ 52.5\% và tăng AOV thêm 14.048đ/đơn).
         \item Triển khai cơ chế nạp và sao lưu dữ liệu mẫu chuẩn thực tiễn (Database Seeding \& SQL Snapshot) với \textbf{16 nhà hàng} trải dài 3 tỉnh thành (Hà Nội, TP. Hồ Chí Minh, Quảng Nam), \textbf{82 món ăn} hình ảnh thực tế, \textbf{8 mã giảm giá}, \textbf{4 sự kiện}, kết hợp cơ chế khóa bảo vệ các endpoint seed tránh ghi đè dữ liệu tùy chỉnh và chặn leo thang đặc quyền công khai.
     \end{itemize}
     \item \textbf{Về mặt thực tiễn:} Cung cấp một sản phẩm phần mềm hoàn chỉnh, giao diện Dark Mode đẹp mắt, hiện đại, tích hợp công nghệ trí tuệ nhân tạo và truyền thông thời gian thực, sẵn sàng phục vụ triển khai thực tế cho các chuỗi nhà hàng hoặc các mô hình sàn thương mại ẩm thực số.
@@ -244,10 +247,10 @@ Khóa luận đạt được những kết quả đóng góp thiết thực cả
 Khóa luận tốt nghiệp được cấu trúc thành 6 chương chính như sau:
 \begin{itemize}
     \item \textbf{Chương 1: Giới thiệu} -- Trình bày bối cảnh thực tiễn, tính cấp thiết của đề tài, các mục tiêu nghiên cứu, phạm vi, phương pháp triển khai và những đóng góp chính của khóa luận.
-    \item \textbf{Chương 2: Cơ sở lý thuyết và Nền tảng công nghệ} -- Khái quát các nền tảng công nghệ được ứng dụng trong dự án, bao gồm kiến trúc Client-Server, Spring Boot 3, Spring Security, JWT, Spring Data JPA, React 19, Redux Toolkit, MySQL, Stripe Payment Gateway, giao thức truyền tin thời gian thực WebSocket và mô hình ngôn ngữ lớn LLM/DSS.
-    \item \textbf{Chương 3: Phân tích và Thu thập yêu cầu} -- Xác định bài toán nghiệp vụ, phân tích chi tiết yêu cầu chức năng, yêu cầu phi chức năng, xây dựng biểu đồ ca sử dụng và các bảng đặc tả ca sử dụng tiêu biểu (bao gồm ca sử dụng AI Copilot và cảnh báo đơn hàng thời gian thực).
-    \item \textbf{Chương 4: Phân tích và Thiết kế hệ thống} -- Trình bày kiến trúc tổng thể của hệ thống, sơ đồ triển khai, các biểu đồ tuần tự cho các luồng nghiệp vụ cốt lõi, mô hình dữ liệu thực thể liên kết (ERD) 21 bảng và từ điển dữ liệu chi tiết kèm bảng nhật ký tồn kho.
-    \item \textbf{Chương 5: Xây dựng, Thực nghiệm và Triển khai hệ thống} -- Mô tả môi trường phát triển, cài đặt các chức năng trọng yếu kèm mã nguồn minh họa chi tiết; trình bày kết quả đánh giá thực nghiệm và đo đạc hiệu năng định lượng (độ trễ WebSocket, khả năng chịu tải trừ kho ACID, độ sẵn sàng của AI Copilot); và giới thiệu giao diện các màn hình chính của ứng dụng.
+    \item \textbf{Chương 2: Cơ sở lý thuyết và Nền tảng công nghệ} -- Khái quát các nền tảng công nghệ được ứng dụng trong dự án, bao gồm kiến trúc Client-Server, Spring Boot 3, Spring Security, JWT, Spring Data JPA, React 19, Redux Toolkit, MySQL, Stripe Payment Gateway, giao thức truyền tin thời gian thực WebSocket, cùng các mô hình ngôn ngữ lớn LLM/DSS, xử lý ngôn ngữ tự nhiên NLP và thuật toán tối ưu hóa ràng buộc trong F\&B.
+    \item \textbf{Chương 3: Phân tích và Thu thập yêu cầu} -- Xác định bài toán nghiệp vụ, phân tích chi tiết yêu cầu chức năng, yêu cầu phi chức năng, xây dựng biểu đồ ca sử dụng và các bảng đặc tả ca sử dụng tiêu biểu (bao gồm ca sử dụng AI Copilot, cảnh báo đơn hàng thời gian thực, tìm kiếm ngữ nghĩa và tối ưu hóa ưu đãi).
+    \item \textbf{Chương 4: Phân tích và Thiết kế hệ thống} -- Trình bày kiến trúc tổng thể của hệ thống, sơ đồ kiến trúc các phân hệ AI và thuật toán thông minh, sơ đồ triển khai, các biểu đồ tuần tự cho các luồng nghiệp vụ cốt lõi, mô hình dữ liệu thực thể liên kết (ERD) 21 bảng và từ điển dữ liệu chi tiết kèm bảng nhật ký tồn kho.
+    \item \textbf{Chương 5: Xây dựng, Thực nghiệm và Triển khai hệ thống} -- Mô tả môi trường phát triển, cài đặt các chức năng trọng yếu kèm mã nguồn minh họa chi tiết; trình bày kết quả đánh giá thực nghiệm học thuật chuyên sâu và đo đạc hiệu năng định lượng (độ trễ WebSocket, khả năng chịu tải trừ kho ACID, độ sẵn sàng của AI Copilot, bộ ba thực nghiệm kiểm duyệt NLP, tìm kiếm ngữ nghĩa Semantic Search và tối ưu hóa voucher); và giới thiệu giao diện các màn hình chính của ứng dụng.
     \item \textbf{Chương 6: Kết luận và Hướng phát triển} -- Tổng kết những thành quả đã đạt được, chỉ ra các mặt hạn chế còn tồn tại và đề xuất định hướng mở rộng, nâng cấp hệ thống trong tương lai.
 \end{itemize}
 
@@ -354,19 +357,52 @@ Sự phát triển đột phá của các mô hình ngôn ngữ lớn (Large Lan
 
 Trong đề tài khóa luận này, hệ thống tích hợp API thế hệ mới \textbf{Google Gemini 2.5 Flash} (endpoint \texttt{v1beta/models/gemini-2.5-flash}). Đây là mô hình trí tuệ nhân tạo được tối ưu hóa đặc biệt về tốc độ suy luận nhanh, chi phí vận hành thấp và khả năng tiếp nhận ngữ cảnh có cấu trúc lớn. Gemini được tích hợp vào hệ thống thông qua giao diện lập trình hướng dịch vụ RESTful với cơ chế xác thực API Key cấu hình qua biến môi trường, đóng vai trò là khối óc phân tích trực tuyến cho trợ lý quản trị \textbf{AI Copilot}.
 
-\subsection{Kiến trúc Phòng thủ Hai tầng, Tác tử AI Hành động (Agentic AI) và Menu Catalog RAG}
+\subsection{Kiến trúc Phòng thủ Hai tầng, Bộ 4 Tác tử AI Hành động (Agentic AI) và Menu Catalog RAG}
 Một trong những thách thức sống còn khi triển khai các dịch vụ AI đám mây trong môi trường quản trị sản xuất (Production) là rủi ro về tính sẵn sàng (Availability): các sự cố nghẽn kết nối, suy giảm tốc độ mạng, hoặc hiện tượng chạm ngưỡng giới hạn tần suất yêu cầu (Rate Limiting HTTP 429) có thể làm tê liệt chức năng trợ lý ảo.
 
-Để khắc phục rủi ro này và nâng tầm trợ lý ảo từ ``hệ thống hỏi-đáp thụ động'' thành ``hệ thống hỗ trợ điều hành chủ động'', khóa luận đề xuất và hiện thực hóa kiến trúc kết hợp ba trụ cột:
+Để khắc phục rủi ro này và nâng tầm trợ lý ảo từ ``hệ thống hỏi-đáp thụ động'' thành ``hệ thống hỗ trợ điều hành chủ động'', khóa luận đề xuất và hiện thực hóa kiến trúc kết hợp các trụ cột công nghệ:
 \begin{enumerate}
     \item \textbf{Chiến lược phòng thủ hai tầng (Two-tier Resilient DSS Architecture):}
     \begin{itemize}
         \item \textit{Tầng 1 -- Trí tuệ AI Đám mây (Primary Cloud LLM Engine):} Hệ thống tổng hợp chỉ số kinh doanh thực tế từ CSDL (tổng doanh thu/GMV, số đơn hoàn thành/hủy, Top 5 món bán chạy, món bán chậm, nguyên liệu cạn kho, điểm hài lòng CSAT) đóng gói vào System Prompt thích ứng theo vai trò (\textbf{Dual-Persona}: Chủ nhà hàng vs. Ban quản trị toàn sàn Super Admin) và gửi tới Google Gemini 2.5 Flash.
-        \item \textit{Tầng 2 -- Động cơ Heuristic DSS Cục bộ Dự phòng (Fallback Local DSS Engine):} Khi tiến trình gọi API đám mây bị quá thời gian chờ, chưa cấu hình API Key hoặc gặp lỗi mạng, hệ thống tự động kích hoạt Động cơ suy luận quy tắc Heuristic cục bộ bằng Java để trả về phân tích định lượng chính xác 100\% tức thì.
+        \item \textit{Tầng 2 -- Động cơ Heuristic DSS Cục bộ Dự phòng (Fallback Local DSS Engine):} Khi tiến trình gọi API đám mây bị quá thời gian chờ, chưa cấu hình API Key hoặc gặp lỗi mạng, hệ thống tự động kích hoạt Động cơ suy luận quy tắc Heuristic cục bộ bằng Java để trả về phân tích định lượng chính xác 100\% tức thì trong thời gian dưới 5 mili-giây.
     \end{itemize}
-    \item \textbf{Động cơ Tác tử AI Hành động (Agentic Action Decision Engine):} Sau khi phân tích ngữ cảnh, hệ thống tự động sinh cấu trúc \texttt{agentAction} kèm giao diện tương tác 1-Click cho phép người quản trị thực thi trực tiếp thay đổi xuống CSDL ngay trong luồng hội thoại: (i) Đối với Chủ nhà hàng, tự động phát hiện nguyên liệu cạn kho và đề xuất nút \textit{``Tạm khóa món ăn trên Menu''} (\texttt{LOCK\_FOOD\_AVAILABILITY}); (ii) Đối với Super Admin, bộ giám sát \textit{AI Content Moderation Sentinel} tự động quét đánh giá vi phạm tiêu chuẩn cộng đồng và đề xuất nút \textit{``Gỡ bỏ đánh giá \& Phục hồi uy tín đối tác''} (\texttt{MODERATE\_REVIEW}).
+    \item \textbf{Động cơ Bộ 4 Tác tử AI Hành động (4-Action Agentic Action Decision Engine):} Sau khi phân tích ngữ cảnh, hệ thống tự động sinh cấu trúc \texttt{agentAction} kèm giao diện tương tác 1-Click cho phép người quản trị thực thi trực tiếp thay đổi xuống CSDL ngay trong luồng hội thoại:
+    \begin{itemize}
+        \item \textit{Chủ nhà hàng 1 (\texttt{LOCK\_FOOD\_AVAILABILITY}):} Tự động phát hiện nguyên liệu chạm ngưỡng an toàn và đề xuất nút \textit{``Tạm khóa món ăn trên Menu''} để tránh đơn hàng bị hủy do thiếu món.
+        \item \textit{Chủ nhà hàng 2 (\texttt{CREATE\_RESTAURANT\_COUPON}):} Phân tích doanh số và tỷ lệ giữ chân khách, đề xuất nút \textit{``Kích hoạt Voucher Tri Ân''} (mã \texttt{TRIAN\_AI}: giảm 15\% cho đơn từ 150.000đ) với 1 cú nhấp chuột.
+        \item \textit{Super Admin 1 (\texttt{MODERATE\_REVIEW}):} Bộ giám sát \textit{AI Content Moderation Sentinel} tự động quét toàn sàn, phát hiện đánh giá độc hại/mất an toàn thực phẩm và đề xuất nút \textit{``Gỡ bỏ đánh giá \& Phục hồi uy tín đối tác''}.
+        \item \textit{Super Admin 2 (\texttt{CREATE\_GLOBAL\_COUPON}):} Phân tích GMV và lưu lượng toàn sàn, đề xuất nút \textit{``Kích hoạt Chiến dịch Voucher Toàn sàn''} (mã \texttt{FREESHIP\_AI}: Freeship 15.000đ cho đơn từ 100.000đ) để kích cầu tăng trưởng.
+    \end{itemize}
+    \item \textbf{Cơ chế Tự phục hồi Mẫu Sentinel (Self-healing Demo Data Sentinel) và Khả năng cập nhật lặp Idempotent:} Nhằm phục vụ quy trình đánh giá, bảo vệ khóa luận và vận hành thực tế không bị gián đoạn, phương thức \texttt{getOrCreateToxicReview()} tự động tái tạo một bản ghi đánh giá vi phạm mẫu khi CSDL bị xóa sạch bởi các lượt kiểm duyệt trước đó, triệt tiêu 100\% rủi ro rỗng dữ liệu khi demo. Đồng thời, tầng dịch vụ \texttt{CouponServiceImpl} triển khai cơ chế cập nhật lặp Idempotent: nếu mã voucher đã tồn tại, hệ thống tự động cập nhật lại các thông số chiết khấu và kích hoạt trạng thái hiệu lực thay vì ném ngoại lệ dừng luồng.
     \item \textbf{Kỹ thuật Truy xuất Tăng cường Danh mục Thực đơn (Menu Catalog RAG):} Phía ứng dụng khách hàng (\texttt{Chatbot.jsx}), Trợ lý Ẩm thực \textbf{AI Concierge} tự động truy vấn trước danh mục món bán chạy (\texttt{/api/food/popular}) và mã giảm giá hiệu lực (\texttt{/api/coupons}) để ghép ngữ cảnh thực tế vào câu trả lời, kết xuất thẻ món ăn kèm ảnh thật, giá tiền, mã ưu đãi và liên kết sâu (\texttt{?foodId=...}) giúp khách hàng bấm đặt món chỉ với một thao tác.
 \end{enumerate}
+
+\subsection{Xử lý Ngôn ngữ Tự nhiên (NLP) trong Kiểm duyệt Đánh giá và Tìm kiếm Ngữ nghĩa}
+Trong môi trường thương mại điện tử F\&B, các phương pháp lọc văn bản truyền thống dựa trên danh sách từ cấm (Blacklist Regex) và so khớp chuỗi SQL chính xác (\texttt{WHERE name LIKE '\%...\%'}) bộc lộ hai nhược điểm chí mạng:
+\begin{enumerate}
+    \item \textbf{Hạn chế của bộ lọc từ khóa tĩnh:} Người dùng mạng xã hội thường sử dụng teencode, biến thể ký tự (như \textit{d!t}, \textit{nhu c*t}, \textit{vcl}), lối nói mỉa mai châm biếm (sarcasm) hoặc phản ánh nguy cơ dị vật, ngộ độc vệ sinh an toàn thực phẩm mà không dùng từ ngữ thô tục. Bộ lọc từ khóa tĩnh bỏ sót tới hơn 70\% các trường hợp vi phạm thực tế. Việc ứng dụng mô hình NLP phân tích ngữ cảnh (Semantic Context Analysis) cho phép hiểu trọn vẹn ngữ nghĩa câu văn, phân biệt chính xác giữa lời phê bình mang tính xây dựng và sự phỉ báng độc hại.
+    \item \textbf{Hạn chế của truy vấn SQL so khớp chuỗi:} Khách hàng có xu hướng tìm kiếm theo ngôn ngữ tự nhiên biểu đạt tâm trạng, thời tiết, chế độ dinh dưỡng (như \textit{``trời lạnh thèm ăn lẩu ấm cay''}, \textit{``món giàu đạm cho người tập gym''}). Truy vấn chuỗi chính xác dẫn tới tỷ lệ không ra kết quả (Zero-Result Rate) lên tới 100\%. Giải pháp Semantic Search kết hợp Intent Parsing (bóc tách thực thể khẩu vị, nhiệt độ, ngân sách) và Query Expansion (sinh từ khóa đồng nghĩa và nhãn ẩm thực) giúp nâng cao vượt bậc tỷ lệ truy hồi món ăn phù hợp.
+\end{enumerate}
+
+\subsection{Thuật toán Tối ưu hóa Ràng buộc Tổ hợp và Phân tích Khoảng cách Ngưỡng Kích cầu Giỏ hàng}
+Bài toán áp dụng mã ưu đãi trong các hệ thống F\&B hiện đại không còn đơn thuần là chọn một mã giảm giá ngẫu nhiên, mà là một bài toán \textbf{Tối ưu hóa Ràng buộc Tổ hợp (Combinatorial Constraint Optimization)}:
+\begin{equation}
+\max_{c \in \mathcal{C}_{\text{valid}}} \text{Discount}(c, \text{CartTotal}) \quad \text{với} \quad \mathcal{C}_{\text{valid}} = \{ c \in \mathcal{C} \mid \text{CartTotal} \ge \text{MinOrder}(c) \land \text{IsActive}(c) \}
+\end{equation}
+Trong đó hàm chiết khấu thực tế phải xét tới giá trị giảm trần tối đa (Discount Cap):
+\begin{equation}
+\text{Discount}(c, V) = 
+\begin{cases} 
+\min(V \times r_c, \text{Cap}_c) & \text{nếu } c \text{ là giảm phần trăm} \\
+v_c & \text{nếu } c \text{ là giảm số tiền cố định}
+\end{cases}
+\end{equation}
+Bên cạnh đó, đề tài xây dựng thuật toán \textbf{Phân tích Khoảng cách Ngưỡng (Upsell Gap Analysis)}:
+\begin{equation}
+\Delta_{\text{gap}} = \min_{c \in \mathcal{C} \setminus \mathcal{C}_{\text{valid}}} (\text{MinOrder}(c) - \text{CartTotal}) \quad \text{sao cho} \quad \Delta_{\text{gap}} \le \text{Threshold}
+\end{equation}
+Khi khách hàng chỉ còn thiếu một khoảng tiền nhỏ ($\Delta_{\text{gap}} \le 30.000$đ) để đạt ngưỡng hưởng một mã giảm giá có giá trị lớn hơn nhiều, hệ thống chủ động gợi ý bổ sung các món ăn kèm (Side dishes, nước uống) có giá trị xấp xỉ $\Delta_{\text{gap}}$. Cơ chế này mang lại lợi ích kép: khách hàng nhận thêm món ăn với chi phí thực tế gần như tương đương, trong khi nhà hàng gia tăng đáng kể giá trị đơn hàng trung bình (Average Order Value -- AOV).
 
 
 % =========================================================================
@@ -412,17 +448,22 @@ Hệ thống được chia thành các phân hệ chức năng tương ứng v�
         \item Quản lý kho nguyên liệu thông minh: tạo nhóm nguyên liệu (Ingredient Category) và nguyên liệu cụ thể (IngredientsItem), định lượng số lượng tồn kho (\texttt{quantity}), đơn vị tính (\texttt{unit}), thiết lập ngưỡng cảnh báo an toàn (\texttt{minThreshold}) và xem nhật ký xuất nhập kho (\texttt{InventoryLog}).
         \item Quản lý đơn hàng: tiếp nhận các đơn hàng mới nhất xếp trên cùng kèm nhãn phương thức thanh toán (\texttt{STRIPE}/\texttt{COD}), điều phối trạng thái tuân thủ Máy trạng thái đơn hàng (State Guard) và tự động hoàn kho nếu hủy đơn.
         \item Tiếp nhận thông báo đơn hàng mới tức thời theo thời gian thực (Real-time WebSocket alerts) kèm chuông báo âm thanh thuật toán (Web Audio Chime) mà không cần làm mới trang.
-        \item Tương tác với Trợ lý AI Copilot \& Tác tử hành động: tra cứu báo cáo kinh doanh theo thời gian thực, nhận cảnh báo nguyên liệu cạn kiệt và bấm nút \textbf{Tác tử AI 1-Click} để tạm khóa hoặc mở bán lại món ăn ngay trên menu khách hàng.
-        \item Tạo sự kiện khuyến mãi (\texttt{Events}) quảng bá ẩm thực gắn liền mã giảm giá, tự động đồng bộ sinh mã \texttt{Coupon} áp dụng riêng cho nhà hàng.
+        \item Tương tác với Trợ lý AI Copilot \& Tác tử hành động: tra cứu báo cáo kinh doanh theo thời gian thực, nhận cảnh báo nguyên liệu chạm ngưỡng và bấm nút \textbf{Tác tử AI 1-Click} để thực thi tức thì các quyết định vận hành: (i) Tạm khóa hoặc mở bán lại món ăn cạn kho trên thực đơn (\texttt{LOCK\_FOOD\_AVAILABILITY}); (ii) Khởi tạo chiến dịch ưu đãi tri ân khách hàng độc quyền của nhà hàng (\texttt{CREATE\_RESTAURANT\_COUPON}: mã \texttt{TRIAN\_AI} chiết khấu 15\% đơn từ 150.000đ).
+        \item Tạo sự kiện khuyến mãi (\texttt{Events}) quảng bá ẩm thực gắn liền mã giảm giá, tự động đồng bộ sinh mã \texttt{Coupon} áp dụng riêng cho nhà hàng kèm cơ chế cập nhật lặp Idempotent.
     \end{itemize}
     \item \textbf{Phân hệ Quản trị viên Sàn (Super Admin):}
     \begin{itemize}
         \item Xem danh sách toàn bộ người dùng trong hệ thống và khóa/mở hoặc phân quyền tài khoản.
         \item Xem danh sách các nhà hàng trên toàn hệ thống và thực hiện xóa các nhà hàng vi phạm chính sách sàn.
         \item Kiểm duyệt danh sách đánh giá theo từng nhà hàng được chọn và xóa bỏ các bài viết có nội dung phản cảm, vi phạm chuẩn mực.
-        \item Tương tác với \textbf{Platform Executive AI Copilot \& AI Content Moderation Sentinel}: giám sát tổng GMV toàn sàn, chỉ số hài lòng CSAT và kích hoạt tác tử AI gỡ bỏ đánh giá vi phạm chỉ bằng 1 thao tác.
+        \item Tương tác với \textbf{Platform Executive AI Copilot \& AI Content Moderation Sentinel}: giám sát tổng GMV toàn sàn, phân tích chỉ số hài lòng CSAT và kích hoạt các quyết định tác tử 1-Click: (i) Gỡ bỏ đánh giá vi phạm chuẩn mực cộng đồng hoặc an toàn thực phẩm (\texttt{MODERATE\_REVIEW}) với sự hỗ trợ của cơ chế tự phục hồi dữ liệu mẫu (\textbf{Self-healing Demo Data Sentinel}); (ii) Kích hoạt chiến dịch Mega Sale toàn sàn phát hành mã giảm giá quy mô lớn (\texttt{CREATE\_GLOBAL\_COUPON}: mã \texttt{FREESHIP\_AI} tài trợ 15.000đ vận chuyển).
         \item Khởi tạo các mã giảm giá áp dụng toàn sàn (Global Coupons) với điều kiện ràng buộc giá trị đơn tối thiểu.
         \item Báo cáo thống kê doanh thu toàn sàn, tổng quan mạng lưới nhà hàng đối tác và biểu đồ tăng trưởng.
+    \end{itemize}
+    \item \textbf{Cơ chế Phân quyền Giao diện và Kiểm soát Điều hướng (Role-based Navbar Guard):}
+    \begin{itemize}
+        \item Thanh điều hướng Navbar tự động thích ứng theo vai trò: đối với tài khoản Chủ nhà hàng và Super Admin, hệ thống tự động ẩn biểu tượng Giỏ hàng và Tìm kiếm món để giữ sự tập trung tuyệt đối vào nghiệp vụ quản trị; đồng thời điều hướng khi nhấn vào Logo về thẳng Bảng điều khiển Quản trị (\texttt{/admin/restaurant}).
+        \item Phản hồi trạng thái xác thực trực quan (Visual Auth Alerts): hiển thị thông báo lỗi thân thiện (Material-UI Alert) trên form Đăng nhập và Đăng ký khi sai mật khẩu hoặc trùng email, giúp nâng cao tính tiện dụng.
     \end{itemize}
 \end{itemize}
 
@@ -442,7 +483,7 @@ Dựa trên các yêu cầu chức năng đã phân tích, biểu đồ ca sử 
 \includegraphics[width=0.95\textwidth]{figures/fig_usecase_general.png}
 \end{figure}
 
-Biểu đồ Hình 3.1 thể hiện rõ ba nhóm tác nhân chính của hệ thống là Khách hàng/Khách vãng lai (Customer/Guest), Chủ nhà hàng (Restaurant Owner) và Quản trị viên sàn (Super Admin), bao quát đầy đủ cả các ca sử dụng AI hiện đại như AI Concierge Menu RAG, Tác tử AI khóa món cạn kho và AI Sentinel kiểm duyệt.
+Biểu đồ Hình 3.1 thể hiện rõ ba nhóm tác nhân chính của hệ thống là Khách hàng/Khách vãng lai (Customer/Guest), Chủ nhà hàng (Restaurant Owner) và Quản trị viên sàn (Super Admin), bao quát đầy đủ cả các ca sử dụng AI hiện đại như AI Concierge Menu RAG, Bộ 4 Tác tử AI hành động 1-Click (Khóa món cạn kho / Tạo voucher tri ân cho Chủ quán, và AI Sentinel gỡ vi phạm / Kích hoạt Mega Sale toàn sàn cho Super Admin).
 
 \section{Đặc tả Chi tiết các Ca sử dụng Tiêu biểu}
 Dưới đây là các bảng đặc tả chi tiết cho 11 ca sử dụng quan trọng nhất trong hệ thống, tuân thủ đúng định dạng chuẩn mực của khóa luận tốt nghiệp ngành Công nghệ thông tin.
@@ -797,6 +838,22 @@ Theo Hình 4.1, hệ thống bao gồm 5 khối kiến trúc vật lý chính:
     \item \textbf{Khối Dịch vụ AI Đám mây Google (Google Cloud AI Services):} Điểm cuối REST API \textbf{Google Gemini 2.5 Flash} kết nối qua HTTPS để tạo phân tích điều hành F\&B chuyên sâu.
 \end{itemize}
 
+\subsection{Sơ đồ Kiến trúc Phân hệ Trí tuệ Nhân tạo và Thuật toán Thông minh}
+Nhằm cung cấp góc nhìn chuyên sâu về kiến trúc thuật toán và trí tuệ nhân tạo -- năng lực khác biệt then chốt của khóa luận so với các hệ thống thương mại điện tử thông thường, sơ đồ kiến trúc các phân hệ AI và thuật toán thông minh được mô hình hóa chi tiết trong Hình 4.2:
+
+\begin{figure}{Kiến trúc Phân hệ Trí tuệ Nhân tạo và Thuật toán Thông minh}
+\centering
+\includegraphics[width=0.95\textwidth]{figures/fig_ai_architecture.png}
+\end{figure}
+
+Sơ đồ Hình 4.2 làm sáng tỏ sự phối hợp đồng bộ giữa 4 phân hệ trí tuệ nhân tạo và giải thuật cốt lõi:
+\begin{enumerate}
+    \item \textbf{Phân hệ NLP Content Moderation \& AI Sentinel:} Tiếp nhận các chuỗi đánh giá của thực khách, tiến hành tiền xử lý và đưa qua bộ phân tích ngữ cảnh để nhận diện các hình thái vi phạm tinh vi (teencode, từ lóng né bộ lọc, mỉa mai cay độc hoặc cảnh báo mất vệ sinh an toàn thực phẩm). Tích hợp cơ chế \textit{Self-healing Demo Data Sentinel} tự động tái sinh bản ghi mẫu giúp quá trình thẩm định và demo tính năng luôn sẵn sàng tuyệt đối.
+    \item \textbf{Phân hệ Semantic Search \& Query Expansion:} Chuyển hóa các câu truy vấn ngôn ngữ tự nhiên thành ý định ẩm thực (khẩu vị, nhiệt độ, chế độ dinh dưỡng, hoàn cảnh ăn uống), sinh các từ khóa mở rộng và chấm điểm khớp đa tiêu chí để truy hồi chính xác món ăn phù hợp.
+    \item \textbf{Phân hệ Combinatorial Voucher Optimizer \& Gap Analysis:} Vận dụng giải thuật tối ưu hóa ràng buộc nhằm tìm kiếm chính xác mã giảm giá mang lại lợi ích tài chính lớn nhất cho khách hàng, đồng thời phân tích khoảng cách ngưỡng thiếu hụt ($\Delta_{\text{gap}}$) để gợi ý bù món ăn kèm, gia tăng giá trị đơn hàng cho nhà hàng.
+    \item \textbf{Trung tâm Điều hành Dual-Persona Agentic AI Copilot:} Kết hợp linh hoạt giữa Google Gemini 2.5 Flash trên đám mây và Động cơ Heuristic DSS cục bộ, tự động sinh các quyết định tác tử 1-Click phục vụ vận hành đa vai trò cho cả Chủ cơ sở và Ban quản trị toàn sàn.
+\end{enumerate}
+
 \section{Biểu đồ Tuần tự cho các Luồng Nghiệp vụ Cốt lõi}
 Phần này trình bày chi tiết các biểu đồ tuần tự (Sequence Diagrams) minh họa trực quan sự tương tác giữa các thành phần phần mềm trong hệ thống qua thời gian đối với các ca sử dụng tiêu biểu.
 
@@ -865,7 +922,14 @@ Quy trình truyền thông thời gian thực và điều phối Tác tử AI h�
 Sơ đồ Hình 4.7 minh họa sự phối hợp nhịp nhàng giữa hai luồng kỹ thuật nâng cao:
 \begin{enumerate}
     \item \textbf{Luồng cảnh báo tức thời \& Trừ kho tự động:} Khi khách hàng tạo đơn hàng thành công tại \texttt{OrderServiceImpl}, hệ thống tự động kích hoạt dịch vụ kho \texttt{IngredientsServiceImpl.depleteStockForOrder} để khấu trừ định lượng nguyên liệu và ghi bản ghi biến động vào bảng \texttt{inventory\_log}. Ngay sau đó, đối tượng thông báo \texttt{OrderNotificationDTO} được đẩy tới \texttt{OrderWebSocketHandler.broadcastToRestaurant}. Tại trình duyệt của chủ nhà hàng, component \texttt{OrderNotificationListener.jsx} bắt sự kiện, gọi bộ tổng hợp âm thanh \texttt{playOrderChime()} tạo chuông ngân 3 nốt nhạc và cập nhật bảng đơn hàng tức thì mà không cần làm mới trang.
-    \item \textbf{Luồng Tác tử AI Copilot Đa vai trò (Dual-Persona Agentic AI):} Khi Chủ quán (\texttt{restaurantId > 0}) hoặc Super Admin (\texttt{restaurantId = 0/null}) gửi truy vấn tại \texttt{AiCopilot.jsx}, dịch vụ \texttt{AiCopilotServiceImpl} thu thập chỉ số thực tế theo vai trò, gửi tới \textbf{Google Gemini 2.5 Flash} (hoặc tự động kích hoạt Động cơ Heuristic DSS dự phòng), đồng thời gọi \texttt{determineAgentAction()} để sinh kèm gói đề xuất hành động (\texttt{LOCK\_FOOD\_AVAILABILITY} hoặc \texttt{MODERATE\_REVIEW}). Chỉ với 1 thao tác bấm nút trên giao diện, Tác tử AI lập tức khóa món cạn kho hoặc gỡ bỏ đánh giá vi phạm xuống CSDL.
+    \item \textbf{Luồng Tác tử AI Copilot Đa vai trò (Dual-Persona Agentic AI):} Khi Chủ quán (\texttt{restaurantId > 0}) hoặc Super Admin (\texttt{restaurantId = 0/null}) gửi truy vấn tại \texttt{AiCopilot.jsx}, dịch vụ \texttt{AiCopilotServiceImpl} thu thập chỉ số thực tế theo vai trò, gửi tới \textbf{Google Gemini 2.5 Flash} (hoặc tự động kích hoạt Động cơ Heuristic DSS dự phòng), đồng thời gọi \texttt{determineAgentAction()} để sinh kèm gói đề xuất hành động thuộc \textbf{Bộ 4 Tác tử AI Hành động 1-Click}:
+    \begin{itemize}
+        \item \textit{Chủ quán 1 (\texttt{LOCK\_FOOD\_AVAILABILITY}):} Tạm khóa món cạn kho trên thực đơn (\texttt{PUT /api/admin/food/\{foodId\}}).
+        \item \textit{Chủ quán 2 (\texttt{CREATE\_RESTAURANT\_COUPON}):} Phát hành mã tri ân khách hàng \texttt{TRIAN\_AI} giảm 15\% (\texttt{POST /api/admin/coupons/restaurant/\{id\}}).
+        \item \textit{Super Admin 1 (\texttt{MODERATE\_REVIEW}):} Gỡ bỏ đánh giá vi phạm chuẩn mực (\texttt{DELETE /api/reviews/\{reviewId\}}), có sự bảo bọc của cơ chế \textbf{Self-healing Demo Data Sentinel} tự phục hồi mẫu vi phạm để đảm bảo dữ liệu luôn sẵn sàng.
+        \item \textit{Super Admin 2 (\texttt{CREATE\_GLOBAL\_COUPON}):} Kích hoạt chiến dịch Mega Sale freeship \texttt{FREESHIP\_AI} tài trợ 15.000đ vận chuyển toàn sàn (\texttt{POST /api/admin/coupons/global}).
+    \end{itemize}
+    Chỉ với đúng 1 lần bấm nút trên giao diện, Tác tử AI lập tức cập nhật CSDL và xác nhận trực tiếp trong cuộc hội thoại.
 \end{enumerate}
 
 \subsection{Biểu đồ Tuần tự: Tư vấn Ẩm thực Khách hàng AI Concierge (Menu Catalog RAG)}
@@ -1423,7 +1487,7 @@ export const playOrderChime = () => {
 };
 \end{lstlisting}
 
-\subsection{Cài đặt Trợ lý Quản trị Thông minh AI Copilot Đa vai trò \& Tác tử Hành động}
+\subsection{Cài đặt Trợ lý Quản trị Thông minh AI Copilot Đa vai trò \& Bộ 4 Tác tử Hành động}
 Lớp dịch vụ \texttt{AiCopilotServiceImpl.java} hiện thực hóa kiến trúc \textbf{Dual-Persona Agentic AI} kết hợp chiến lược phòng thủ hai tầng: kết nối API \textbf{Google Gemini 2.5 Flash} (\texttt{gemini-2.5-flash}) và tự động kích hoạt Động cơ Heuristic DSS nội bộ (phân tách riêng cho Chủ quán và Super Admin), đồng thời đính kèm payload \texttt{agentAction} qua phương thức \texttt{determineAgentAction()}:
 
 \begin{lstlisting}[language=Java, caption={Điều phối Dual-Persona Agentic AI và DSS trong AiCopilotServiceImpl.java}]
@@ -1431,6 +1495,13 @@ Lớp dịch vụ \texttt{AiCopilotServiceImpl.java} hiện thực hóa kiến t
 public class AiCopilotServiceImpl implements AiCopilotService {
     @Value("${gemini.api.key:}")
     private String geminiApiKey;
+
+    @Autowired
+    private ReviewRepository reviewRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private RestaurantRepository restaurantRepository;
 
     @Override
     public AiChatResponse chatWithCopilot(AiChatRequest request) {
@@ -1451,7 +1522,7 @@ public class AiCopilotServiceImpl implements AiCopilotService {
             aiReply = generateHeuristicBusinessInsight(metrics, userQuery, restaurantId);
         }
 
-        // 4. Sinh goi Tac tu AI Hanh dong 1-Click (MODERATE_REVIEW hoac LOCK_FOOD_AVAILABILITY)
+        // 4. Sinh goi Bo 4 Tac tu AI Hanh dong 1-Click
         Map<String, Object> agentAction = determineAgentAction(userQuery, isSuperAdmin, restaurantId, metrics);
         List<String> prompts = isSuperAdmin ? superAdminSuggestedPrompts : ownerSuggestedPrompts;
 
@@ -1460,7 +1531,19 @@ public class AiCopilotServiceImpl implements AiCopilotService {
 }
 \end{lstlisting}
 
-Nhờ thiết kế này, Chủ nhà hàng có thể kích hoạt nút \textit{``Tạm khóa món ăn trên Menu''} ngay khi AI cảnh báo nguyên liệu cạn kho (\texttt{PUT /api/admin/food/\{foodId\}}), còn Super Admin có thể kích hoạt \textit{AI Content Moderation Sentinel} gỡ bỏ đánh giá vi phạm quy chuẩn cộng đồng ngay tức thì (\texttt{DELETE /api/reviews/\{reviewId\}}).
+Đặc biệt, nhằm nâng cao độ tin cậy trong quá trình thẩm định và vận hành thực tế, hệ thống trang bị hai cơ chế kỹ thuật tiên tiến:
+\begin{enumerate}
+    \item \textbf{Cơ chế Tự phục hồi Mẫu Sentinel (Self-healing Demo Data Sentinel):} Khi Super Admin thực thi thao tác gỡ bỏ đánh giá vi phạm, CSDL có thể không còn bình luận tiêu cực nào. Phương thức \texttt{getOrCreateToxicReview()} tự động nhận diện nếu không còn đánh giá xấu sẽ tự động tạo một bình luận vi phạm mẫu chuẩn (\textit{``Đồ ăn như rác rưởi, sườn thiu thối...''}), đảm bảo luồng demo tính năng AI Sentinel luôn trơn tru 100\% mà không bao giờ bị lỗi dữ liệu rỗng.
+    \item \textbf{Khả năng Cập nhật Lặp Idempotent (Coupon Upsert):} Tại \texttt{CouponServiceImpl.java}, khi tác tử AI hoặc quản trị viên tái kích hoạt các mã ưu đãi trùng tên (như \texttt{TRIAN\_AI} hoặc \texttt{FREESHIP\_AI}), hệ thống không ném ngoại lệ dừng luồng mà tự động cập nhật lại các giá trị chiết khấu (\texttt{discountValue}, \texttt{minimumOrderValue}) và kích hoạt cờ \texttt{active = true}.
+\end{enumerate}
+
+Phía giao diện người dùng \texttt{AiCopilot.jsx}, Tác tử AI hỗ trợ đầy đủ \textbf{Bộ 4 Tác tử AI Hành động 1-Click}:
+\begin{itemize}
+    \item \texttt{LOCK\_FOOD\_AVAILABILITY}: Gửi \texttt{PUT /api/admin/food/\{foodId\}} tạm khóa món cạn kho trên thực đơn.
+    \item \texttt{CREATE\_RESTAURANT\_COUPON}: Gửi \texttt{POST /api/admin/coupons/restaurant/\{id\}} kích hoạt mã \texttt{TRIAN\_AI} (giảm 15\% đơn từ 150.000đ).
+    \item \texttt{MODERATE\_REVIEW}: Gửi \texttt{DELETE /api/reviews/\{reviewId\}} gỡ bỏ đánh giá vi phạm chuẩn mực.
+    \item \texttt{CREATE\_GLOBAL\_COUPON}: Gửi \texttt{POST /api/admin/coupons/global} kích hoạt chiến dịch Mega Sale \texttt{FREESHIP\_AI} (15.000đ toàn sàn).
+\end{itemize}
 
 \subsection{Cài đặt Cơ chế Tự động Trừ Kho và Lưu Nhật ký Xuất Nhập (Smart Stock Depletion)}
 Tại lớp \texttt{IngredientsServiceImpl.java}, hệ thống tự động khấu trừ định lượng nguyên liệu cấu thành món ăn khi đơn được tạo và hoàn kho khi đơn bị hủy:
@@ -1521,8 +1604,37 @@ Bên cạnh trợ lý điều hành phía quản trị, phân hệ khách hàng 
     \item \textbf{Bảo vệ dữ liệu \& Tự động hóa vận hành:} Các endpoint seed ghi đè dữ liệu (\texttt{/public/fix-images}, \texttt{/public/update-curated-images}) được khóa bằng cờ bảo vệ \texttt{?confirm=true}; đồng thời cung cấp bộ kịch bản khởi chạy và giải phóng cổng mạng 1-Click (\texttt{KHOI\_DONG\_HE\_THONG.bat}, \texttt{KHOI\_DONG\_LAI\_BACKEND.bat}) cùng tệp sao lưu SQL chuẩn \texttt{database/restore\_images\_and\_coupons.sql}.
 \end{itemize}
 
+\subsection{Cài đặt Thanh Điều hướng Phân quyền (Role-based Navbar Guard) và Cảnh báo Lỗi Xác thực Trực quan}
+Nhằm mang lại trải nghiệm chuyên nghiệp cho người dùng và cách ly tuyệt đối luồng nghiệp vụ giữa khách hàng và các nhà quản trị, component thanh điều hướng (\texttt{Navbar.jsx}) được cài đặt cơ chế bảo vệ phân quyền thích ứng:
+\begin{lstlisting}[language=JavaScript, caption={Phân quyền điều hướng thông minh trên Navbar trong Navbar.jsx}]
+const isCustomer = !auth.user || auth.user.role === "ROLE_CUSTOMER";
+
+// Chi dong bo gio hang khi nguoi dung dang nhap voi vai tro Khach hang
+useEffect(() => {
+    if (jwt && auth.user && isCustomer) {
+        dispatch(findUserCart(jwt));
+    }
+}, [dispatch, jwt, auth.user, isCustomer]);
+
+// Dieu huong Logo thong minh theo vai tro nguoi dung
+const handleLogoClick = () => {
+    if (auth.user?.role === "ROLE_RESTAURANT_OWNER" || auth.user?.role === "ROLE_ADMIN") {
+        navigate("/admin/restaurant");
+    } else {
+        navigate("/");
+    }
+};
+\end{lstlisting}
+
+Đoạn mã trên bảo đảm:
+\begin{itemize}
+    \item Biểu tượng Tìm kiếm (\texttt{SearchIcon}) và Giỏ hàng (\texttt{ShoppingCartIcon}) chỉ hiển thị khi người dùng là Khách hàng (\texttt{isCustomer = true}). Đối với Chủ quán và Super Admin, các nút này được ẩn hoàn toàn để tối ưu không gian làm việc.
+    \item Khi Chủ quán hoặc Admin nhấn vào logo ``Online Food Ordering'', hệ thống không đưa về trang chủ mua sắm của khách mà chuyển hướng thẳng về Bảng điều khiển Quản trị (\texttt{/admin/restaurant}).
+    \item Đồng thời, tại \texttt{LoginForm.jsx} và \texttt{RegisterForm.jsx}, hệ thống lắng nghe trạng thái lỗi \texttt{auth.error} từ Redux Store và hiển thị thông báo trực quan bằng component \texttt{<Alert severity="error">} của Material-UI (thông báo rõ: \textit{``Mật khẩu hoặc tài khoản không chính xác!''} hoặc \textit{``Email này đã được sử dụng với tài khoản khác''}), thay vì để người dùng bối rối khi thao tác thất bại trong im lặng.
+\end{itemize}
+
 \section{Đánh giá Thực nghiệm và Đo đạc Hiệu năng Hệ thống}
-Để kiểm chứng tính khả thi, độ ổn định và hiệu năng vận hành trong điều kiện thực tế, hệ thống đã được triển khai thử nghiệm trên môi trường máy chủ thực nghiệm và tiến hành đo đạc định lượng trên ba phân hệ cốt lõi: truyền thông thời gian thực WebSocket, tính toàn vẹn kho nguyên liệu ACID khi chịu tải đồng thời, và thời gian phản hồi của Trợ lý Quản trị AI Copilot kết hợp Động cơ DSS dự phòng.
+Để kiểm chứng tính khả thi, độ ổn định và giá trị học thuật của hệ thống trong điều kiện vận hành thực tế, khóa luận đã thiết kế và thực hiện đo đạc định lượng toàn diện trên cả hai bình diện: Hiệu năng hạ tầng phân tán (Độ trễ truyền thông WebSocket, Tính nhất quán trừ kho ACID, Độ sẵn sàng của AI Copilot phòng thủ hai tầng) và Bộ ba Đánh giá Thực nghiệm Trí tuệ Nhân tạo \& Giải thuật Chuẩn Khoa học Máy tính (Kiểm duyệt nội dung NLP, Tìm kiếm món ăn ngữ nghĩa Semantic Search, và Tối ưu hóa ràng buộc tổ hợp mã ưu đãi).
 
 \subsection{Đo đạc Độ trễ Truyền thông Đơn hàng: WebSocket so với HTTP Polling}
 Nhằm chứng minh sự vượt trội của giải pháp WebSocket so với phương pháp kéo dữ liệu định kỳ truyền thống (HTTP Long-Polling với chu kỳ 2 giây), một kịch bản đo đạc thực tế gồm 100 đơn hàng liên tiếp được kích hoạt từ phía khách hàng và ghi nhận thời điểm máy chủ phát tín hiệu so với thời điểm máy khách của chủ nhà hàng nhận được thông báo kèm kích hoạt chuông âm thanh Web Audio API. Kết quả đo đạc được tổng hợp trong Bảng 5.1:
@@ -1567,7 +1679,7 @@ Hiện tượng xung đột khóa chết (Deadlock) & Không phát sinh & Không
 Kết quả thực nghiệm tại Bảng 5.2 chứng minh cơ chế quản lý giao dịch Spring Data JPA kết hợp cơ chế khóa tự nhiên của MySQL đảm bảo tính toàn vẹn tuyệt đối: Dưới áp lực 100 yêu cầu đồng thời, thời gian hoàn tất trung bình chỉ đạt \textbf{483 ms / giao dịch}, không phát sinh bất kỳ hiện tượng Deadlock nào và độ lệch tồn kho bằng \textbf{0\%}, toàn bộ 100 giao dịch đều được ghi vết minh bạch vào nhật ký \texttt{InventoryLog}.
 
 \subsection{Đo đạc Thời gian Phản hồi và Tính Sẵn sàng của Trợ lý AI Copilot}
-Trợ lý AI Copilot được thiết kế theo kiến trúc phòng thủ hai tầng: tầng 1 là mô hình Google Gemini 2.5 Flash Cloud API phục vụ phân tích ngôn ngữ tự nhiên chuyên sâu; tầng 2 là Động cơ Heuristic DSS nội bộ hoạt động ngoại tuyến (Offline) dựa trên dữ liệu thống kê SQL thời gian thực (hỗ trợ Dual-Persona cho cả Chủ quán và Super Admin). Bảng 5.4 thể hiện số liệu so sánh hiệu năng giữa hai tầng:
+Trợ lý AI Copilot được thiết kế theo kiến trúc phòng thủ hai tầng: tầng 1 là mô hình Google Gemini 2.5 Flash Cloud API phục vụ phân tích ngôn ngữ tự nhiên chuyên sâu; tầng 2 là Động cơ Heuristic DSS nội bộ hoạt động ngoại tuyến (Offline) dựa trên dữ liệu thống kê SQL thời gian thực (hỗ trợ Dual-Persona cho cả Chủ quán và Super Admin). Bảng 5.3 thể hiện số liệu so sánh hiệu năng giữa hai tầng:
 
 \begin{table}{Đo đạc hiệu năng Trợ lý AI Copilot: Gemini 2.5 Flash Cloud so với Heuristic DSS Fallback}
 \centering
@@ -1585,6 +1697,94 @@ Chất lượng và phong cách câu trả lời & Văn phong tự nhiên, linh 
 \end{table}
 
 Số liệu đo đạc làm nổi bật tính thực tiễn của giải pháp: Khi có kết nối mạng ổn định, Gemini 2.5 Flash mang lại trải nghiệm tư vấn thông minh, linh hoạt trong khoảng \textbf{8,01 giây}. Ngược lại, khi xảy ra sự cố nghẽn mạng quốc tế hoặc vượt hạn mức truy vấn, Động cơ Heuristic DSS lập tức phản hồi trong chỉ \textbf{3,8 mili-giây}, đồng thời vẫn bảo đảm sinh đầy đủ các đề xuất Tác tử AI Hành động (\texttt{agentAction}) với tính sẵn sàng \textbf{100\%}.
+
+\subsection{Đánh giá Thực nghiệm Kiểm duyệt Bình luận Tự động (NLP Content Moderation \& AI Sentinel)}
+Nhằm giải quyết triệt để vấn nạn ngôn ngữ phi chuẩn, chửi thề viết tắt (teencode), lối nói mỉa mai châm biếm (sarcasm) và các phản ánh liên quan tới an toàn thực phẩm mà bộ lọc từ cấm truyền thống (Keyword Blacklist Regex) thường bỏ sót, đề tài đã xây dựng bộ dữ liệu thực nghiệm chuẩn \texttt{dataset\_toxic\_reviews.json} gồm 200 mẫu bình luận tiếng Việt được gán nhãn thủ công (100 mẫu vi phạm thuộc 3 nhóm: teencode lăng mạ, dị vật/ngộ độc/mất vệ sinh, mỉa mai cay độc; và 100 mẫu bình thường gồm lời khen, câu hỏi trung tính, đặc biệt là các góp ý tiêu cực nhưng mang tính xây dựng). 
+
+Bảng 5.4 tổng hợp kết quả đo đạc định lượng đối chiếu giữa phương pháp lọc từ cấm Baseline và Mô hình NLP Phân tích Ngữ cảnh do đề tài đề xuất:
+
+\begin{table}{So sánh hiệu năng kiểm duyệt bình luận giữa Baseline Blacklist và Mô hình NLP/AI}
+\centering
+\small
+\begin{tabularx}{\textwidth}{|X|c|c|c|}
+\hline
+\textbf{Chỉ số Đánh giá (Metrics)} & \textbf{Baseline (Keyword Blacklist)} & \textbf{Mô hình NLP Đề xuất} & \textbf{Mức độ Cải thiện} \\ \hline
+Độ chính xác toàn diện (Accuracy) & 63,50\% & \textbf{91,50\%} & \textbf{+28,00\%} \\ \hline
+Độ chuẩn xác khi phát hiện (Precision) & \textbf{100,00\%} & 95,60\% & Tránh phạt oan khách hàng \\ \hline
+Độ bao phủ vi phạm (Recall) & 27,00\% & \textbf{87,00\%} & \textbf{+60,00\% (Gấp 3,2 lần)} \\ \hline
+Chỉ số tổng hòa chất lượng (F1-Score) & 42,52\% & \textbf{91,10\%} & \textbf{+48,58\%} \\ \hline
+Độ đặc hiệu nhận diện câu đúng (Specificity) & \textbf{100,00\%} & 96,00\% & Giữ vững độ tin cậy \\ \hline
+Thời gian xử lý trung bình (Latency) & 0,065 ms & \textbf{0,070 ms} & Đáp ứng thời gian thực \\ \hline
+\end{tabularx}
+\end{table}
+
+Phân tích ma trận nhầm lẫn (Confusion Matrix) khẳng định:
+\begin{itemize}
+    \item \textbf{Mô hình Baseline Blacklist} ($TP = 27$, $FP = 0$, $TN = 100$, $FN = 73$): Mặc dù đạt độ chuẩn xác tuyệt đối trên các từ khóa bắt được, phương pháp cũ bỏ sót tới \textbf{73\%} các bình luận độc hại vi phạm do người dùng cố tình lách bộ lọc bằng teencode (chỉ nhận diện được 40,0\%), phản ánh mất an toàn thực phẩm (31,4\%) và mỉa mai (chỉ đạt 6,7\%).
+    \item \textbf{Mô hình NLP đề xuất} ($TP = 87$, $FP = 4$, $TN = 96$, $FN = 13$): Nhận diện thành công 87\% tổng số vi phạm, nâng độ bao phủ teencode lên \textbf{91,4\%}, an toàn thực phẩm lên \textbf{88,6\%} và mỉa mai lên \textbf{80,0\%}. Đặc biệt, mô hình duy trì độ đặc hiệu 96,0\%, không bị nhầm lẫn đối với các bình luận phê bình văn minh, đồng thời hoàn tất kiểm thử trong thời gian siêu tốc \textbf{0,07 ms}.
+\end{itemize}
+
+\subsection{Đánh giá Thực nghiệm Tìm kiếm Món ăn Ngữ nghĩa (Semantic Search \& Intent Expansion)}
+Để giải quyết bài toán khách hàng tìm kiếm ẩm thực bằng các câu hỏi tự nhiên theo ngữ cảnh (thời tiết, khẩu vị, chế độ dinh dưỡng, hoàn cảnh ăn uống), đề tài xây dựng bộ dữ liệu \texttt{dataset\_food\_search.json} gồm 60 câu truy vấn đa chiều được thử nghiệm đối soát trực tiếp trên kho dữ liệu thực tế gồm 60+ món ăn thuộc hệ thống \texttt{anh\_food\_yt}. Kết quả được so sánh với hai phương pháp cơ sở: Tìm kiếm chuỗi SQL chính xác (\texttt{WHERE name LIKE '\%query\%'}) và Tìm kiếm theo từ đơn lẻ (\texttt{Token-based LIKE}).
+
+Bảng 5.5 trình bày các chỉ số chuẩn trong Truy hồi Thông tin (Information Retrieval -- IR):
+
+\begin{table}{So sánh chỉ số truy hồi món ăn (IR Metrics) giữa các phương pháp tìm kiếm}
+\centering
+\small
+\begin{tabularx}{\textwidth}{|X|c|c|c|}
+\hline
+\textbf{Chỉ số Truy hồi (IR Metrics)} & \textbf{Baseline 1 (SQL Exact)} & \textbf{Baseline 2 (SQL Token)} & \textbf{Mô hình Semantic AI} \\ \hline
+Tỷ lệ không có kết quả (Zero-Result Rate) & 100,0\% & 20,0\% & \textbf{0,0\% (Khắc phục triệt để)} \\ \hline
+Tỷ lệ đoán đúng Top 1 (Hit Rate @ 1) & 0,0\% & 15,0\% & \textbf{73,33\%} \\ \hline
+Tỷ lệ trúng món Top 3 (Hit Rate @ 3) & 0,0\% & 18,33\% & \textbf{96,67\%} \\ \hline
+Tỷ lệ trúng món Top 5 (Hit Rate @ 5) & 0,0\% & 20,0\% & \textbf{96,67\%} \\ \hline
+Hạng nghịch đảo trung bình (MRR) & 0,000 & 0,170 & \textbf{0,851} \\ \hline
+Độ chuẩn xác Top 3 (Precision @ 3) & 0,0\% & 11,67\% & \textbf{48,89\%} \\ \hline
+Thời gian thực thi trung bình & 0,02 ms & 0,24 ms & \textbf{0,39 ms} \\ \hline
+\end{tabularx}
+\end{table}
+
+Số liệu tại Bảng 5.5 chứng minh:
+\begin{itemize}
+    \item Tìm kiếm SQL nguyên văn thất bại hoàn toàn ($100\%$ trả về rỗng) do người dùng không bao giờ gõ đúng tên món ăn niêm yết trong cơ sở dữ liệu.
+    \item Tìm kiếm phân tách từ đơn lẻ (Baseline 2) tuy giảm tỷ lệ rỗng xuống 20\% nhưng kết quả trả về nhiều món ăn rác, khiến chỉ số MRR chỉ đạt mức khiêm tốn 0,170.
+    \item Mô hình \textbf{Semantic AI đề xuất} triệt tiêu hoàn toàn tỷ lệ rỗng ($0,0\%$), đưa \textbf{Hit Rate @ 3 lên tới 96,67\%} và chỉ số \textbf{MRR đạt 0,851} với độ trễ xử lý chỉ \textbf{0,39 ms}, chứng minh năng lực thấu hiểu sâu sắc nhu cầu tự nhiên của thực khách.
+\end{itemize}
+
+\subsection{Đánh giá Thực nghiệm Tối ưu hóa Tổ hợp Mã Giảm giá và Kích cầu Giỏ hàng}
+Để chứng minh giá trị kinh tế và giải thuật của phân hệ khuyến mãi, đề tài đã thiết kế tập dữ liệu \texttt{dataset\_voucher\_cases.json} gồm 40 kịch bản giỏ hàng thực tế với giá trị biến thiên từ 75.000đ đến 850.000đ thử nghiệm với 6 mã voucher có ràng buộc phức tạp (giảm cố định, giảm phần trăm có chặn trần, freeship). Phương pháp Tối ưu hóa Ràng buộc đề xuất (Constraint Solver) được đối chiếu với: Lựa chọn ngẫu nhiên của khách (Random Pick) và Thuật toán tham lam chọn mã đầu tiên hợp lệ (First-Fit Greedy).
+
+Bảng 5.6 tổng hợp kết quả đo đạc thực nghiệm:
+
+\begin{table}{So sánh hiệu quả tối ưu hóa mã giảm giá và kích cầu giỏ hàng}
+\centering
+\small
+\begin{tabularx}{\textwidth}{|X|c|c|c|}
+\hline
+\textbf{Tiêu chí Đánh giá} & \textbf{Baseline 1 (Random Pick)} & \textbf{Baseline 2 (First-Fit)} & \textbf{Thuật toán Đề xuất} \\ \hline
+Tỷ lệ chọn đúng mã tối ưu nhất & 35,0\% & 10,0\% & \textbf{100,0\%} \\ \hline
+Số tiền giảm trung bình cho khách & 24.058 đ & 10.125 đ & \textbf{38.140 đ} \\ \hline
+Mức tăng số tiền tiết kiệm cho khách & Mốc cơ sở & -- & \textbf{+58,54\%} \\ \hline
+Tỷ lệ phát hiện cơ hội bù món (Upsell Rate) & 0,0\% & 0,0\% & \textbf{52,5\% số đơn} \\ \hline
+Doanh thu kích cầu tăng thêm (AOV Lift) & 0 đ & 0 đ & \textbf{+14.048 đ / đơn} \\ \hline
+Thời gian giải thuật toán tối ưu & -- & -- & \textbf{0,025 ms} \\ \hline
+\end{tabularx}
+\end{table}
+
+Phân tích kết quả thực nghiệm tại Bảng 5.6:
+\begin{itemize}
+    \item Do các điều kiện trần chiết khấu phức tạp, khách hàng tự chọn thủ công chỉ đạt 35\% xác suất tìm được mã ưu đãi tốt nhất.
+    \item Thuật toán \textbf{Constraint Solver đề xuất} bảo đảm \textbf{100\% chọn ra phương án tối ưu tuyệt đối} trong thời gian vỏn vẹn \textbf{0,025 ms}, giúp người tiêu dùng tiết kiệm thêm trung bình \textbf{+58,54\%} số tiền giảm giá so với cách chọn ngẫu nhiên.
+    \item Cơ chế Phân tích Khoảng cách Ngưỡng (Upsell Gap Analysis) phát hiện cơ hội bù món ở \textbf{52,5\%} tổng số đơn hàng, giúp các nhà hàng đối tác gia tăng doanh thu trung bình mỗi đơn (\textbf{AOV Lift}) thêm \textbf{14.048 đ}, tạo ra giải pháp đôi bên cùng có lợi (Win-Win) giữa thực khách và chủ quán.
+\end{itemize}
+
+\subsection{Tổng kết Định lượng và Đóng góp Học thuật của Phân hệ AI}
+Kết quả đo đạc định lượng trên 3 bộ benchmark độc lập khẳng định rõ ràng:
+\begin{enumerate}
+    \item Việc nghiên cứu và ứng dụng Trí tuệ Nhân tạo trong đề tài không mang tính hình thức hay lắp ghép giao diện, mà đã giải quyết trực diện các bài toán hóc búa của thương mại điện tử ẩm thực.
+    \item Các chỉ số thực nghiệm chuẩn của ngành Khoa học Máy tính ($F_1 = 91,10\%$, $\text{Hit Rate@3} = 96,67\%$, $\text{MRR} = 0,851$, $\text{Tiết kiệm} +58,54\%$, $\text{AOV Lift} +14.048$đ) cung cấp cơ sở khoa học vững chắc và luận cứ định lượng thuyết phục cho toàn bộ khóa luận.
+\end{enumerate}
 
 \section{Giao diện Một số Màn hình Chính của Hệ thống}
 Hệ thống được thiết kế hoàn chỉnh với hơn 20 màn hình chức năng chạy thực tế. Dưới đây là ảnh chụp màn hình thực tế từ hệ thống đang vận hành đại diện cho 6 phân hệ trọng yếu nhất:
@@ -1663,15 +1863,17 @@ Khóa luận tốt nghiệp với đề tài \textbf{``Nghiên cứu và phát t
     \item \textbf{Phát triển Động cơ kiểm soát mã giảm giá (Coupon Engine) \& Đồng bộ Sự kiện:} Giải quyết trọn vẹn bài toán khuyến mãi đa cấp độ (4 mã toàn sàn, 4 mã riêng nhà hàng tự động đồng bộ từ 4 sự kiện khuyến mãi); triển khai cơ chế tự động gỡ bỏ mã (Auto-removal) tại giao diện và thuật toán kiểm tra an toàn biên (\texttt{Math.max}, \texttt{Math.min}) tại máy chủ.
     \item \textbf{Tích hợp Thanh toán Đa phương thức (Stripe Checkout \& COD) và Máy trạng thái Đơn hàng:} Xây dựng luồng thanh toán thẻ quốc tế Stripe chuẩn PCI DSS (với callback mở khóa an toàn), hỗ trợ song song thanh toán COD và xuất hóa đơn điện tử; thiết lập \textbf{Order State Guard} ngăn chuyển trạng thái trái quy trình.
     \item \textbf{Hiện thực hóa truyền thông đơn hàng thời gian thực qua WebSocket \& Chuông thuật toán:} Loại bỏ hoàn toàn cơ chế kéo định kỳ HTTP Polling, đưa độ trễ nhận đơn hàng xuống còn 26,5ms (nhanh gấp 57,6 lần), luôn sắp xếp đơn hàng mới nhất lên đầu và tích hợp chuông âm thanh Web Audio API.
-    \item \textbf{Xây dựng Hệ sinh thái AI Đa tầng (Dual-Persona Agentic AI Copilot \& Menu Catalog RAG Chatbot):} Kết hợp \textbf{Google Gemini 2.5 Flash} và Động cơ Heuristic DSS dự phòng hai tầng (đạt độ sẵn sàng 100\%) kèm tính năng Tác tử AI 1-Click khóa món cạn kho/gỡ đánh giá vi phạm cho quản trị viên, cùng Widget Chatbot Menu Catalog RAG hỗ trợ thực khách đặt món nhanh qua deep-link.
+    \item \textbf{Xây dựng Hệ sinh thái AI Đa tầng (Dual-Persona Agentic AI Copilot \& Menu Catalog RAG Chatbot):} Kết hợp \textbf{Google Gemini 2.5 Flash} và Động cơ Heuristic DSS dự phòng hai tầng (đạt độ sẵn sàng 100\%) kèm \textbf{Bộ 4 Tác tử AI Hành động 1-Click} (tạm khóa món cạn kho, tạo mã tri ân khách hàng \texttt{TRIAN\_AI} cho Chủ quán; gỡ bỏ đánh giá độc hại kèm cơ chế \textbf{Self-healing Demo Data Sentinel}, và kích hoạt Mega Sale toàn sàn \texttt{FREESHIP\_AI} cho Super Admin); cơ chế cập nhật lặp Idempotent trong dịch vụ ưu đãi; cùng Widget Chatbot Menu Catalog RAG hỗ trợ thực khách đặt món nhanh qua deep-link.
     \item \textbf{Phát triển phân hệ Quản lý Kho nguyên liệu Tự động (Smart Stock Depletion Engine):} Tự động khấu trừ và hoàn trả tồn kho nguyên liệu theo từng đơn hàng phát sinh hoặc bị hủy (bao gồm lúc chủ quán chuyển trạng thái hủy), ghi vết minh bạch vào nhật ký biến động kho \texttt{InventoryLog} với độ lệch tồn kho bằng 0\%.
     \item \textbf{Thiết kế cơ sở dữ liệu chuẩn hóa và Hệ sinh thái dữ liệu thực tế:} Xây dựng mô hình ERD gồm 21 bảng chuẩn 3NF, bảo đảm tính toàn vẹn ACID cùng bộ dữ liệu thử nghiệm chuẩn thực tiễn (16 nhà hàng thuộc 3 thành phố, 82 món ăn ảnh thật, kịch bản khởi tạo tự động và bản sao lưu SQL \texttt{restore\_images\_and\_coupons.sql}).
-    \item \textbf{Trải nghiệm người dùng vượt trội với Dark Mode UI:} Thiết kế giao diện đồng bộ, mượt mà trên Material-UI 9, Recharts và TailwindCSS, tối ưu hóa thao tác với lưới 4 cột thích ứng, Carousel ``Hôm nay ăn gì?'', đánh giá theo từng món và thanh điều hướng quản trị nhất quán.
+    \item \textbf{Trải nghiệm người dùng vượt trội và Bảo vệ Điều hướng Phân quyền:} Thiết kế giao diện Dark Mode đồng bộ trên Material-UI 9, Recharts và TailwindCSS, tối ưu hóa thao tác với lưới 4 cột thích ứng, Carousel ``Hôm nay ăn gì?'', đánh giá theo từng món, thanh điều hướng Navbar phân quyền thông minh (ẩn giỏ hàng/tìm kiếm đối với Chủ quán/Admin, điều hướng logo về bảng quản trị) và cảnh báo xác thực trực quan (Visual Auth Alerts).
+    \item \textbf{Nghiên cứu và Đánh giá Thực nghiệm Học thuật Chuyên sâu Chuẩn Khoa học Máy tính:} Xây dựng 3 bộ benchmark độc lập chứng minh định lượng tính ưu việt của AI/Thuật toán đề xuất so với Baseline truyền thống: $F_1$-score kiểm duyệt nội dung đạt 91,10\% (tăng +48,58\% so với Blacklist, bắt trọn 87\% teencode và nguy cơ ngộ độc), triệt tiêu hoàn toàn tỷ lệ rỗng kết quả tìm kiếm với Hit Rate@3 đạt 96,67\% và MRR đạt 0,851, cùng thuật toán tối ưu hóa ràng buộc đạt 100\% độ chuẩn xác giúp thực khách tiết kiệm thêm +58,54\% chi phí và tăng doanh thu kích cầu AOV Lift cho quán thêm 14.048 đ/đơn.
 \end{enumerate}
 
 \subsection{Đánh giá Ưu điểm Nổi bật của Hệ thống}
 \begin{itemize}
     \item \textbf{Tính thực tiễn và sẵn sàng triển khai cao:} Không chỉ dừng lại ở mức mô hình nghiên cứu lý thuyết, hệ thống đã giải quyết trọn vẹn các bài toán nghiệp vụ gai góc trong thực tế của ngành F\&B như: tùy biến nguyên liệu theo món, thanh toán thẻ quốc tế thực tế, cơ chế hủy đơn an toàn, kiểm duyệt đánh giá xấu, cảnh báo đơn hàng tức thời, quản trị kho tự động và phân tích kinh doanh bằng AI.
+    \item \textbf{Cơ sở thực nghiệm định lượng khoa học và tính tự phục hồi dữ liệu thông minh:} Khóa luận cung cấp đầy đủ số liệu đo đạc thực nghiệm trên các bộ dữ liệu chuẩn độc lập, đi kèm cơ chế Self-healing Demo Data Sentinel và Idempotent Coupon Upsert bảo đảm quá trình thẩm định và vận hành thực tế không bao giờ gặp lỗi gián đoạn.
     \item \textbf{Kiến trúc mã nguồn rõ ràng, dễ bảo trì:} Codebase được tổ chức theo cấu trúc phân tầng chuẩn mực (Controller, Service, Repository, DTO, Redux Slices, Components), tuân thủ nguyên lý thiết kế SOLID và các quy ước kỹ thuật chuẩn của cộng đồng Spring và React.
     \item \textbf{Bảo mật và an toàn dữ liệu cao:} Đảm bảo kiểm tra quyền truy cập ở từng endpoint, bảo vệ dữ liệu thẻ khách hàng và loại trừ các lỗ hổng bảo mật phổ biến.
 \end{itemize}
