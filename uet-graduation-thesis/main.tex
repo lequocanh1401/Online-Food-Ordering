@@ -85,6 +85,7 @@ Tôi xin chịu hoàn toàn trách nhiệm trước Hội đồng chấm khóa l
 
 \vspace{1.5cm}
 \begin{flushright}
+\textit{Hà Nội, tháng 12 năm 2026}\\
 \textbf{Sinh viên thực hiện}\\
 \textit{(Ký và ghi rõ họ tên)}\\
 \vspace{1.5cm}
@@ -106,7 +107,7 @@ Cuối cùng, em xin dành tình cảm biết ơn vô hạn tới gia đình, ch
 
 \vspace{1cm}
 \begin{flushright}
-\textit{Hà Nội, tháng 05 năm 2026}\\
+\textit{Hà Nội, tháng 12 năm 2026}\\
 \textbf{Lê Quốc Anh}
 \end{flushright}
 \end{preamble}
@@ -979,7 +980,7 @@ Dưới đây là từ điển dữ liệu đặc tả cấu trúc của các b�
 \begin{table}[!htbp]{Từ điển dữ liệu bảng User}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{2.3cm}|>{\raggedright\arraybackslash}p{3.3cm}|>{\raggedright\arraybackslash}X|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{3.5cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Ràng buộc} & \textbf{Mô tả ý nghĩa} \\ \hline
 id & BIGINT & PK, Auto Increment & Khóa chính định danh người dùng \\ \hline
@@ -994,7 +995,7 @@ role & VARCHAR(50) & Not Null & Vai trò người dùng (ROLE\_CUSTOMER, ...) \\
 \begin{table}[!htbp]{Từ điển dữ liệu bảng Restaurant}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{2.3cm}|>{\raggedright\arraybackslash}p{3.3cm}|>{\raggedright\arraybackslash}X|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{3.5cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Ràng buộc} & \textbf{Mô tả ý nghĩa} \\ \hline
 id & BIGINT & PK, Auto Increment & Khóa chính định danh nhà hàng \\ \hline
@@ -1016,7 +1017,7 @@ registrationDate & DATETIME & Not Null & Thời điểm đăng ký tham gia sàn
 \begin{table}[!htbp]{Từ điển dữ liệu bảng Food}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{2.3cm}|>{\raggedright\arraybackslash}p{3.3cm}|>{\raggedright\arraybackslash}X|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{3.5cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Ràng buộc} & \textbf{Mô tả ý nghĩa} \\ \hline
 id & BIGINT & PK, Auto Increment & Khóa chính định danh món ăn \\ \hline
@@ -1036,7 +1037,7 @@ creationDate & DATETIME & Not Null & Thời điểm tạo món ăn trên hệ th
 \begin{table}[!htbp]{Từ điển dữ liệu bảng IngredientsItem (Định lượng tồn kho)}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{2.3cm}|>{\raggedright\arraybackslash}p{3.3cm}|>{\raggedright\arraybackslash}X|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{3.5cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Ràng buộc} & \textbf{Mô tả ý nghĩa} \\ \hline
 id & BIGINT & PK, Auto Increment & Khóa chính định danh nguyên liệu \\ \hline
@@ -1055,7 +1056,7 @@ minThreshold & DOUBLE & Default 5.0 & Ngưỡng định lượng cảnh báo s�
 \begin{table}[!htbp]{Từ điển dữ liệu bảng InventoryLog (Nhật ký xuất nhập tồn kho)}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{2.3cm}|>{\raggedright\arraybackslash}p{3.3cm}|>{\raggedright\arraybackslash}X|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{3.5cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Ràng buộc} & \textbf{Mô tả ý nghĩa} \\ \hline
 id & BIGINT & PK, Auto Increment & Khóa chính định danh bản ghi nhật ký kho \\ \hline
@@ -1076,7 +1077,7 @@ createdAt & DATETIME & Not Null & Dấu thời gian ghi nhận biến động \\
 \begin{table}[!htbp]{Từ điển dữ liệu bảng Cart và CartItem}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{2.3cm}|>{\raggedright\arraybackslash}p{3.3cm}|>{\raggedright\arraybackslash}X|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{3.5cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Ràng buộc} & \textbf{Mô tả ý nghĩa} \\ \hline
 \multicolumn{4}{|c|}{\textbf{Bảng Cart}} \\ \hline
@@ -1097,7 +1098,7 @@ totalPrice & BIGINT & Not Null & Thành tiền = Giá món $\times$ Số lượn
 \begin{table}[!htbp]{Từ điển dữ liệu bảng Order}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{2.3cm}|>{\raggedright\arraybackslash}p{3.3cm}|>{\raggedright\arraybackslash}X|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{3.5cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Ràng buộc} & \textbf{Mô tả ý nghĩa} \\ \hline
 id & BIGINT & PK, Auto Increment & Khóa chính định danh đơn hàng \\ \hline
@@ -1119,7 +1120,7 @@ totalItem & INT & Not Null & Tổng số lượng món ăn có trong đơn \\ \h
 \begin{table}[!htbp]{Từ điển dữ liệu bảng Events (Sự kiện đồng bộ Mã ưu đãi)}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{2.3cm}|>{\raggedright\arraybackslash}p{3.3cm}|>{\raggedright\arraybackslash}X|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{3.5cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Ràng buộc} & \textbf{Mô tả ý nghĩa} \\ \hline
 id & BIGINT & PK, Auto Increment & Khóa chính định danh sự kiện nhà hàng \\ \hline
@@ -1140,7 +1141,7 @@ minimumOrderValue & BIGINT & Default 0 & Giá trị đơn tối thiểu được
 \begin{table}[!htbp]{Từ điển dữ liệu bảng Coupon}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{2.3cm}|>{\raggedright\arraybackslash}p{3.3cm}|>{\raggedright\arraybackslash}X|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{3.5cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Ràng buộc} & \textbf{Mô tả ý nghĩa} \\ \hline
 id & BIGINT & PK, Auto Increment & Khóa chính định danh mã giảm giá \\ \hline
@@ -1157,7 +1158,7 @@ active & BOOLEAN & Default True & Trạng thái mã còn hiệu lực sử dụn
 \begin{table}[!htbp]{Từ điển dữ liệu bảng Review}
 \centering
 \small
-\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{2.3cm}|>{\raggedright\arraybackslash}p{3.3cm}|>{\raggedright\arraybackslash}X|}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.8cm}|>{\raggedright\arraybackslash}p{3.0cm}|>{\raggedright\arraybackslash}p{3.5cm}|>{\raggedright\arraybackslash}X|}
 \hline
 \textbf{Tên trường} & \textbf{Kiểu dữ liệu} & \textbf{Ràng buộc} & \textbf{Mô tả ý nghĩa} \\ \hline
 id & BIGINT & PK, Auto Increment & Khóa chính định danh bài đánh giá \\ \hline
@@ -1946,8 +1947,8 @@ Nhằm nâng cấp hệ thống trở thành một nền tảng thương mại �
 \bibitem{eng1} Walls, C., \textit{Spring in Action, Sixth Edition}, Manning Publications, 2022.
 \bibitem{eng2} Spilca, L., \textit{Spring Security in Action, Second Edition}, Manning Publications, 2023.
 \bibitem{eng3} Banks, A., \& Porcello, E., \textit{Learning React: Modern Patterns for Developing React Applications, 2nd Edition}, O'Reilly Media, 2020.
-\bibitem{eng4} Redux Team, \textit{Redux Toolkit Documentation: The official, opinionated, batteries-included toolset for efficient Redux development}, Available: \url{https://redux-toolkit.js.org/}, Accessed: April 2026.
-\bibitem{eng5} Stripe Inc., \textit{Stripe API Documentation \& Integration Guide for Java and React}, Available: \url{https://stripe.com/docs/api}, Accessed: April 2026.
+\bibitem{eng4} Redux Team, \textit{Redux Toolkit Documentation: The official, opinionated, batteries-included toolset for efficient Redux development}, Available: \url{https://redux-toolkit.js.org/}, Accessed: November 2026.
+\bibitem{eng5} Stripe Inc., \textit{Stripe API Documentation \& Integration Guide for Java and React}, Available: \url{https://stripe.com/docs/api}, Accessed: November 2026.
 \bibitem{eng6} Fielding, R. T., \textit{Architectural Styles and the Design of Network-based Software Architectures}, Doctoral dissertation, University of California, Irvine, 2000.
 \bibitem{eng7} Silberschatz, A., Korth, H. F., \& Sudarshan, S., \textit{Database System Concepts, 7th Edition}, McGraw-Hill, 2020.
 \bibitem{eng8} Rescorla, E., \textit{The Transport Layer Security (TLS) Protocol Version 1.3}, RFC 8446, Internet Engineering Task Force (IETF), 2018.

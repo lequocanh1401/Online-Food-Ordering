@@ -38,7 +38,7 @@ Tôi xin chịu hoàn toàn trách nhiệm trước Hội đồng chấm khóa l
 
 <br/>
 
-*Hà Nội, tháng 05 năm 2026*  
+*Hà Nội, tháng 12 năm 2026*  
 **Sinh viên thực hiện**  
 *(Ký và ghi rõ họ tên)*  
 
@@ -62,7 +62,7 @@ Cuối cùng, em xin dành tình cảm biết ơn vô hạn tới gia đình, ch
 
 <br/>
 
-*Hà Nội, tháng 05 năm 2026*  
+*Hà Nội, tháng 12 năm 2026*  
 **Lê Quốc Anh**
 
 ---
