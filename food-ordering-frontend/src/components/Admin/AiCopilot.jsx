@@ -135,9 +135,9 @@ export const AiCopilot = () => {
 
     const ownerDefaultPrompts = [
         "📊 Đánh giá tổng quan hiệu quả kinh doanh của quán tuần này",
-        "⚠️ Cảnh báo nguyên liệu sắp hết & rủi ro gián đoạn bếp",
-        "💡 Đề xuất chiến lược tăng doanh thu & kích cầu món bán chậm",
-        "🎁 Gợi ý chương trình khuyến mãi giờ vàng tối ưu"
+        "💡 Đề xuất chiến lược tăng doanh thu & kích cầu giỏ hàng (AOV)",
+        "📦 Dự báo tiêu thụ & Đề xuất kế hoạch nhập/giảm kho nguyên liệu",
+        "⭐ Phân tích phản hồi khách hàng & Tóm tắt chất lượng dịch vụ"
     ];
 
     const [suggestedPrompts, setSuggestedPrompts] = useState(

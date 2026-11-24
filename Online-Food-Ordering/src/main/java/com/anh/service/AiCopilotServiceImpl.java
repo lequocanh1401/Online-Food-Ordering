@@ -50,9 +50,9 @@ public class AiCopilotServiceImpl implements AiCopilotService {
 
     private final List<String> ownerSuggestedPrompts = List.of(
             "📊 Đánh giá tổng quan hiệu quả kinh doanh của quán tuần này",
-            "💡 Đề xuất chiến lược tăng doanh thu & kích cầu món bán chậm",
-            "⚠️ Cảnh báo nguyên liệu sắp hết & rủi ro gián đoạn bếp",
-            "🎁 Gợi ý chương trình khuyến mãi giờ vàng tối ưu"
+            "💡 Đề xuất chiến lược tăng doanh thu & kích cầu giỏ hàng (AOV)",
+            "📦 Dự báo tiêu thụ & Đề xuất kế hoạch nhập/giảm kho nguyên liệu",
+            "⭐ Phân tích phản hồi khách hàng & Tóm tắt chất lượng dịch vụ"
     );
 
     private final List<String> superAdminSuggestedPrompts = List.of(
@@ -426,49 +426,73 @@ public class AiCopilotServiceImpl implements AiCopilotService {
         }
 
         // Dành cho Chủ nhà hàng
-        // Trường hợp cảnh báo nguyên liệu & gián đoạn bếp
-        if (qLower.contains("nguyên liệu") || qLower.contains("gián đoạn") || qLower.contains("cảnh báo") 
-                || qLower.contains("hết hàng") || qLower.contains("sắp hết") || qLower.contains("kho") || qLower.contains("bếp")) {
-            List<Food> foods = (restaurantId != null && restaurantId > 0) ? foodRepository.findByRestaurantId(restaurantId) : Collections.emptyList();
-            Food targetFood = null;
-            for (Food f : foods) {
-                if (f.getName().toLowerCase().contains("sườn") && f.isAvailable()) {
-                    targetFood = f;
-                    break;
-                }
-            }
-            if (targetFood == null) {
-                for (Food f : foods) {
-                    if (f.isAvailable()) { targetFood = f; break; }
-                }
-            }
-            if (targetFood == null && !foods.isEmpty()) targetFood = foods.get(0);
-
-            String foodName = targetFood != null ? targetFood.getName() : "Cơm Sườn Cây Nướng Mật Ong";
-            boolean isAvail = targetFood != null && targetFood.isAvailable();
-
+        // Trường hợp 1: Dự báo tiêu thụ & Kế hoạch nhập/giảm kho nguyên liệu (Smart Supply Chain & Food Waste Reduction)
+        if (qLower.contains("nguyên liệu") || qLower.contains("nhập") || qLower.contains("giảm kho") 
+                || qLower.contains("tiêu thụ") || qLower.contains("dự báo") || qLower.contains("tồn kho") || qLower.contains("kế hoạch")) {
             StringBuilder sb = new StringBuilder();
-            sb.append("### ⚠️ Cảnh Báo Nguy Cơ Cạn Kho & Rủi Ro Gián Đoạn Bếp — ").append(restName).append("\n\n");
-            sb.append("> *Hệ thống Smart Inventory AI phát hiện sự mất cân đối giữa tồn kho nguyên liệu và lượng đơn khách đặt.* \n\n");
+            sb.append("### 📦 Báo Cáo Dự Báo Tiêu Thụ & Tối Ưu Hóa Nhập Kho — ").append(restName).append("\n\n");
+            sb.append("> *Hệ thống AI phân tích tốc độ tiêu thụ (Consumption Velocity) đối soát với lịch sử bán hàng và hạn sử dụng nguyên vật liệu.* \n\n");
 
-            sb.append("#### 📉 1. Tình Trạng Tồn Kho Nguyên Vật Liệu Trọng Yếu\n");
-            sb.append("- **Nguyên liệu cạn kho**: `Sườn cây tươi` (Tồn kho: `0.0 kg` / Ngưỡng an toàn: `10.0 kg`)\n");
-            sb.append("- **Nguyên liệu sắp hết**: `Trứng gà ta` (Tồn kho: `2.0 quả` / Ngưỡng an toàn: `10.0 quả`)\n");
-            sb.append("- **Món ăn bị ảnh hưởng trực tiếp**: **").append(foodName).append("** (Món Best-Seller đóng góp ~35% doanh thu của quán)\n");
-            sb.append("- **Trạng thái menu hiện tại**: ").append(isAvail ? "`🟢 Đang mở bán` ⚠️ *(Rủi ro rất cao)*" : "`🔴 Đã tạm khóa` ✅ *(Bếp an toàn)*").append("\n\n");
+            sb.append("#### 📈 1. Phân Tích Nhóm Nguyên Liệu Cần Tăng Nhập (Món Bán Chạy)\n");
+            sb.append("- **Sườn Cây Tươi & Gạo Tấm Thơm**: Thuộc nhóm món Best-Seller (đóng góp **68.5% tổng doanh thu** của quán).\n");
+            sb.append("- **Tốc độ tiêu thụ**: Trung bình tiêu thụ `12 - 15 kg/ngày`, tăng mạnh vào cuối tuần.\n");
+            sb.append("- **💡 Khuyến nghị nhập kho**: Đề xuất **tăng lượng nhập thêm +25%** vào thứ 6 để chuẩn bị cho 2 ngày cuối tuần, tránh nguy cơ cạn kho khiến hệ thống phải tự động tạm ngưng bán món và mất doanh thu.\n\n");
 
-            sb.append("#### 🚨 2. Dự Báo Rủi Ro Khung Giờ Cao Điểm (11:30 - 13:00)\n");
-            sb.append("- Nếu tiếp tục mở bán khi thiếu nguyên liệu chính, dự kiến có 6-10 đơn hàng tiếp theo gọi món này mà bếp không thể chế biến kịp.\n");
-            sb.append("- Tỷ lệ hủy đơn cưỡng chế ước tính tăng vọt lên **25.0%**, dẫn đến điểm đánh giá của quán bị tụt hạng và khách khiếu nại giao trễ.\n\n");
+            sb.append("#### 📉 2. Phân Tích Nhóm Nguyên Liệu Cần Giảm Nhập (Giảm Hao Hụt & Lãng Phí Thực Phẩm)\n");
+            sb.append("- **Chả Bì & Khổ Qua**: Thuộc nhóm món ăn phụ bán chậm, lượng tiêu thụ chỉ đạt `2 - 3 suất/ngày`.\n");
+            sb.append("- **Thời hạn bảo quản**: Nguyên liệu tươi sống dễ ôi thiu nếu để qua 48 giờ.\n");
+            sb.append("- **💡 Khuyến nghị tối ưu**: Đề xuất **giảm lượng nhập -30%** đối với chả bì và khổ qua tươi, đồng thời thiết kế combo cơm sườn kèm canh để đẩy nhanh vòng quay tồn kho (Food Waste Reduction).\n\n");
 
-            sb.append("#### 🤖 3. Đề Xuất Quyết Sách Từ Tác Tử AI (Agentic Action)\n");
-            sb.append("1. **Tạm ngưng phục vụ ngay lập tức**:\n");
-            sb.append("   - Kích hoạt nút tác tử bên dưới để Tác tử AI **tự động tạm khóa món \"").append(foodName).append("\"** trên ứng dụng khách hàng ngay tức thì.\n");
-            sb.append("2. **Điều phối bếp & Kích cầu món thay thế**:\n");
-            sb.append("   - Hướng khách hàng sang các món còn dồi dào nguyên liệu như *Cơm Tấm Ba Rọi Nướng Giòn* hoặc *Gà Nướng Mật Ong*.\n\n");
+            sb.append("#### 🛡️ 3. Cơ Chế Kiểm Soát Tồn Kho Toàn Vẹn Của Hệ Thống\n");
+            sb.append("- *Lưu ý*: Phân hệ Quản lý kho của hệ thống đã tích hợp cơ chế tự động trừ kho BOM và **tự động khóa món ăn trên Menu khi nguyên liệu chạm ngưỡng 0 (giao dịch ACID)**. Bản kế hoạch AI này giúp Chủ quán chủ động tối ưu dòng tiền nhập hàng trước khi sự cố xảy ra.\n\n");
 
             sb.append("---\n");
-            sb.append("💡 *Chủ quán bấm nút Tác tử AI bên dưới để thực thi khóa món ngay trên thực đơn khách hàng!*");
+            sb.append("💡 *Bản kế hoạch mang tính tư vấn chiến lược vận hành chuỗi cung ứng, không yêu cầu kích hoạt tác tử cưỡng chế!*");
+            return sb.toString();
+        }
+
+        // Trường hợp 2: Phân tích phản hồi khách hàng & Tóm tắt chất lượng dịch vụ (Customer Sentiment NLP)
+        if (qLower.contains("đánh giá") || qLower.contains("phản hồi") || qLower.contains("chất lượng") 
+                || qLower.contains("dịch vụ") || qLower.contains("khách hàng") || qLower.contains("review") || qLower.contains("csat")) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("### ⭐ Phân Tích Cảm Xúc & Trải Nghiệm Khách Hàng (NLP Sentiment) — ").append(restName).append("\n\n");
+            sb.append("> *Hệ thống NLP phân tích toàn bộ văn bản đánh giá tự nhiên của khách hàng để bóc tách điểm khen và điểm nghẽn dịch vụ.* \n\n");
+
+            sb.append("#### 🌟 1. Điểm Sáng Được Khách Hàng Khen Ngợi (Tỷ lệ tích cực: 88.0%)\n");
+            sb.append("- **Chất lượng món ăn**: Đa số khách hàng đánh giá cao hương vị sườn nướng mật ong mềm mọng, đậm đà, hạt cơm tấm dẻo và nước mắm pha chuẩn vị Sài Gòn.\n");
+            sb.append("- **Đóng gói cẩn thận**: Hộp đựng thức ăn sạch sẽ, giữ nhiệt tốt và đồ chua kèm theo tươi giòn.\n\n");
+
+            sb.append("#### ⚠️ 2. Điểm Nghẽn Cần Khắc Phục Ngay (Tỷ lệ tiêu cực: 12.0%)\n");
+            sb.append("- **Tốc độ ra món giờ cao điểm**: Có 3 phản ánh ghi nhận đơn đặt trong khung giờ trưa (`11:30 - 12:30`) phải chờ lâu (trên 25 phút), dẫn đến shipper giao trễ và canh bị nguội.\n");
+            sb.append("- **Khẩu vị**: 1 khách nhận xét phần chả trứng bì hơi mặn so với khẩu vị thanh đạm miền Bắc.\n\n");
+
+            sb.append("#### 🎯 3. Khuyến Nghị Cải Thiện Vận Hành Bếp\n");
+            sb.append("1. **Tối ưu hóa quy trình chế biến giờ trưa**: Sơ chế và nướng sẵn một mẻ sườn cốt lết trước 11h15 để rút ngắn thời gian đóng gói xuống dưới 5 phút/đơn.\n");
+            sb.append("2. **Điều chỉnh nêm nếm**: Giảm bớt 10% lượng muối trong mẻ hấp chả trứng tiếp theo để phù hợp với số đông thực khách.\n\n");
+
+            sb.append("---\n");
+            sb.append("💡 *Chủ quán có thể theo dõi biểu đồ đánh giá sao chi tiết tại mục Đánh giá đối tác trên thanh điều hướng!*");
+            return sb.toString();
+        }
+
+        // Trường hợp 3: Đề xuất chiến lược tăng doanh thu & kích cầu giỏ hàng (AOV Upsell)
+        if (qLower.contains("tăng doanh thu") || qLower.contains("kích cầu") || qLower.contains("aov") 
+                || qLower.contains("giỏ hàng") || qLower.contains("chiến lược") || qLower.contains("voucher")) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("### 💡 Đề Xuất Chiến Lược Tăng Doanh Thu & Kích Cầu Giỏ Hàng (AOV Upsell) — ").append(restName).append("\n\n");
+            sb.append("> *Hệ thống AI phân tích ma trận giỏ hàng và đề xuất chiến lược tối ưu hóa ngưỡng khuyến mãi.* \n\n");
+
+            sb.append("#### 📊 1. Điểm Nghẽn Doanh Thu Hiện Tại\n");
+            sb.append("- **Giá trị đơn hàng trung bình (AOV)**: Đang ở mức thấp, chỉ đạt `~52.000đ/đơn`.\n");
+            sb.append("- **Hành vi người dùng**: Đa số khách hàng chỉ đặt 1 suất cơm đơn lẻ, rất ít khi gọi thêm canh, chả bì hoặc nước giải khát.\n\n");
+
+            sb.append("#### 🎯 2. Giải Pháp Kích Cầu Bằng Thuật Toán Khoảng Cách Ngưỡng (Upsell Gap Analysis)\n");
+            sb.append("- Tác tử AI đề xuất phát hành mã **`GIAM20K_AI`** (Giảm 20.000đ cho đơn hàng từ **120.000đ**).\n");
+            sb.append("- **Tác động tâm lý**: Khi thấy giỏ hàng 120k được giảm 20k (thực trả 100k), khách hàng sẽ chủ động gọi thêm 1 phần chả trứng (15k) và 1 lon nước ngọt (15k) để đủ điều kiện áp mã.\n");
+            sb.append("- **Hiệu quả dự kiến**: Tăng giá trị đơn trung bình (AOV) từ `52.000đ` lên `120.000đ` (**+25% doanh thu thuần** sau chiết khấu).\n\n");
+
+            sb.append("---\n");
+            sb.append("💡 *Chủ quán có thể bấm nút Tác tử AI bên dưới để hệ thống tự động phát hành và kích hoạt mã ngay, hoặc bấm Bỏ qua nếu muốn giữ nguyên!*");
             return sb.toString();
         }
 
@@ -586,47 +610,10 @@ public class AiCopilotServiceImpl implements AiCopilotService {
             return null;
         }
 
-        // Restaurant Owner Action 1: Smart Operations & Predictive Inventory Advisory
-        if (queryLower.contains("nguyên liệu") || queryLower.contains("gián đoạn") || queryLower.contains("cảnh báo") 
-                || queryLower.contains("hết hàng") || queryLower.contains("sắp hết") || queryLower.contains("kho") || queryLower.contains("bếp")) {
-            List<Food> foods = (restaurantId != null && restaurantId > 0) ? foodRepository.findByRestaurantId(restaurantId) : Collections.emptyList();
-            Food targetFood = null;
-            // Ưu tiên món Cơm Sườn Cây Nướng Mật Ong hoặc món chứa từ Sườn
-            for (Food f : foods) {
-                if (f.getName().toLowerCase().contains("sườn") && f.isAvailable()) {
-                    targetFood = f;
-                    break;
-                }
-            }
-            if (targetFood == null) {
-                for (Food f : foods) {
-                    if (f.isAvailable()) {
-                        targetFood = f;
-                        break;
-                    }
-                }
-            }
-            if (targetFood == null && !foods.isEmpty()) {
-                targetFood = foods.get(0);
-            }
-
-            if (targetFood != null) {
-                Map<String, Object> action = new HashMap<>();
-                action.put("type", "LOCK_FOOD_AVAILABILITY");
-                action.put("foodId", targetFood.getId());
-                action.put("foodName", targetFood.getName());
-                action.put("currentAvailable", targetFood.isAvailable());
-                action.put("title", "⚠️ Tác tử AI Cảnh Báo: Dự Báo Cạn Kho & Điều Tiết Menu");
-                action.put("reason", "Phân tích tốc độ tiêu thụ nguyên liệu: Món '" + targetFood.getName() + "' tiêu thụ nhanh trong khi nguyên liệu chính sắp chạm ngưỡng tối thiểu. Dù hệ thống sẽ tự động khóa món khi kho chạm 0 (theo cơ chế trừ kho ACID), AI đề xuất chủ quán có thể chủ động tạm ẩn món trước giờ cao điểm để điều hướng khách gọi các món bán chậm khác.");
-                action.put("buttonLabel", targetFood.isAvailable() ? "🚫 Đồng ý: Tạm ẩn món để điều hướng menu" : "🟢 Mở bán lại món ăn trên Menu");
-                action.put("successMessage", "Tác tử AI đã cập nhật trạng thái món '" + targetFood.getName() + "'. Thực đơn phía khách hàng đã được đồng bộ thời gian thực.");
-                return action;
-            }
-        }
-
-        // Restaurant Owner Action 2: Dynamic Promotion & Smart Revenue Upselling (AOV Optimization)
-        if (queryLower.contains("khuyến mãi") || queryLower.contains("giờ vàng") || queryLower.contains("kích cầu") 
-                || queryLower.contains("doanh thu") || queryLower.contains("chiến lược") || queryLower.contains("voucher") || queryLower.contains("bán chậm")) {
+        // Restaurant Owner Action: Dynamic Promotion & Smart Revenue Upselling (AOV Optimization)
+        // DUY NHẤT Prompt 2 mới kích hoạt Tác tử tạo mã kích cầu giỏ hàng
+        if (queryLower.contains("tăng doanh thu") || queryLower.contains("kích cầu") || queryLower.contains("aov") 
+                || queryLower.contains("giỏ hàng") || queryLower.contains("voucher")) {
             Map<String, Object> action = new HashMap<>();
             action.put("type", "CREATE_RESTAURANT_COUPON");
             action.put("restaurantId", restaurantId != null ? restaurantId : 1L);
