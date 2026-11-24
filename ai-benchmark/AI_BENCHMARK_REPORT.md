@@ -31,7 +31,7 @@ Hệ thống tập trung giải quyết 3 bài toán trọng tâm nơi các phư
 | **Recall (Độ bao phủ / Bắt trúng vi phạm)** | 27.0% | **87.0%** | **+60.0%** |
 | **F1-Score (Chỉ số tổng hòa chất lượng)** | 42.52% | **91.1%** | **+48.58%** |
 | **Specificity (Độ đặc hiệu - Nhận diện câu đúng)** | 100.0% | **96.0%** | Duy trì mức cao ổn định |
-| **Thời gian xử lý trung bình (Latency)** | 0.065 ms | **0.07 ms** | Đáp ứng thời gian thực |
+| **Thời gian xử lý trung bình (Latency)** | 0.055 ms | **0.063 ms** | Đáp ứng thời gian thực |
 
 ### 2.3. Ma trận Nhầm lẫn (Confusion Matrix)
 
@@ -62,7 +62,7 @@ Hệ thống tập trung giải quyết 3 bài toán trọng tâm nơi các phư
 | **Hit Rate @ 5 (Món đúng nằm trong Top 5)** | 0.0% | 81.67% | **91.67%** |
 | **Mean Reciprocal Rank (MRR)** | 0.0 | 0.694 | **0.7276** |
 | **Precision @ 3 (Độ chính xác Top 3)** | 0.0% | 50.56% | **47.78%** |
-| **Độ trễ trung bình (Query Latency)** | 0.7 ms | 9.7 ms | **8.44 ms** |
+| **Độ trễ trung bình (Query Latency)** | 0.65 ms | 8.74 ms | **7.9 ms** |
 
 ---
 
@@ -84,7 +84,7 @@ Hệ thống tập trung giải quyết 3 bài toán trọng tâm nơi các phư
 | **Mức tăng số tiền tiết kiệm cho khách** | Baseline | - | **+58.54%** |
 | **Tỷ lệ phát hiện cơ hội bù món (Upsell Rate)** | 0% | 0% | **52.5%** số đơn |
 | **Doanh thu giỏ hàng tăng thêm cho quán (AOV Lift)** | 0 đ | 0 đ | **+14,048 đ** / đơn |
-| **Thời gian giải thuật toán** | - | - | **0.0 ms** |
+| **Thời gian giải thuật toán** | - | - | **0.025 ms** |
 
 ---
 

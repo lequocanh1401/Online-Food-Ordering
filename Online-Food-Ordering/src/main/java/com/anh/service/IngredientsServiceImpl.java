@@ -106,7 +106,32 @@ public class IngredientsServiceImpl implements IngredientsService {
         }
         IngredientsItem item = opt.get();
         item.setInStock(!item.isInStock()); // Đảo trạng thái Còn hàng / Hết hàng
-        return ingredientItemRepository.save(item);
+        if (item.isInStock() && item.getQuantity() <= 0.0) {
+            item.setQuantity(10.0); // Tự động phục hồi định lượng nếu mở bán lại
+        }
+        IngredientsItem saved = ingredientItemRepository.save(item);
+
+        // Tự động kiểm tra và mở bán lại món ăn nếu nguyên liệu này giúp hoàn tất đủ công thức
+        try {
+            List<com.anh.model.Food> foods = foodRepository.findAll();
+            for (com.anh.model.Food f : foods) {
+                if (f.getIngredients() != null && f.getIngredients().stream().anyMatch(i -> i.getId().equals(id))) {
+                    boolean allOk = f.getIngredients().stream().allMatch(i -> {
+                        Optional<IngredientsItem> ingO = ingredientItemRepository.findById(i.getId());
+                        return ingO.isPresent() && ingO.get().isInStock() && ingO.get().getQuantity() > 0.0;
+                    });
+                    if (allOk && !f.isAvailable()) {
+                        f.setAvailable(true);
+                        foodRepository.save(f);
+                    } else if (!allOk && f.isAvailable()) {
+                        f.setAvailable(false);
+                        foodRepository.save(f);
+                    }
+                }
+            }
+        } catch (Exception ignored) {}
+
+        return saved;
     }
 
     @Autowired
@@ -250,6 +275,22 @@ public class IngredientsServiceImpl implements IngredientsService {
                     inventoryLogRepository.save(log);
                 } catch (Exception ignored) {}
             }
+
+            // Tự động tạm khóa món ăn trên Menu (Auto-Lock) nếu có bất kỳ nguyên liệu chính nào cạn kiệt (quantity <= 0 hoặc !inStock)
+            boolean anyIngredientDepleted = false;
+            for (IngredientsItem checkIng : food.getIngredients()) {
+                if (checkIng.getId() == null) continue;
+                Optional<IngredientsItem> curIngOpt = ingredientItemRepository.findById(checkIng.getId());
+                if (curIngOpt.isPresent() && (curIngOpt.get().getQuantity() <= 0.0 || !curIngOpt.get().isInStock())) {
+                    anyIngredientDepleted = true;
+                    break;
+                }
+            }
+            if (anyIngredientDepleted && food.isAvailable()) {
+                food.setAvailable(false);
+                foodRepository.save(food);
+                System.out.println(">>> [SMART-STOCK AUTO-LOCK] Món '" + food.getName() + "' (ID: " + food.getId() + ") đã tự động tạm khóa trên Menu do cạn nguyên liệu!");
+            }
         }
     }
 
@@ -303,6 +344,22 @@ public class IngredientsServiceImpl implements IngredientsService {
                     log.setCreatedAt(java.time.LocalDateTime.now());
                     inventoryLogRepository.save(log);
                 } catch (Exception ignored) {}
+            }
+
+            // Tự động mở bán lại món ăn nếu tất cả nguyên liệu đã được hoàn về tồn kho > 0
+            boolean allIngredientsRestored = true;
+            for (IngredientsItem checkIng : food.getIngredients()) {
+                if (checkIng.getId() == null) continue;
+                Optional<IngredientsItem> curIngOpt = ingredientItemRepository.findById(checkIng.getId());
+                if (curIngOpt.isPresent() && (curIngOpt.get().getQuantity() <= 0.0 || !curIngOpt.get().isInStock())) {
+                    allIngredientsRestored = false;
+                    break;
+                }
+            }
+            if (allIngredientsRestored && !food.isAvailable()) {
+                food.setAvailable(true);
+                foodRepository.save(food);
+                System.out.println(">>> [SMART-STOCK AUTO-UNLOCK] Món '" + food.getName() + "' (ID: " + food.getId() + ") đã tự động mở bán lại khi hoàn nguyên liệu vào kho!");
             }
         }
     }

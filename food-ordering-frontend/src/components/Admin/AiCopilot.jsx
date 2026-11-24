@@ -124,6 +124,7 @@ export const AiCopilot = () => {
     const [metrics, setMetrics] = useState(null);
     const [executingAction, setExecutingAction] = useState(false);
     const [executedActionIds, setExecutedActionIds] = useState({});
+    const [dismissedActionIds, setDismissedActionIds] = useState({});
 
     const superAdminDefaultPrompts = [
         "🏢 Đánh giá tổng quan hiệu quả vận hành & GMV toàn sàn F&B",
@@ -530,10 +531,10 @@ export const AiCopilot = () => {
                                                                 </div>
                                                                 <Chip 
                                                                     size="small" 
-                                                                    label={executedActionIds[index] ? "🔴 Tạm hết món" : (msg.agentAction.currentAvailable ? "🟢 Đang mở bán" : "🔴 Đã tạm khóa")} 
+                                                                    label={executedActionIds[index] ? "🔴 Tạm hết món" : (dismissedActionIds[index] ? "⚪ Đã bỏ qua" : (msg.agentAction.currentAvailable ? "🟢 Đang mở bán" : "🔴 Đã tạm khóa"))} 
                                                                     sx={{ 
-                                                                        bgcolor: executedActionIds[index] ? 'rgba(239, 68, 68, 0.2)' : 'rgba(16, 185, 129, 0.2)', 
-                                                                        color: executedActionIds[index] ? '#f87171' : '#34d399', 
+                                                                        bgcolor: executedActionIds[index] ? 'rgba(239, 68, 68, 0.2)' : (dismissedActionIds[index] ? 'rgba(107, 114, 128, 0.2)' : 'rgba(16, 185, 129, 0.2)'), 
+                                                                        color: executedActionIds[index] ? '#f87171' : (dismissedActionIds[index] ? '#9ca3af' : '#34d399'), 
                                                                         fontWeight: 'bold' 
                                                                     }}
                                                                 />
@@ -546,15 +547,34 @@ export const AiCopilot = () => {
                                                                     <CheckIcon sx={{ fontSize: 18 }} />
                                                                     Tác tử AI đã tạm khóa món thành công! Thực đơn khách hàng đã cập nhật "Tạm hết món".
                                                                 </div>
+                                                            ) : dismissedActionIds[index] ? (
+                                                                <div className="mt-2 py-2 px-3 rounded-lg bg-gray-800/60 border border-gray-700/60 text-gray-400 text-[11px] flex items-center justify-between">
+                                                                    <span>ℹ️ Đã bỏ qua đề xuất này (Chủ quán quyết định giữ nguyên trạng thái món).</span>
+                                                                    <button 
+                                                                        onClick={() => handleExecuteAgentAction(msg.agentAction, index)}
+                                                                        className="text-rose-400 hover:text-rose-300 font-bold underline cursor-pointer ml-2"
+                                                                    >
+                                                                        Khóa ngay
+                                                                    </button>
+                                                                </div>
                                                             ) : (
-                                                                <button
-                                                                    onClick={() => handleExecuteAgentAction(msg.agentAction, index)}
-                                                                    disabled={executingAction}
-                                                                    className="mt-2 w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-bold text-xs shadow-lg shadow-rose-600/30 flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95 disabled:opacity-50"
-                                                                >
-                                                                    {executingAction ? <CircularProgress size={16} sx={{ color: 'white' }} /> : <BlockIcon sx={{ fontSize: 16 }} />}
-                                                                    {msg.agentAction.buttonLabel}
-                                                                </button>
+                                                                <div className="mt-2 flex items-center gap-2">
+                                                                    <button
+                                                                        onClick={() => handleExecuteAgentAction(msg.agentAction, index)}
+                                                                        disabled={executingAction}
+                                                                        className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white font-bold text-xs shadow-lg shadow-rose-600/30 flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95 disabled:opacity-50"
+                                                                    >
+                                                                        {executingAction ? <CircularProgress size={16} sx={{ color: 'white' }} /> : <BlockIcon sx={{ fontSize: 16 }} />}
+                                                                        {msg.agentAction.buttonLabel}
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => setDismissedActionIds(prev => ({ ...prev, [index]: true }))}
+                                                                        disabled={executingAction}
+                                                                        className="py-2.5 px-3 rounded-xl bg-gray-800/80 hover:bg-gray-700 text-gray-300 hover:text-white font-medium text-xs border border-gray-700 transition-all cursor-pointer active:scale-95 disabled:opacity-50"
+                                                                    >
+                                                                        ❌ Bỏ qua
+                                                                    </button>
+                                                                </div>
                                                             )}
                                                         </div>
                                                     )}
@@ -581,15 +601,158 @@ export const AiCopilot = () => {
                                                                     <CheckIcon sx={{ fontSize: 18 }} />
                                                                     Đã gỡ bỏ đánh giá vi phạm khỏi sàn! Uy tín đối tác và CSAT sàn đã phục hồi.
                                                                 </div>
+                                                            ) : dismissedActionIds[index] ? (
+                                                                <div className="mt-2 py-2 px-3 rounded-lg bg-gray-800/60 border border-gray-700/60 text-gray-400 text-[11px] flex items-center justify-between">
+                                                                    <span>ℹ️ Đã bỏ qua đề xuất (Admin quyết định giữ lại bình luận này).</span>
+                                                                    <button 
+                                                                        onClick={() => handleExecuteAgentAction(msg.agentAction, index)}
+                                                                        className="text-red-400 hover:text-red-300 font-bold underline cursor-pointer ml-2"
+                                                                    >
+                                                                        Gỡ bỏ ngay
+                                                                    </button>
+                                                                </div>
                                                             ) : (
-                                                                <button
-                                                                    onClick={() => handleExecuteAgentAction(msg.agentAction, index)}
-                                                                    disabled={executingAction}
-                                                                    className="mt-2 w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-xs shadow-lg shadow-red-600/30 flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95 disabled:opacity-50"
-                                                                >
-                                                                    {executingAction ? <CircularProgress size={16} sx={{ color: 'white' }} /> : <ShieldIcon sx={{ fontSize: 16 }} />}
-                                                                    {msg.agentAction.buttonLabel}
-                                                                </button>
+                                                                <div className="mt-2 flex items-center gap-2">
+                                                                    <button
+                                                                        onClick={() => handleExecuteAgentAction(msg.agentAction, index)}
+                                                                        disabled={executingAction}
+                                                                        className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold text-xs shadow-lg shadow-red-600/30 flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95 disabled:opacity-50"
+                                                                    >
+                                                                        {executingAction ? <CircularProgress size={16} sx={{ color: 'white' }} /> : <ShieldIcon sx={{ fontSize: 16 }} />}
+                                                                        {msg.agentAction.buttonLabel}
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => setDismissedActionIds(prev => ({ ...prev, [index]: true }))}
+                                                                        disabled={executingAction}
+                                                                        className="py-2.5 px-3 rounded-xl bg-gray-800/80 hover:bg-gray-700 text-gray-300 hover:text-white font-medium text-xs border border-gray-700 transition-all cursor-pointer active:scale-95 disabled:opacity-50"
+                                                                    >
+                                                                        ❌ Bỏ qua
+                                                                    </button>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    )}
+
+                                                    {msg.agentAction.type === 'CREATE_RESTAURANT_COUPON' && (
+                                                        <div className="space-y-2.5 text-xs text-gray-300">
+                                                            <div className="p-3 rounded-lg bg-black/40 border border-pink-900/50 flex items-center justify-between">
+                                                                <div>
+                                                                    <span className="text-gray-400 block text-[11px]">Mã ưu đãi kích cầu AOV đề xuất:</span>
+                                                                    <span className="font-extrabold text-amber-300 text-base tracking-wider font-mono">
+                                                                        🏷️ {msg.agentAction.couponPayload?.code || 'GIAM20K_AI'}
+                                                                    </span>
+                                                                    <span className="text-gray-400 block text-[10px] mt-0.5">
+                                                                        Giảm: <strong className="text-emerald-400">{Number(msg.agentAction.couponPayload?.discountValue || 20000).toLocaleString('vi-VN')}đ</strong> cho đơn từ <strong className="text-white">{Number(msg.agentAction.couponPayload?.minimumOrderValue || 120000).toLocaleString('vi-VN')}đ</strong>
+                                                                    </span>
+                                                                </div>
+                                                                <Chip 
+                                                                    size="small" 
+                                                                    label={executedActionIds[index] ? "✅ Đã kích hoạt" : (dismissedActionIds[index] ? "⚪ Đã bỏ qua" : "💡 Đề xuất")} 
+                                                                    sx={{ 
+                                                                        bgcolor: executedActionIds[index] ? 'rgba(16, 185, 129, 0.2)' : (dismissedActionIds[index] ? 'rgba(107, 114, 128, 0.2)' : 'rgba(236, 72, 153, 0.2)'), 
+                                                                        color: executedActionIds[index] ? '#34d399' : (dismissedActionIds[index] ? '#9ca3af' : '#f472b6'), 
+                                                                        fontWeight: 'bold' 
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                            <p className="text-gray-300 text-[11px] leading-relaxed bg-pink-950/20 p-2.5 rounded-lg border border-pink-900/30">
+                                                                📊 <strong className="text-pink-300">Phân tích kinh doanh:</strong> {msg.agentAction.reason}
+                                                            </p>
+                                                            {executedActionIds[index] ? (
+                                                                <div className="mt-2 py-2.5 px-3 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-bold text-xs flex items-center justify-center gap-2">
+                                                                    <CheckIcon sx={{ fontSize: 18 }} />
+                                                                    {msg.agentAction.successMessage || "Mã khuyến mãi đã được phát hành và kích hoạt thành công!"}
+                                                                </div>
+                                                            ) : dismissedActionIds[index] ? (
+                                                                <div className="mt-2 py-2 px-3 rounded-lg bg-gray-800/60 border border-gray-700/60 text-gray-400 text-[11px] flex items-center justify-between">
+                                                                    <span>ℹ️ Đã từ chối đề xuất này. Chủ quán có thể tự cấu hình mã thủ công.</span>
+                                                                    <button 
+                                                                        onClick={() => handleExecuteAgentAction(msg.agentAction, index)}
+                                                                        className="text-pink-400 hover:text-pink-300 font-bold underline cursor-pointer ml-2"
+                                                                    >
+                                                                        Đổi ý? Tạo ngay
+                                                                    </button>
+                                                                </div>
+                                                            ) : (
+                                                                <div className="mt-2 flex items-center gap-2">
+                                                                    <button
+                                                                        onClick={() => handleExecuteAgentAction(msg.agentAction, index)}
+                                                                        disabled={executingAction}
+                                                                        className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-pink-600 to-rose-600 hover:from-pink-500 hover:to-rose-500 text-white font-bold text-xs shadow-lg shadow-pink-600/30 flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95 disabled:opacity-50"
+                                                                    >
+                                                                        {executingAction ? <CircularProgress size={16} sx={{ color: 'white' }} /> : <AutoAwesomeIcon sx={{ fontSize: 16 }} />}
+                                                                        {msg.agentAction.buttonLabel || "🚀 Đồng ý: AI tạo & kích hoạt mã ngay"}
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => setDismissedActionIds(prev => ({ ...prev, [index]: true }))}
+                                                                        disabled={executingAction}
+                                                                        className="py-2.5 px-3 rounded-xl bg-gray-800/80 hover:bg-gray-700 text-gray-300 hover:text-white font-medium text-xs border border-gray-700 transition-all cursor-pointer active:scale-95 disabled:opacity-50"
+                                                                    >
+                                                                        ❌ Bỏ qua / Để sau
+                                                                    </button>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    )}
+
+                                                    {msg.agentAction.type === 'CREATE_GLOBAL_COUPON' && (
+                                                        <div className="space-y-2.5 text-xs text-gray-300">
+                                                            <div className="p-3 rounded-lg bg-black/40 border border-indigo-900/50 flex items-center justify-between">
+                                                                <div>
+                                                                    <span className="text-gray-400 block text-[11px]">Chiến dịch Voucher toàn sàn đề xuất:</span>
+                                                                    <span className="font-extrabold text-amber-300 text-base tracking-wider font-mono">
+                                                                        ⚡ {msg.agentAction.couponPayload?.code || 'MEGASALE_AI'}
+                                                                    </span>
+                                                                    <span className="text-gray-400 block text-[10px] mt-0.5">
+                                                                        Ưu đãi sàn: <strong className="text-emerald-400">{Number(msg.agentAction.couponPayload?.discountValue || 25000).toLocaleString('vi-VN')}đ</strong> cho đơn từ <strong className="text-white">{Number(msg.agentAction.couponPayload?.minimumOrderValue || 150000).toLocaleString('vi-VN')}đ</strong>
+                                                                    </span>
+                                                                </div>
+                                                                <Chip 
+                                                                    size="small" 
+                                                                    label={executedActionIds[index] ? "✅ Đã phê duyệt" : (dismissedActionIds[index] ? "⚪ Đã bỏ qua" : "⚡ Đề xuất Sàn")} 
+                                                                    sx={{ 
+                                                                        bgcolor: executedActionIds[index] ? 'rgba(16, 185, 129, 0.2)' : (dismissedActionIds[index] ? 'rgba(107, 114, 128, 0.2)' : 'rgba(99, 102, 241, 0.2)'), 
+                                                                        color: executedActionIds[index] ? '#34d399' : (dismissedActionIds[index] ? '#9ca3af' : '#818cf8'), 
+                                                                        fontWeight: 'bold' 
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                            <p className="text-gray-300 text-[11px] leading-relaxed bg-indigo-950/20 p-2.5 rounded-lg border border-indigo-900/30">
+                                                                📈 <strong className="text-indigo-300">Phân tích GMV & Vận hành:</strong> {msg.agentAction.reason}
+                                                            </p>
+                                                            {executedActionIds[index] ? (
+                                                                <div className="mt-2 py-2.5 px-3 rounded-lg bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-bold text-xs flex items-center justify-center gap-2">
+                                                                    <CheckIcon sx={{ fontSize: 18 }} />
+                                                                    {msg.agentAction.successMessage || "Chiến dịch toàn sàn đã được phê duyệt và kích hoạt!"}
+                                                                </div>
+                                                            ) : dismissedActionIds[index] ? (
+                                                                <div className="mt-2 py-2 px-3 rounded-lg bg-gray-800/60 border border-gray-700/60 text-gray-400 text-[11px] flex items-center justify-between">
+                                                                    <span>ℹ️ Đã từ chối đề xuất này. Admin có thể tự cấu hình chiến dịch thủ công.</span>
+                                                                    <button 
+                                                                        onClick={() => handleExecuteAgentAction(msg.agentAction, index)}
+                                                                        className="text-indigo-400 hover:text-indigo-300 font-bold underline cursor-pointer ml-2"
+                                                                    >
+                                                                        Đổi ý? Phê duyệt ngay
+                                                                    </button>
+                                                                </div>
+                                                            ) : (
+                                                                <div className="mt-2 flex items-center gap-2">
+                                                                    <button
+                                                                        onClick={() => handleExecuteAgentAction(msg.agentAction, index)}
+                                                                        disabled={executingAction}
+                                                                        className="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/30 flex items-center justify-center gap-2 transition-all cursor-pointer active:scale-95 disabled:opacity-50"
+                                                                    >
+                                                                        {executingAction ? <CircularProgress size={16} sx={{ color: 'white' }} /> : <AutoAwesomeIcon sx={{ fontSize: 16 }} />}
+                                                                        {msg.agentAction.buttonLabel || "🚀 Đồng ý: Phê duyệt Chiến dịch Sàn"}
+                                                                    </button>
+                                                                    <button
+                                                                        onClick={() => setDismissedActionIds(prev => ({ ...prev, [index]: true }))}
+                                                                        disabled={executingAction}
+                                                                        className="py-2.5 px-3 rounded-xl bg-gray-800/80 hover:bg-gray-700 text-gray-300 hover:text-white font-medium text-xs border border-gray-700 transition-all cursor-pointer active:scale-95 disabled:opacity-50"
+                                                                    >
+                                                                        ❌ Bỏ qua / Để sau
+                                                                    </button>
+                                                                </div>
                                                             )}
                                                         </div>
                                                     )}
