@@ -65,17 +65,17 @@ export const Chatbot = () => {
 
     const suggestions = [
         "🔥 Món nào đang bán chạy nhất?",
-        "🥤 Gợi ý trà sữa hoặc đồ uống giải nhiệt",
-        "🥗 Có món ăn chay thanh đạm nào không?",
         "🎟️ Có mã giảm giá nào dùng được không?",
-        "❌ Làm sao để hủy đơn hàng đã đặt?"
+        "💳 Hệ thống hỗ trợ thanh toán qua hình thức nào?",
+        "❌ Làm sao để hủy đơn hàng đã đặt?",
+        "🛒 Đơn hàng tối thiểu để áp mã giảm giá là gì?"
     ];
 
     const getBotResponse = (userText) => {
         const text = userText.toLowerCase().trim();
         
         // 1. Chào hỏi
-        if (text.includes("chào") || text.includes("hello") || text.includes("hi") || text.includes("hey")) {
+        if (text.includes("chào") || text.includes("hello") || text === "hi" || text.startsWith("hi ") || text.endsWith(" hi") || text.includes(" hi ") || text.includes("hey")) {
             return {
                 text: "Xin chào! Chúc bạn một ngày tốt lành. Tôi có thể gợi ý món ngon, tìm quán gần bạn hoặc kiểm tra mã giảm giá giúp bạn nhé! 😊"
             };
@@ -106,9 +106,9 @@ export const Chatbot = () => {
             };
         }
         // 4.3. Stripe / Thanh toán
-        if (text.includes("stripe") || (text.includes("thanh toán") && !text.includes("món") && !text.includes("ăn"))) {
+        if (text.includes("stripe") || text.includes("hình thức thanh toán") || (text.includes("thanh toán") && !text.includes("món") && !text.includes("ăn"))) {
             return {
-                text: "💳 Hệ thống hỗ trợ cổng thanh toán quốc tế Stripe và COD. Sau khi đặt hàng, bạn sẽ được tự động chuyển sang cổng Stripe bảo mật cao cấp (chuẩn PCI DSS) để quẹt thẻ thanh toán an toàn."
+                text: "💳 Hệ thống hỗ trợ 2 phương thức thanh toán an toàn, linh hoạt:\n\n1. **Cổng thanh toán quốc tế Stripe:** Quẹt thẻ tín dụng/ghi nợ (Visa, Mastercard...) an toàn tuyệt đối, tuân thủ tiêu chuẩn an ninh thanh toán quốc tế **PCI DSS** (máy chủ không lưu số thẻ của khách).\n2. **Thanh toán tiền mặt khi nhận hàng (COD):** Trả tiền mặt trực tiếp cho shipper khi nhận món ăn."
             };
         }
         // 4.4. Tác giả
@@ -119,9 +119,9 @@ export const Chatbot = () => {
             };
         }
         // 4.5. Đơn hàng tối thiểu
-        if (text.includes("tối thiểu") || text.includes("min order")) {
+        if (text.includes("tối thiểu") || text.includes("min order") || text.includes("áp mã")) {
             return {
-                text: "Đơn hàng tối thiểu là mức tiền tối thiểu bạn cần đạt được để áp dụng mã giảm giá thành công. Nếu bạn bớt món ăn khiến tổng tiền giảm xuống dưới mức này, mã giảm giá sẽ tự động được gỡ bỏ (Auto-removal)."
+                text: "🛒 **Đơn hàng tối thiểu** là giá trị giỏ hàng tối thiểu để mã giảm giá có hiệu lực (ví dụ: mã **GIAM20K** áp dụng cho đơn từ 50.000đ).\n\n💡 **Cơ chế an toàn (Auto-removal):** Nếu bạn bớt món ăn khiến tổng tiền giảm xuống dưới mức tối thiểu này, hệ thống sẽ tự động gỡ mã giảm giá để đảm bảo tính toàn vẹn và chống gian lận khuyến mãi!"
             };
         }
         // 4.6. Mã giảm giá thuần túy
