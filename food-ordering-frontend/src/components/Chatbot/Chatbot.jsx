@@ -51,6 +51,7 @@ export const Chatbot = () => {
     const [inputValue, setInputValue] = useState('');
     const [isTyping, setIsTyping] = useState(false);
     const lastDishRef = useRef(null);
+    const dislikedDishIdsRef = useRef(new Set());
     
     const messagesEndRef = useRef(null);
 
@@ -91,170 +92,40 @@ export const Chatbot = () => {
                 text: "Tạm biệt bạn! Hẹn gặp lại bạn sớm nhất khi đói bụng nhé! 👋"
             };
         }
-        // 4. XỬ LÝ Ý ĐỊNH PHỦ ĐỊNH / ĐỔI MÓN KHÁC (NEGATIVE INTENT / CHANGE DISH)
-        const isNegativeOrChange = text.includes("không thích") || text.includes("đổi món") || text.includes("món khác") 
-                || text.includes("chán") || text.includes("không ăn") || text.includes("món nào khác") 
-                || text.includes("khác đi") || text.includes("không muốn") || text.includes("gợi ý món khác")
-                || text.includes("không khoái") || text.includes("đổi cho tôi") || text.includes("món gì khác");
-
-        if (isNegativeOrChange) {
-            const currentLastId = lastDishRef.current ? lastDishRef.current.id : null;
-            const currentLastName = lastDishRef.current ? (lastDishRef.current.name || "").toLowerCase() : "";
-
-            // Lọc ra các món khác với món vừa đề xuất
-            let candidates = popularFoods.filter(f => f.id !== currentLastId);
-
-            // Nếu món cũ là sườn/cơm thì ưu tiên gợi ý món bún/phở/mì hoặc trà sữa/đồ uống
-            let altDish = null;
-            if (currentLastName.includes("sườn") || currentLastName.includes("cơm")) {
-                altDish = candidates.find(f => f.name.toLowerCase().includes("bún") || f.name.toLowerCase().includes("phở") || f.name.toLowerCase().includes("lẩu") || f.name.toLowerCase().includes("mì") || f.name.toLowerCase().includes("trà"));
-            } else if (currentLastName.includes("bún") || currentLastName.includes("phở")) {
-                altDish = candidates.find(f => f.name.toLowerCase().includes("cơm") || f.name.toLowerCase().includes("sườn") || f.name.toLowerCase().includes("gà"));
-            }
-
-            if (!altDish && candidates.length > 0) {
-                altDish = candidates[0];
-            }
-
-            if (altDish) {
-                lastDishRef.current = altDish;
-                const restName = altDish.restaurant?.name || "Tiệm Ẩm Thực";
-                const city = altDish.restaurant?.address?.city || "Hà Nội";
-                const dishImg = (altDish.images && altDish.images.length > 0) 
-                    ? altDish.images[0] 
-                    : "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500";
-
-                return {
-                    text: `Dạ em rất xin lỗi vì món vừa rồi chưa đúng ý bạn! 😊\n\nVậy bạn thử đổi gió sang món **${altDish.name}** tại **${restName}** xem sao nhé! Món ăn này có hương vị thơm ngon đặc trưng và nhận được rất nhiều phản hồi 5 sao từ thực khách hôm nay.`,
-                    dish: {
-                        id: altDish.id,
-                        name: altDish.name,
-                        price: altDish.price,
-                        image: dishImg,
-                        restaurantId: altDish.restaurant?.id || 1,
-                        restaurantName: restName,
-                        city: city
-                    }
-                };
-            }
+        // 4. CÁC CÂU HỎI HỖ TRỢ / FAQ NỀN TẢNG
+        // 4.1. Hủy đơn hàng
+        if (text.includes("hủy") || text.includes("cancel")) {
             return {
-                text: "Dạ em rất xin lỗi! Bạn có thể chia sẻ thêm bạn đang muốn ăn món nước, món khô hay đồ uống để em tìm đúng món hợp khẩu vị nhất cho bạn nhé!"
+                text: "Bạn có thể dễ dàng hủy các đơn hàng chưa thanh toán (PENDING) bằng cách bấm nút **[Hủy đơn hàng]** trực tiếp tại trang Lịch sử đơn hàng trong Hồ sơ cá nhân. Đối với đơn đã thanh toán hoặc đang chuẩn bị, vui lòng liên hệ trực tiếp quán ăn để được hỗ trợ nhé!"
             };
         }
-
-        // 5. GỢI Ý MÓN ĂN THÔNG MINH (MENU CATALOG RAG)
-        if (text.includes("món") || text.includes("ăn gì") || text.includes("gợi ý") || text.includes("cơm") || text.includes("sườn") 
-                || text.includes("trưa") || text.includes("tối") || text.includes("sáng") || text.includes("hot") || text.includes("bán chạy") 
-                || text.includes("trà sữa") || text.includes("phê la") || text.includes("bún bò") || text.includes("phở") || text.includes("lẩu")
-                || text.includes("chay") || text.includes("dưới") || text.includes("tầm") || text.includes("ngon") || text.includes("đói")
-                || text.includes("uống") || text.includes("ấm bụng") || text.includes("mưa") || text.includes("lạnh")) {
-            
-            let matchedDish = null;
-
-            // 5.1. Trích xuất ngân sách (VD: "dưới 50k", "dưới 60k", "tầm 40k", "dưới 50000")
-            const budgetMatch = text.match(/(?:dưới|tầm|khoảng|<=|<)\s*(\d+)\s*(?:k|nghìn|ngàn|000)?/i);
-            let maxBudget = null;
-            if (budgetMatch) {
-                let rawNum = parseInt(budgetMatch[1], 10);
-                maxBudget = rawNum < 1000 ? rawNum * 1000 : rawNum;
-            }
-
-            // 5.2. Khai phá ý định ngữ nghĩa (Semantic Intent Parsing)
-            const isDietChay = text.includes("chay") || text.includes("thanh đạm");
-            const isWarmSoup = text.includes("ấm bụng") || text.includes("mưa") || text.includes("lạnh") || text.includes("nước") || text.includes("bún") || text.includes("phở") || text.includes("lẩu");
-            const isDrink = text.includes("uống") || text.includes("trà") || text.includes("phê la") || text.includes("cà phê") || text.includes("nước ép");
-            const isRiceMeal = text.includes("cơm") || text.includes("sườn") || text.includes("no bụng") || text.includes("trưa") || text.includes("tối") || text.includes("gà");
-
-            // Ưu tiên 1: Đồ uống
-            if (isDrink) {
-                matchedDish = popularFoods.find(f => f.name.toLowerCase().includes("ô long") || f.name.toLowerCase().includes("trà") || f.name.toLowerCase().includes("phê la") || f.name.toLowerCase().includes("cà phê"));
-            }
-            // Ưu tiên 2: Món Chay
-            else if (isDietChay) {
-                matchedDish = popularFoods.find(f => f.isVegetarian || f.name.toLowerCase().includes("chay") || f.name.toLowerCase().includes("nấm") || f.name.toLowerCase().includes("sen"));
-            }
-            // Ưu tiên 3: Món Nước / Ấm bụng
-            else if (isWarmSoup) {
-                matchedDish = popularFoods.find(f => f.name.toLowerCase().includes("bún") || f.name.toLowerCase().includes("phở") || f.name.toLowerCase().includes("lẩu"));
-            }
-            // Ưu tiên 4: Cơm / Món no bụng / Ngân sách
-            else if (isRiceMeal) {
-                if (maxBudget) {
-                    matchedDish = popularFoods.find(f => (f.name.toLowerCase().includes("sườn") || f.name.toLowerCase().includes("cơm")) && f.price <= maxBudget);
-                }
-                if (!matchedDish) {
-                    matchedDish = popularFoods.find(f => f.name.toLowerCase().includes("sườn cây") || f.name.toLowerCase().includes("sườn"));
-                }
-            }
-
-            // 5.3. Nếu có ngân sách nhưng chưa khớp món, tìm bất kỳ món nào trong popularFoods thỏa mãn ngân sách
-            if (!matchedDish && maxBudget) {
-                matchedDish = popularFoods.find(f => f.price <= maxBudget);
-            }
-
-            // 5.4. Fallback món phổ biến đầu tiên nếu chưa có món nào
-            if (!matchedDish && popularFoods.length > 0) {
-                matchedDish = popularFoods[0];
-            }
-
-            if (matchedDish) {
-                lastDishRef.current = matchedDish;
-                const restName = matchedDish.restaurant?.name || "Tiệm Cơm Tấm Sài Gòn - Cầu Giấy";
-                const city = matchedDish.restaurant?.address?.city || "Hà Nội";
-                const dishImg = (matchedDish.images && matchedDish.images.length > 0) 
-                    ? matchedDish.images[0] 
-                    : "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500";
-
-                let customDesc = `Dạ chào bạn! Dựa trên khẩu vị người dùng và các món ăn đạt điểm đánh giá cao nhất hôm nay, tôi xin đề xuất món **${matchedDish.name}** tại **${restName}** cực kỳ chuẩn vị!`;
-                if (maxBudget) {
-                    customDesc = `Dạ với ngân sách khoảng ${maxBudget.toLocaleString('vi-VN')} đ, món **${matchedDish.name}** (giá ${Number(matchedDish.price).toLocaleString('vi-VN')} đ) tại **${restName}** là lựa chọn tuyệt vời vừa vặn túi tiền và chất lượng nhất hôm nay!`;
-                }
-
-                return {
-                    text: customDesc,
-                    dish: {
-                        id: matchedDish.id,
-                        name: matchedDish.name,
-                        price: matchedDish.price,
-                        image: dishImg,
-                        restaurantId: matchedDish.restaurant?.id || 1,
-                        restaurantName: restName,
-                        city: city
-                    }
-                };
-            }
-
-            // Fallback nếu chưa tải được danh sách món
+        // 4.2. Giao hàng
+        if (text.includes("giao hàng") || text.includes("ship") || text.includes("bao lâu") || text.includes("thời gian")) {
             return {
-                text: `Dạ chào bạn! Món ăn được yêu thích nhất hôm nay là **Cơm Sườn Cây Nướng Mật Ong** tại Tiệm Cơm Tấm Sài Gòn. Sườn nướng mật ong thơm lừng, thịt mềm đậm đà ăn kèm chả trứng béo ngậy!`,
-                dish: {
-                    id: 1,
-                    name: "Cơm Sườn Cây Nướng Mật Ong",
-                    price: 55000,
-                    image: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500",
-                    restaurantId: 1,
-                    restaurantName: "Tiệm Cơm Tấm Sài Gòn - Cầu Giấy",
-                    city: "Hà Nội"
-                }
+                text: "🚚 Online Food Ordering cam kết giao thức ăn nóng hổi đến tay bạn trong vòng 30 phút kể từ lúc nhà hàng hoàn thành chuẩn bị món. Bạn có thể theo dõi tiến độ đơn hàng thời gian thực trên hệ thống!"
             };
         }
-
-        // 5. Nhà hàng
-        if (text.includes("nhà hàng") || text.includes("quán") || text.includes("restaurant") || text.includes("cửa hàng")) {
-            const list = restaurant.restaurants || [];
-            if (list.length > 0) {
-                const resList = list.slice(0, 5).map(r => `• 🏠 **${r.name}** (${r.cuisineType || 'Ẩm thực'})`).join('\n');
-                return {
-                    text: `Dưới đây là một số nhà hàng nổi bật đang hoạt động trên hệ thống:\n\n${resList}\n\nBạn có thể nhấn vào các nhà hàng này ở trang chủ để xem thực đơn chi tiết nhé!`
-                };
-            }
+        // 4.3. Stripe / Thanh toán
+        if (text.includes("stripe") || (text.includes("thanh toán") && !text.includes("món") && !text.includes("ăn"))) {
             return {
-                text: "Hiện tại hệ thống đang cập nhật danh sách nhà hàng. Bạn vui lòng quay lại sau nhé!"
+                text: "💳 Hệ thống hỗ trợ cổng thanh toán quốc tế Stripe và COD. Sau khi đặt hàng, bạn sẽ được tự động chuyển sang cổng Stripe bảo mật cao cấp (chuẩn PCI DSS) để quẹt thẻ thanh toán an toàn."
             };
         }
-
-        // 6. Mã giảm giá / Coupon
-        if (text.includes("mã") || text.includes("giảm giá") || text.includes("coupon") || text.includes("khuyến mãi")) {
+        // 4.4. Tác giả
+        if (text.includes("tác giả") || text.includes("ai tạo ra") || text.includes("sinh viên") || text.includes("phát triển") || text.includes("code")) {
+            return {
+                text: "Hệ thống Đặt đồ ăn trực tuyến (Online Food Ordering) này được nghiên cứu, thiết kế và phát triển bởi sinh viên **Lê Quốc Anh (23020005)**, Trường ĐH Công nghệ - ĐHQGHN, tích hợp kiến trúc Trí tuệ nhân tạo Agentic AI và Menu Catalog RAG!"
+            };
+        }
+        // 4.5. Đơn hàng tối thiểu
+        if (text.includes("tối thiểu") || text.includes("min order")) {
+            return {
+                text: "Đơn hàng tối thiểu là mức tiền tối thiểu bạn cần đạt được để áp dụng mã giảm giá thành công. Nếu bạn bớt món ăn khiến tổng tiền giảm xuống dưới mức này, mã giảm giá sẽ tự động được gỡ bỏ (Auto-removal)."
+            };
+        }
+        // 4.6. Mã giảm giá thuần túy
+        if ((text.includes("mã giảm giá") || text.includes("xem mã") || text.includes("coupon") || text.includes("khuyến mãi")) 
+                && !text.includes("món") && !text.includes("ăn") && !text.includes("bún") && !text.includes("phở") && !text.includes("cơm")) {
             if (coupons.length > 0) {
                 const couponList = coupons.map(c => {
                     const valueStr = c.discountType === 'PERCENTAGE' ? `${c.discountValue}%` : `${c.discountValue?.toLocaleString()} đ`;
@@ -266,10 +137,172 @@ export const Chatbot = () => {
                     text: `Dưới đây là danh sách các mã giảm giá đang hoạt động:\n\n${couponList}\n\n💡 Hãy nhập mã **GIAM20K** khi thanh toán trong Giỏ hàng để được giảm ngay 20.000đ nhé!`
                 };
             }
+        }
+        // 4.7. Danh sách quán thuần túy
+        if ((text.includes("danh sách nhà hàng") || text.includes("nhà hàng nào") || text.includes("các quán")) 
+                && !text.includes("món") && !text.includes("ăn") && !text.includes("bún") && !text.includes("phở") && !text.includes("cơm")) {
+            const list = restaurant.restaurants || [];
+            if (list.length > 0) {
+                const resList = list.slice(0, 5).map(r => `• 🏠 **${r.name}** (${r.cuisineType || 'Ẩm thực'})`).join('\n');
+                return {
+                    text: `Dưới đây là một số nhà hàng nổi bật đang hoạt động trên hệ thống:\n\n${resList}\n\nBạn có thể nhấn vào các nhà hàng này ở trang chủ để xem thực đơn chi tiết nhé!`
+                };
+            }
+        }
+
+        // =========================================================================
+        // 5. ĐỘNG CƠ TRUY XUẤT & XẾP HẠNG NGỮ NGHĨA THỰC ĐƠN (MENU CATALOG RAG ENGINE)
+        // =========================================================================
+
+        // A. Phát hiện Ý định Phủ định / Từ chối món
+        const isRejection = text.includes("không thích") || text.includes("đổi món") || text.includes("món khác") 
+                || text.includes("chán") || text.includes("không ăn") || text.includes("khác đi") 
+                || text.includes("thôi") || text.includes("không khoái") || text.includes("không muốn")
+                || text.includes("đổi cho tôi");
+
+        // Nếu từ chối món hiện tại, đưa id món cũ vào danh sách đen trong phiên này
+        if (isRejection && lastDishRef.current) {
+            dislikedDishIdsRef.current.add(lastDishRef.current.id);
+        }
+
+        // B. Trích xuất ý định món ăn cụ thể mà người dùng nhấn mạnh
+        const wantsBun = text.includes("bún");
+        const wantsPho = text.includes("phở");
+        const wantsCom = text.includes("cơm") || text.includes("tấm");
+        const wantsSuon = text.includes("sườn");
+        const wantsTra = text.includes("trà") || text.includes("phê la") || text.includes("olong") || text.includes("ô long");
+        const wantsChay = text.includes("chay") || text.includes("thanh đạm");
+        const wantsMi = text.includes("mì") || text.includes("miến");
+        const wantsLau = text.includes("lẩu");
+        const wantsDrink = text.includes("uống") || text.includes("cà phê") || text.includes("nước ép") || text.includes("sinh tố");
+        const wantsWarmSoup = text.includes("ấm") || text.includes("nước") || text.includes("mưa") || text.includes("lạnh") || text.includes("nóng") || text.includes("xúp") || text.includes("canh");
+        const wantsHearty = text.includes("no") || text.includes("trưa") || text.includes("tối") || text.includes("đói");
+
+        // C. Khôi phục nếu người dùng nhấn mạnh lại món (VD: "Bún cơ mà", "Tôi bảo bún")
+        if (wantsBun) {
+            popularFoods.forEach(f => {
+                if (f.name && f.name.toLowerCase().includes("bún")) dislikedDishIdsRef.current.delete(f.id);
+            });
+        }
+        if (wantsPho) {
+            popularFoods.forEach(f => {
+                if (f.name && f.name.toLowerCase().includes("phở")) dislikedDishIdsRef.current.delete(f.id);
+            });
+        }
+        if (wantsCom || wantsSuon) {
+            popularFoods.forEach(f => {
+                if (f.name && (f.name.toLowerCase().includes("cơm") || f.name.toLowerCase().includes("sườn"))) dislikedDishIdsRef.current.delete(f.id);
+            });
+        }
+
+        // D. Trích xuất ngân sách nếu có
+        const budgetMatch = text.match(/(?:dưới|tầm|khoảng|<=|<)\s*(\d+)\s*(?:k|nghìn|ngàn|000)?/i);
+        let maxBudget = null;
+        if (budgetMatch) {
+            let rawNum = parseInt(budgetMatch[1], 10);
+            maxBudget = rawNum < 1000 ? rawNum * 1000 : rawNum;
+        }
+
+        // E. Thuật toán chấm điểm mức độ liên quan ngữ nghĩa (Semantic Relevance Scoring)
+        const scoredList = popularFoods.map((f, index) => {
+            let score = 0;
+            const fName = (f.name || "").toLowerCase();
+            const fDesc = (f.description || "").toLowerCase();
+
+            // 1. Phạt cực nặng nếu món đã bị chê
+            if (dislikedDishIdsRef.current.has(f.id)) score -= 1000;
+
+            // 2. Phạt nhẹ món vừa gợi ý nếu người dùng muốn đổi món
+            if (lastDishRef.current && f.id === lastDishRef.current.id && !wantsBun && !wantsPho && !wantsCom && !wantsSuon) {
+                score -= 500;
+            }
+
+            // 3. Khớp từ khóa cốt lõi (Trọng số +400)
+            if (wantsBun && fName.includes("bún")) score += 400;
+            if (wantsPho && fName.includes("phở")) score += 400;
+            if (wantsCom && fName.includes("cơm")) score += 300;
+            if (wantsSuon && fName.includes("sườn")) score += 300;
+            if (wantsTra && (fName.includes("trà") || fName.includes("ô long") || fName.includes("phê la"))) score += 350;
+            if (wantsChay && (f.isVegetarian || fName.includes("chay") || fName.includes("nấm"))) score += 350;
+            if (wantsMi && fName.includes("mì")) score += 300;
+            if (wantsLau && fName.includes("lẩu")) score += 300;
+            if (wantsDrink && (fName.includes("trà") || fName.includes("cà phê") || fName.includes("nước"))) score += 250;
+
+            // 4. Ngữ cảnh thời tiết / ấm bụng
+            if (wantsWarmSoup && (fName.includes("bún") || fName.includes("phở") || fName.includes("lẩu") || fName.includes("canh"))) {
+                score += 120;
+            }
+
+            // 5. Ngữ cảnh no bụng / bữa chính
+            if (wantsHearty && (fName.includes("cơm") || fName.includes("sườn") || fName.includes("bún") || fName.includes("phở"))) {
+                score += 80;
+            }
+
+            // 6. Ràng buộc ngân sách
+            if (maxBudget) {
+                if (f.price <= maxBudget) score += 90;
+                else score -= 120;
+            }
+
+            // 7. Token matching n-gram
+            const tokens = text.split(/[\s,?!.]+/).filter(w => w.length > 1);
+            tokens.forEach(tok => {
+                if (fName.includes(tok)) score += 40;
+                if (fDesc.includes(tok)) score += 15;
+            });
+
+            // 8. Điểm độ phổ biến cơ bản
+            score += (10 - index);
+
+            return { food: f, score };
+        });
+
+        scoredList.sort((a, b) => b.score - a.score);
+        let matchedDish = (scoredList.length > 0 && scoredList[0].score > -400) ? scoredList[0].food : null;
+        if (!matchedDish && popularFoods.length > 0) matchedDish = popularFoods[0];
+
+        if (matchedDish) {
+            lastDishRef.current = matchedDish;
+            const restName = matchedDish.restaurant?.name || "Tiệm Ẩm Thực";
+            const city = matchedDish.restaurant?.address?.city || "Hà Nội";
+            const dishImg = (matchedDish.images && matchedDish.images.length > 0) 
+                ? matchedDish.images[0] 
+                : "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500";
+
+            let replyText = `Dạ chào bạn! Dựa trên nhu cầu ẩm thực của bạn, tôi xin gợi ý món **${matchedDish.name}** tại **${restName}** cực kỳ thơm ngon, chuẩn vị!`;
+
+            if (wantsBun && (text.includes("cơ mà") || text.includes("đã bảo") || text.includes("thích bún") || isRejection)) {
+                replyText = `Dạ vâng, em xin lỗi bạn nhiều nhé! 🍜 Đúng món Bún thơm ngon chuẩn vị bạn đang tìm đây ạ: **${matchedDish.name}** tại **${restName}**. Nước dùng ngọt thanh đậm đà, mời bạn thưởng thức!`;
+            } else if (wantsPho && (text.includes("cơ mà") || text.includes("đã bảo") || isRejection)) {
+                replyText = `Dạ vâng, em xin lỗi bạn nhé! 🍲 Đúng món Phở thơm lừng bạn đang tìm đây ạ: **${matchedDish.name}** tại **${restName}**. Nước dùng ninh xương gia truyền béo ngậy!`;
+            } else if (isRejection) {
+                replyText = `Dạ em xin lỗi vì món vừa rồi chưa đúng ý bạn! 😊 Em đã đổi ngay sang món **${matchedDish.name}** tại **${restName}** cho bạn rồi đây ạ. Món này đang là Best-Seller đạt đánh giá rất cao hôm nay!`;
+            } else if (maxBudget) {
+                replyText = `Dạ với ngân sách khoảng ${maxBudget.toLocaleString('vi-VN')} đ, món **${matchedDish.name}** (giá ${Number(matchedDish.price).toLocaleString('vi-VN')} đ) tại **${restName}** là lựa chọn tuyệt vời vừa vặn túi tiền và chất lượng nhất hôm nay!`;
+            } else if (wantsWarmSoup) {
+                replyText = `Dạ thời tiết se lạnh hay lúc muốn ấm bụng thì một tô **${matchedDish.name}** nóng hổi tại **${restName}** là chuẩn bài nhất luôn ạ! 🍲`;
+            } else if (wantsTra || wantsDrink) {
+                replyText = `Dạ giải khát cực đã cùng ly **${matchedDish.name}** thanh mát tại **${restName}** nhé! 🥤`;
+            }
+
             return {
-                text: "Để áp dụng mã giảm giá, bạn vào Giỏ hàng, điền mã và bấm 'Áp dụng'. Bạn có thể thử mã **GIAM20K** cho đơn từ 50.000đ nhé!"
+                text: replyText,
+                dish: {
+                    id: matchedDish.id,
+                    name: matchedDish.name,
+                    price: matchedDish.price,
+                    image: dishImg,
+                    restaurantId: matchedDish.restaurant?.id || 1,
+                    restaurantName: restName,
+                    city: city
+                }
             };
         }
+
+        // Fallback cuối cùng
+        return {
+            text: "Cảm ơn câu hỏi của bạn. Bạn có thể hỏi tôi về gợi ý món ăn, mã giảm giá hot, thời gian giao hàng hoặc chính sách hủy đơn nhé! 😊"
+        };
 
         // 7. Đơn hàng tối thiểu
         if (text.includes("tối thiểu") || text.includes("min order")) {
