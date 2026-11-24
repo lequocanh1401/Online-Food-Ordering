@@ -518,7 +518,7 @@ export const Chatbot = () => {
         };
     };
 
-    const handleSendMessage = (text) => {
+    const handleSendMessage = async (text) => {
         if (!text.trim()) return;
 
         // 1. Thêm tin nhắn của User
@@ -527,6 +527,45 @@ export const Chatbot = () => {
         // 2. Kích hoạt hiệu ứng đang gõ
         setIsTyping(true);
 
+        // 3. TẦNG 1: Thử gọi Cloud Google Gemini 2.5 Flash RAG từ Backend
+        try {
+            const res = await axios.post(`${API_URL}/api/chat/concierge`, {
+                message: text,
+                dislikedFoodIds: Array.from(dislikedDishIdsRef.current)
+            }, { timeout: 4500 });
+
+            if (res.data && res.data.reply && res.data.engineUsed === 'GEMINI_2_5_FLASH') {
+                const geminiDish = res.data.dish ? {
+                    id: res.data.dish.id,
+                    name: res.data.dish.name,
+                    price: res.data.dish.price,
+                    image: (res.data.dish.images && res.data.dish.images.length > 0) ? res.data.dish.images[0] : "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500",
+                    restaurantId: res.data.dish.restaurant?.id || 1,
+                    restaurantName: res.data.dish.restaurant?.name || "Tiệm Ẩm Thực",
+                    city: res.data.dish.restaurant?.address?.city || "Hà Nội"
+                } : undefined;
+
+                if (geminiDish) {
+                    lastDishRef.current = res.data.dish;
+                }
+
+                setMessages(prev => [
+                    ...prev, 
+                    { 
+                        sender: 'bot', 
+                        text: res.data.reply,
+                        dish: geminiDish,
+                        engine: 'Gemini 2.5 Flash RAG'
+                    }
+                ]);
+                setIsTyping(false);
+                return;
+            }
+        } catch (err) {
+            console.log("Gemini RAG cloud call bypassed or timed out, using Heuristic Fallback engine:", err.message);
+        }
+
+        // TẦNG 2: DỰ PHÒNG NGOẠI TUYẾN (Heuristic MCDM DSS Engine)
         setTimeout(() => {
             const response = getBotResponse(text);
             setMessages(prev => [
@@ -534,11 +573,12 @@ export const Chatbot = () => {
                 { 
                     sender: 'bot', 
                     text: response.text,
-                    dish: response.dish
+                    dish: response.dish,
+                    engine: 'Heuristic MCDM RAG'
                 }
             ]);
             setIsTyping(false);
-        }, 600);
+        }, 300);
     };
 
     const handleFormSubmit = (e) => {
@@ -584,7 +624,7 @@ export const Chatbot = () => {
                                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                                 </Typography>
                                 <Typography variant="caption" className="text-pink-100 block text-[11px]">
-                                    Gợi ý món thông minh • Menu RAG
+                                    Gemini 2.5 Flash & Menu Catalog RAG
                                 </Typography>
                             </div>
                         </div>
@@ -608,6 +648,13 @@ export const Chatbot = () => {
                                             : 'bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-tr-none font-medium'
                                     }`}>
                                         <div className="whitespace-pre-line">{msg.text}</div>
+
+                                        {/* Huy hiệu hiển thị động cơ AI phục vụ (Dual-Tier RAG Indicator) */}
+                                        {isBot && msg.engine && (
+                                            <div className="mt-1.5 flex items-center gap-1 text-[9px] text-pink-300/80 font-mono">
+                                                <span>⚡ {msg.engine}</span>
+                                            </div>
+                                        )}
 
                                         {/* Thẻ Gợi Ý Món Ăn Tương Tác (Menu Catalog RAG Card) */}
                                         {isBot && msg.dish && (
