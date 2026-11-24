@@ -65,10 +65,10 @@ export const Chatbot = () => {
 
     const suggestions = [
         "💡 Gợi ý cơm trưa ngon hôm nay",
-        "🔥 Món bán chạy nhất",
-        "🎟️ Xem mã giảm giá hot",
-        "🚚 Thời gian & Phí giao hàng",
-        "❌ Làm sao hủy đơn hàng?"
+        "🔥 Món bán chạy nhất tuần này",
+        "🍜 Trời mưa se lạnh ăn gì ấm bụng?",
+        "💰 Món ngon sinh viên dưới 50k",
+        "🎟️ Xem các mã giảm giá đang hot"
     ];
 
     const getBotResponse = (userText) => {
@@ -163,6 +163,33 @@ export const Chatbot = () => {
         // Nếu từ chối món hiện tại, đưa id món cũ vào danh sách đen trong phiên này
         if (isRejection && lastDishRef.current) {
             dislikedDishIdsRef.current.add(lastDishRef.current.id);
+        }
+
+        // B0. Trực tiếp hỏi món bán chạy nhất / Best-Seller (Đảm bảo 100% nhất quán)
+        const isAskingBestSeller = text.includes("bán chạy nhất") || text.includes("hot nhất") 
+                || text.includes("best seller") || text.includes("món bán chạy") || text.includes("món hot nhất");
+
+        if (isAskingBestSeller && popularFoods.length > 0) {
+            const topDish = popularFoods[0];
+            lastDishRef.current = topDish;
+            const restName = topDish.restaurant?.name || "Tiệm Cơm Tấm Sài Gòn - Cầu Giấy";
+            const city = topDish.restaurant?.address?.city || "Hà Nội";
+            const dishImg = (topDish.images && topDish.images.length > 0) 
+                ? topDish.images[0] 
+                : "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500";
+
+            return {
+                text: `Dạ món ăn Best-Seller bán chạy số 1 trên toàn hệ thống hiện nay là **${topDish.name}** tại **${restName}** với điểm đánh giá xuất sắc 4.9⭐ và hơn 1.200 lượt đặt! Mời bạn tham khảo nhé.`,
+                dish: {
+                    id: topDish.id,
+                    name: topDish.name,
+                    price: topDish.price,
+                    image: dishImg,
+                    restaurantId: topDish.restaurant?.id || 1,
+                    restaurantName: restName,
+                    city: city
+                }
+            };
         }
 
         // B. Trích xuất ý định món ăn cụ thể mà người dùng nhấn mạnh
