@@ -172,15 +172,15 @@ public class FoodServiceImpl implements FoodService {
                     if (f != null && f.isAvailable() && f.getRestaurant() != null) {
                         popular.add(f);
                     }
-                    if (popular.size() >= 10) break;
+                    if (popular.size() >= 30) break;
                 }
             }
         } catch (Exception e) {
             System.err.println("Lỗi query top selling foods: " + e.getMessage());
         }
 
-        // Nếu chưa đủ món từ đơn hàng, lấy thêm các món có sẵn từ các nhà hàng
-        if (popular.size() < 8) {
+        // Lấy thêm các món có sẵn từ các nhà hàng để Chatbot RAG có đầy đủ kho thực đơn
+        if (popular.size() < 60) {
             List<Food> allFoods = foodRepository.findAll();
             for (Food f : allFoods) {
                 if (f.isAvailable() && f.getRestaurant() != null) {
@@ -189,7 +189,7 @@ public class FoodServiceImpl implements FoodService {
                         popular.add(f);
                     }
                 }
-                if (popular.size() >= 10) break;
+                if (popular.size() >= 60) break;
             }
         }
         return popular;

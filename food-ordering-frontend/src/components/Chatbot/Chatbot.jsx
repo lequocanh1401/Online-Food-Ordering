@@ -30,8 +30,22 @@ export const Chatbot = () => {
 
         const fetchPopular = async () => {
             try {
-                const { data } = await axios.get(`${API_URL}/api/food/popular`);
-                setPopularFoods(data || []);
+                const { data: popData } = await axios.get(`${API_URL}/api/food/popular`);
+                let combined = Array.isArray(popData) ? [...popData] : [];
+                try {
+                    // Tải thêm danh mục thực đơn món ăn qua API search để Menu Catalog RAG truy xuất phong phú và đầy đủ
+                    const { data: searchData } = await axios.get(`${API_URL}/api/food/search?name=a`);
+                    if (Array.isArray(searchData)) {
+                        searchData.forEach(item => {
+                            if (item.available && item.restaurant && !combined.some(c => c.id === item.id)) {
+                                combined.push(item);
+                            }
+                        });
+                    }
+                } catch (e) {
+                    console.log("Could not fetch extra catalog items, using popular items only");
+                }
+                setPopularFoods(combined);
             } catch (err) {
                 console.error("Lỗi chatbot tải món phổ biến:", err);
             }
@@ -40,6 +54,40 @@ export const Chatbot = () => {
         fetchCoupons();
         fetchPopular();
     }, []);
+
+    // Phân loại đồ uống (Drink) vs đồ ăn (Food)
+    const isDrinkItem = (food) => {
+        if (!food) return false;
+        const catName = (food.foodCategory?.name || "").toLowerCase();
+        const fName = (food.name || "").toLowerCase();
+        const restCuisine = (food.restaurant?.cuisineType || "").toLowerCase();
+        const restName = (food.restaurant?.name || "").toLowerCase();
+
+        // Loại trừ rõ ràng nếu tên món là bánh hoặc đồ ăn tinh bột, thịt
+        if (fName.includes("bánh") || fName.includes("croissant") || fName.includes("mousse") 
+            || fName.includes("tiramisu") || fName.includes("cơm") || fName.includes("phở") 
+            || fName.includes("bún") || fName.includes("mì") || fName.includes("mỳ") 
+            || fName.includes("nem") || fName.includes("gà") || fName.includes("pizza") 
+            || fName.includes("sushi") || fName.includes("sashimi") || fName.includes("lẩu")) {
+            return false;
+        }
+
+        const drinkWords = [
+            "đồ uống", "thức uống", "nước giải khát", "nước", "trà", "cà phê", "cafe", "coffee",
+            "trà sữa", "nước ép", "sinh tố", "sữa bắp", "nước sấu", "sữa tươi", "latte", 
+            "cappuccino", "macchiato", "matcha", "freeze", "đá xay", "soda", "ô long", "olong", 
+            "bia", "pepsi", "coca", "phin sữa"
+        ];
+
+        if (drinkWords.some(w => catName.includes(w))) return true;
+        if (drinkWords.some(w => fName.includes(w))) return true;
+
+        if (restCuisine.includes("cà phê") || restCuisine.includes("trà sữa") || restName.includes("coffee") || restName.includes("phê la") || restName.includes("highlands")) {
+            return true;
+        }
+
+        return false;
+    };
 
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([
@@ -173,7 +221,7 @@ export const Chatbot = () => {
         if (isAskingBestSeller && popularFoods.length > 0) {
             const topDish = popularFoods[0];
             lastDishRef.current = topDish;
-            const restName = topDish.restaurant?.name || "Tiệm Cơm Tấm Sài Gòn - Cầu Giấy";
+            const restName = topDish.restaurant?.name || "Tiệm Cơm Tấm Sài Gòn - Đặc Biệt";
             const city = topDish.restaurant?.address?.city || "Hà Nội";
             const dishImg = (topDish.images && topDish.images.length > 0) 
                 ? topDish.images[0] 
@@ -193,20 +241,99 @@ export const Chatbot = () => {
             };
         }
 
-        // B. Trích xuất ý định món ăn cụ thể mà người dùng nhấn mạnh
+        // B. Phân loại ý định: Đồ ăn (Food) vs Đồ uống (Drink)
+        const drinkKeywords = [
+            "uống", "đồ uống", "thức uống", "nước giải khát", "nước ngọt", "trà", "trà sữa", 
+            "cà phê", "cafe", "coffee", "nước ép", "sinh tố", "giải khát", "giải nhiệt", 
+            "khát", "đá xay", "ô long", "olong", "macchiato", "sữa bắp", "nước sấu", "bia"
+        ];
+        const isBrothContext = text.includes("nước dùng") || text.includes("bún nước") || text.includes("phở nước") || text.includes("chan nước");
+        const isAskingDrink = drinkKeywords.some(kw => text.includes(kw)) && !isBrothContext;
+
+        const foodKeywords = [
+            "ăn", "món ăn", "cơm", "bún", "phở", "mì", "mỳ", "miến", "bánh mì", "sườn", "gà", 
+            "bò", "heo", "thịt", "hải sản", "tôm", "cua", "cá", "lẩu", "nướng", "đói", 
+            "bữa trưa", "bữa tối", "bữa sáng", "no bụng", "chay", "thanh đạm", "món mặn",
+            "pizza", "sushi", "sashimi", "burger", "dimsum", "há cảo", "xíu mại"
+        ];
+        const isAskingFood = foodKeywords.some(kw => text.includes(kw));
+
+        // C. Kiểm tra ngữ cảnh ẩm thực / dịch vụ (Tránh trả lời bừa khi người dùng hỏi lung tung)
+        const isFoodOrServiceRelated = 
+            isAskingDrink || 
+            isAskingFood ||
+            isRejection ||
+            isAskingBestSeller ||
+            text.includes("món") ||
+            text.includes("quán") ||
+            text.includes("nhà hàng") ||
+            text.includes("tiệm") ||
+            text.includes("thực đơn") ||
+            text.includes("menu") ||
+            text.includes("đặt") ||
+            text.includes("gợi ý") ||
+            text.includes("ngon") ||
+            text.includes("bổ") ||
+            text.includes("rẻ") ||
+            text.includes("đắt") ||
+            text.includes("tiền") ||
+            text.includes("giá") ||
+            text.includes("k") ||
+            text.includes("đ") ||
+            text.includes("ship") ||
+            text.includes("ấm bụng") ||
+            text.includes("thanh mát") ||
+            text.includes("cay") ||
+            text.includes("ngọt") ||
+            text.includes("chua") ||
+            text.includes("béo");
+
+        // Nếu câu hỏi hoàn toàn ngoài lề dịch vụ ẩm thực (thời tiết, chứng khoán, tin tức...)
+        if (!isFoodOrServiceRelated) {
+            return {
+                text: "Dạ xin lỗi bạn, tôi là **Trợ lý Ẩm thực AI (Concierge)** chuyên phục vụ trên nền tảng **Online Food Ordering**! 🍜🥤\n\nTôi được thiết kế chuyên sâu để giúp bạn:\n• 🍱 Tìm kiếm và gợi ý các món ăn, đồ uống chuẩn vị theo sở thích và ngân sách\n• 🎟️ Cung cấp mã giảm giá hot và thông tin ưu đãi đối tác\n• 💳 Hướng dẫn quy trình đặt món, thanh toán Stripe và chính sách hủy đơn hàng\n\nHiện tại tôi chưa hỗ trợ các chủ đề ngoài dịch vụ ẩm thực (như thời tiết, tin tức xã hội hay kỹ thuật). Bạn hãy thử hỏi tôi các câu như: *'Trưa nay ăn gì?'*, *'Gợi ý trà sữa giải nhiệt'* hoặc *'Món nào bán chạy nhất'* nhé! 😊"
+            };
+        }
+
+        // D. Phát hiện các món phổ biến ngoài thực đơn (Unsupported Catalog Items)
+        const unsupportedDishKeywords = [
+            { kw: "bún đậu", name: "Bún đậu mắm tôm" },
+            { kw: "taco", name: "Món Tacos / Burrito Mexico" },
+            { kw: "bánh xèo", name: "Bánh xèo miền Tây" },
+            { kw: "cháo lòng", name: "Cháo lòng" },
+            { kw: "vịt quay", name: "Vịt quay Bắc Kinh" },
+            { kw: "tokbokki", name: "Tokbokki Hàn Quốc" },
+            { kw: "kimbap", name: "Kimbap Hàn Quốc" },
+            { kw: "bún ốc", name: "Bún ốc Hà Nội" },
+            { kw: "bún riêu", name: "Bún riêu cua" },
+            { kw: "cơm niêu", name: "Cơm niêu" }
+        ];
+
+        const matchedUnsupported = unsupportedDishKeywords.find(item => text.includes(item.kw));
+        if (matchedUnsupported) {
+            return {
+                text: `Dạ hiện tại trên hệ thống **Online Food Ordering** chưa có đối tác nhà hàng nào phục vụ món **${matchedUnsupported.name}** ạ! 🥺\n\nTuy nhiên, các quán đối tác đang phục vụ rất nhiều món ngon Best-Seller cực kỳ chuẩn vị như **Cơm Sườn Bì Chả Sài Gòn**, **Phở Bò Tái Bát Đàn**, **Bún Chả Hương Liên (Obama)**, **Pizza 4 Cheeses**, **Sushi Rồng** hay **Trà Ô Long Phê La**.\n\nBạn có muốn đổi sang thử một trong các món Best-Seller này không ạ? 😊`
+            };
+        }
+
+        // E. Trích xuất ý định món ăn cụ thể
         const wantsBun = text.includes("bún");
         const wantsPho = text.includes("phở");
         const wantsCom = text.includes("cơm") || text.includes("tấm");
         const wantsSuon = text.includes("sườn");
         const wantsTra = text.includes("trà") || text.includes("phê la") || text.includes("olong") || text.includes("ô long");
-        const wantsChay = text.includes("chay") || text.includes("thanh đạm");
-        const wantsMi = text.includes("mì") || text.includes("miến");
+        const wantsChay = text.includes("chay") || text.includes("thanh đạm") || text.includes("thuần chay");
+        const wantsMi = text.includes("mì") || text.includes("mỳ") || text.includes("miến") || text.includes("pasta") || text.includes("spaghetti");
         const wantsLau = text.includes("lẩu");
-        const wantsDrink = text.includes("uống") || text.includes("cà phê") || text.includes("nước ép") || text.includes("sinh tố");
-        const wantsWarmSoup = text.includes("ấm") || text.includes("nước") || text.includes("mưa") || text.includes("lạnh") || text.includes("nóng") || text.includes("xúp") || text.includes("canh");
+        const wantsPizza = text.includes("pizza");
+        const wantsSushi = text.includes("sushi") || text.includes("sashimi");
+        const wantsBanhMi = text.includes("bánh mì") || text.includes("bánh mỳ");
+        const wantsGaRan = text.includes("gà rán") || text.includes("kfc") || text.includes("gà giòn");
+        const wantsCoffee = text.includes("cà phê") || text.includes("cafe") || text.includes("coffee") || text.includes("phin");
+        const wantsWarmSoup = text.includes("ấm") || isBrothContext || text.includes("trời mưa") || text.includes("lạnh") || text.includes("nóng") || text.includes("xúp") || text.includes("canh");
         const wantsHearty = text.includes("no") || text.includes("trưa") || text.includes("tối") || text.includes("đói");
 
-        // C. Khôi phục nếu người dùng nhấn mạnh lại món (VD: "Bún cơ mà", "Tôi bảo bún")
+        // F. Khôi phục nếu người dùng nhấn mạnh lại món (VD: "Bún cơ mà", "Tôi bảo bún")
         if (wantsBun) {
             popularFoods.forEach(f => {
                 if (f.name && f.name.toLowerCase().includes("bún")) dislikedDishIdsRef.current.delete(f.id);
@@ -222,8 +349,13 @@ export const Chatbot = () => {
                 if (f.name && (f.name.toLowerCase().includes("cơm") || f.name.toLowerCase().includes("sườn"))) dislikedDishIdsRef.current.delete(f.id);
             });
         }
+        if (wantsTra || wantsCoffee) {
+            popularFoods.forEach(f => {
+                if (isDrinkItem(f)) dislikedDishIdsRef.current.delete(f.id);
+            });
+        }
 
-        // D. Trích xuất ngân sách nếu có
+        // G. Trích xuất ngân sách nếu có
         const isStrictlyUnder = text.includes("dưới") || text.includes("<");
         const budgetMatch = text.match(/(?:dưới|tầm|khoảng|<=|<)\s*(\d+)\s*(?:k|nghìn|ngàn|000)?/i);
         let maxBudget = null;
@@ -232,150 +364,160 @@ export const Chatbot = () => {
             maxBudget = rawNum < 1000 ? rawNum * 1000 : rawNum;
         }
 
-        // E. Thuật toán chấm điểm mức độ liên quan ngữ nghĩa (Semantic Relevance Scoring)
+        // H. Thuật toán chấm điểm mức độ liên quan ngữ nghĩa (Semantic Relevance Scoring)
         const scoredList = popularFoods.map((f, index) => {
             let score = 0;
             const fName = (f.name || "").toLowerCase();
             const fDesc = (f.description || "").toLowerCase();
+            const catName = (f.foodCategory?.name || "").toLowerCase();
+            const isDrink = isDrinkItem(f);
 
             // 1. Phạt cực nặng nếu món đã bị chê
-            if (dislikedDishIdsRef.current.has(f.id)) score -= 1000;
+            if (dislikedDishIdsRef.current.has(f.id)) score -= 2000;
 
             // 2. Phạt nhẹ món vừa gợi ý nếu người dùng muốn đổi món
-            if (lastDishRef.current && f.id === lastDishRef.current.id && !wantsBun && !wantsPho && !wantsCom && !wantsSuon) {
-                score -= 500;
+            if (lastDishRef.current && f.id === lastDishRef.current.id && !wantsBun && !wantsPho && !wantsCom && !wantsSuon && !wantsTra) {
+                score -= 800;
             }
 
-            // 3. Khớp từ khóa cốt lõi (Trọng số +400)
-            if (wantsBun && fName.includes("bún")) score += 400;
-            if (wantsPho && fName.includes("phở")) score += 400;
-            if (wantsCom && fName.includes("cơm")) score += 300;
-            if (wantsSuon && fName.includes("sườn")) score += 300;
-            if (wantsTra && (fName.includes("trà") || fName.includes("ô long") || fName.includes("phê la"))) score += 350;
-            if (wantsChay && (f.isVegetarian || fName.includes("chay") || fName.includes("nấm"))) score += 350;
-            if (wantsMi && fName.includes("mì")) score += 300;
-            if (wantsLau && fName.includes("lẩu")) score += 300;
-            if (wantsDrink && (fName.includes("trà") || fName.includes("cà phê") || fName.includes("nước"))) score += 250;
-
-            // 4. Ngữ cảnh thời tiết / ấm bụng
-            if (wantsWarmSoup && (fName.includes("bún") || fName.includes("phở") || fName.includes("lẩu") || fName.includes("canh"))) {
-                score += 120;
+            // 3. Phân biệt rõ ràng đồ ăn và đồ uống (Strict Food vs Drink Separation)
+            if (isAskingDrink && !isAskingFood) {
+                if (isDrink) {
+                    score += 500;
+                } else {
+                    score -= 2000; // Đang hỏi đồ uống tuyệt đối không gợi ý món ăn
+                }
+            } else if (isAskingFood && !isAskingDrink) {
+                if (isDrink) {
+                    score -= 2000; // Đang hỏi đồ ăn tuyệt đối không gợi ý đồ uống
+                } else {
+                    score += 300;
+                }
             }
 
-            // 5. Ngữ cảnh no bụng / bữa chính
-            if (wantsHearty && (fName.includes("cơm") || fName.includes("sườn") || fName.includes("bún") || fName.includes("phở"))) {
-                score += 80;
+            // 4. Món ăn chay / Thanh đạm (Strict Vegetarian)
+            if (wantsChay) {
+                if (isDrink) {
+                    score -= 2000; // Trà/cà phê không được gợi ý làm món ăn chay!
+                }
+                const hasMeat = fName.includes("sườn") || fName.includes("bò") || fName.includes("heo") || fName.includes("gà") || fName.includes("thịt") || fName.includes("tôm") || fName.includes("cua") || fName.includes("chả") || fName.includes("nem");
+                if (hasMeat) {
+                    score -= 1500;
+                }
+                if (f.isVegetarian || fName.includes("chay") || fName.includes("salad") || fName.includes("nấm") || fName.includes("đậu nành") || fName.includes("edamame")) {
+                    score += 600;
+                }
             }
 
-            // 6. Ràng buộc ngân sách
+            // 5. Khớp từ khóa cụ thể (+500)
+            if (wantsBun && fName.includes("bún")) score += 500;
+            if (wantsPho && fName.includes("phở")) score += 500;
+            if (wantsCom && fName.includes("cơm")) score += 400;
+            if (wantsSuon && fName.includes("sườn")) score += 400;
+            if (wantsPizza && (fName.includes("pizza") || catName.includes("pizza"))) score += 500;
+            if (wantsSushi && (fName.includes("sushi") || fName.includes("sashimi") || catName.includes("sushi") || catName.includes("sashimi"))) score += 500;
+            if (wantsBanhMi && fName.includes("bánh mì")) score += 500;
+            if (wantsGaRan && (fName.includes("gà") || catName.includes("gà"))) score += 450;
+            if (wantsTra && (fName.includes("trà") || fName.includes("ô long") || fName.includes("phê la"))) score += 450;
+            if (wantsCoffee && (fName.includes("cà phê") || fName.includes("phin") || fName.includes("coffee"))) score += 450;
+            if (wantsMi && (fName.includes("mỳ") || fName.includes("mì") || fName.includes("spaghetti"))) score += 400;
+            if (wantsLau && fName.includes("lẩu")) score += 450;
+
+            // 6. Ngữ cảnh thời tiết / ấm bụng
+            if (wantsWarmSoup && !isDrink && (fName.includes("bún") || fName.includes("phở") || fName.includes("lẩu") || fName.includes("canh") || fName.includes("mỳ"))) {
+                score += 150;
+            }
+
+            // 7. Ngữ cảnh no bụng / bữa chính
+            if (wantsHearty && !isDrink && (fName.includes("cơm") || fName.includes("sườn") || fName.includes("bún") || fName.includes("phở") || fName.includes("pizza"))) {
+                score += 100;
+            }
+
+            // 8. Ràng buộc ngân sách
             if (maxBudget) {
                 const meetsBudget = isStrictlyUnder ? f.price < maxBudget : f.price <= maxBudget;
-                if (meetsBudget) score += 120;
+                if (meetsBudget) score += 150;
                 else if (f.price === maxBudget && isStrictlyUnder) score += 20;
-                else score -= 150;
+                else score -= 180;
             }
 
-            // 7. Token matching n-gram
+            // 9. Token matching n-gram
             const tokens = text.split(/[\s,?!.]+/).filter(w => w.length > 1);
             tokens.forEach(tok => {
                 if (fName.includes(tok)) score += 40;
                 if (fDesc.includes(tok)) score += 15;
             });
 
-            // 8. Điểm độ phổ biến cơ bản
-            score += (10 - index);
+            // 10. Điểm xếp hạng phổ biến cơ bản
+            score += Math.max(0, 15 - index);
 
             return { food: f, score };
         });
 
         scoredList.sort((a, b) => b.score - a.score);
-        let matchedDish = (scoredList.length > 0 && scoredList[0].score > -400) ? scoredList[0].food : null;
-        if (!matchedDish && popularFoods.length > 0) matchedDish = popularFoods[0];
 
-        if (matchedDish) {
-            lastDishRef.current = matchedDish;
-            const restName = matchedDish.restaurant?.name || "Tiệm Ẩm Thực";
-            const city = matchedDish.restaurant?.address?.city || "Hà Nội";
-            const dishImg = (matchedDish.images && matchedDish.images.length > 0) 
-                ? matchedDish.images[0] 
-                : "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500";
+        const bestCandidate = scoredList.length > 0 ? scoredList[0] : null;
 
-            let replyText = `Dạ chào bạn! Dựa trên nhu cầu ẩm thực của bạn, tôi xin gợi ý món **${matchedDish.name}** tại **${restName}** cực kỳ thơm ngon, chuẩn vị!`;
+        // Chỉ chấp nhận món nếu điểm số dương và đủ tự tin (score >= 40)
+        let matchedDish = (bestCandidate && bestCandidate.score >= 40) ? bestCandidate.food : null;
 
-            if (wantsBun && (text.includes("cơ mà") || text.includes("đã bảo") || text.includes("thích bún") || isRejection)) {
-                replyText = `Dạ vâng, em xin lỗi bạn nhiều nhé! 🍜 Đúng món Bún thơm ngon chuẩn vị bạn đang tìm đây ạ: **${matchedDish.name}** tại **${restName}**. Nước dùng ngọt thanh đậm đà, mời bạn thưởng thức!`;
-            } else if (wantsPho && (text.includes("cơ mà") || text.includes("đã bảo") || isRejection)) {
-                replyText = `Dạ vâng, em xin lỗi bạn nhé! 🍲 Đúng món Phở thơm lừng bạn đang tìm đây ạ: **${matchedDish.name}** tại **${restName}**. Nước dùng ninh xương gia truyền béo ngậy!`;
-            } else if (isRejection) {
-                replyText = `Dạ em xin lỗi vì món vừa rồi chưa đúng ý bạn! 😊 Em đã đổi ngay sang món **${matchedDish.name}** tại **${restName}** cho bạn rồi đây ạ. Món này đang là Best-Seller đạt đánh giá rất cao hôm nay!`;
-            } else if (maxBudget) {
-                if (isStrictlyUnder && matchedDish.price >= maxBudget) {
-                    replyText = `Dạ hiện tại các món ăn tiêu chuẩn trên hệ thống có giá từ ${Number(matchedDish.price).toLocaleString('vi-VN')} đ (như món **${matchedDish.name}** tại **${restName}**). Tuy nhiên, khi bạn nhập mã ưu đãi **GIAM20K** trong giỏ hàng, giá thực trả sẽ chỉ còn **${(matchedDish.price - 20000).toLocaleString('vi-VN')} đ** (thấp hơn nhiều so với ngân sách ${maxBudget.toLocaleString('vi-VN')} đ của bạn)!`;
-                } else {
-                    replyText = `Dạ với ngân sách khoảng ${maxBudget.toLocaleString('vi-VN')} đ, món **${matchedDish.name}** (giá ${Number(matchedDish.price).toLocaleString('vi-VN')} đ) tại **${restName}** là lựa chọn tuyệt vời vừa vặn túi tiền và chất lượng nhất hôm nay!`;
-                }
-            } else if (wantsWarmSoup) {
-                replyText = `Dạ thời tiết se lạnh hay lúc muốn ấm bụng thì một tô **${matchedDish.name}** nóng hổi tại **${restName}** là chuẩn bài nhất luôn ạ! 🍲`;
-            } else if (wantsTra || wantsDrink) {
-                replyText = `Dạ giải khát cực đã cùng ly **${matchedDish.name}** thanh mát tại **${restName}** nhé! 🥤`;
+        // Nếu người dùng chỉ hỏi chung chung như "gợi ý món ăn" hoặc "trưa nay ăn gì" mà chưa món nào > 40
+        if (!matchedDish && isAskingFood && !isAskingDrink && !wantsBun && !wantsPho && !wantsPizza && !wantsSushi && !wantsChay) {
+            const firstValidFood = scoredList.find(item => !isDrinkItem(item.food) && item.score > -500)?.food;
+            if (firstValidFood) matchedDish = firstValidFood;
+        } else if (!matchedDish && isAskingDrink && !isAskingFood) {
+            const firstValidDrink = scoredList.find(item => isDrinkItem(item.food) && item.score > -500)?.food;
+            if (firstValidDrink) matchedDrink = firstValidDrink;
+        }
+
+        // Nếu vẫn không có món nào phù hợp (món không có hoặc điểm quá thấp):
+        if (!matchedDish) {
+            return {
+                text: "Dạ hiện tại tôi chưa tìm thấy món ăn hoặc đồ uống nào trong thực đơn hoàn toàn khớp với yêu cầu chi tiết này của bạn. 🥺\n\nBạn có thể thử chọn các món Best-Seller nổi tiếng như **Cơm Sườn Bì Chả Sài Gòn**, **Phở Bò Tái Lăn Bát Đàn**, **Bún Chả Hương Liên (Obama)**, **Pizza 4 Cheeses** hay **Trà Ô Long Phê La** nhé! 😊"
+            };
+        }
+
+        lastDishRef.current = matchedDish;
+        const isMatchedDrink = isDrinkItem(matchedDish);
+        const restName = matchedDish.restaurant?.name || "Tiệm Ẩm Thực";
+        const city = matchedDish.restaurant?.address?.city || "Hà Nội";
+        const dishImg = (matchedDish.images && matchedDish.images.length > 0) 
+            ? matchedDish.images[0] 
+            : "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500";
+
+        let replyText = `Dạ chào bạn! Dựa trên nhu cầu ẩm thực của bạn, tôi xin gợi ý món **${matchedDish.name}** tại **${restName}** cực kỳ thơm ngon, chuẩn vị!`;
+
+        if (wantsBun && (text.includes("cơ mà") || text.includes("đã bảo") || text.includes("thích bún") || isRejection)) {
+            replyText = `Dạ vâng, em xin lỗi bạn nhiều nhé! 🍜 Đúng món Bún thơm ngon chuẩn vị bạn đang tìm đây ạ: **${matchedDish.name}** tại **${restName}**. Nước dùng ngọt thanh đậm đà, mời bạn thưởng thức!`;
+        } else if (wantsPho && (text.includes("cơ mà") || text.includes("đã bảo") || isRejection)) {
+            replyText = `Dạ vâng, em xin lỗi bạn nhé! 🍲 Đúng món Phở thơm lừng bạn đang tìm đây ạ: **${matchedDish.name}** tại **${restName}**. Nước dùng ninh xương gia truyền béo ngậy!`;
+        } else if (wantsChay) {
+            replyText = `Dạ với lựa chọn thanh đạm, thuần khiết tốt cho sức khỏe, tôi xin gợi ý món **${matchedDish.name}** tại **${restName}** chuẩn vị tươi ngon, giàu dinh dưỡng! 🥗`;
+        } else if (isMatchedDrink) {
+            replyText = `Dạ giải khát cực đã cùng ly **${matchedDish.name}** thanh mát tại **${restName}** nhé! 🥤`;
+        } else if (isRejection) {
+            replyText = `Dạ em xin lỗi vì món vừa rồi chưa đúng ý bạn! 😊 Em đã đổi ngay sang món **${matchedDish.name}** tại **${restName}** cho bạn rồi đây ạ. Món này đang là Best-Seller đạt đánh giá rất cao hôm nay!`;
+        } else if (maxBudget) {
+            if (isStrictlyUnder && matchedDish.price >= maxBudget) {
+                replyText = `Dạ hiện tại các món ăn tiêu chuẩn trên hệ thống có giá từ ${Number(matchedDish.price).toLocaleString('vi-VN')} đ (như món **${matchedDish.name}** tại **${restName}**). Tuy nhiên, khi bạn nhập mã ưu đãi **GIAM20K** trong giỏ hàng, giá thực trả sẽ chỉ còn **${(matchedDish.price - 20000).toLocaleString('vi-VN')} đ** (thấp hơn nhiều so với ngân sách ${maxBudget.toLocaleString('vi-VN')} đ của bạn)!`;
+            } else {
+                replyText = `Dạ với ngân sách khoảng ${maxBudget.toLocaleString('vi-VN')} đ, món **${matchedDish.name}** (giá ${Number(matchedDish.price).toLocaleString('vi-VN')} đ) tại **${restName}** là lựa chọn tuyệt vời vừa vặn túi tiền và chất lượng nhất hôm nay!`;
             }
-
-            return {
-                text: replyText,
-                dish: {
-                    id: matchedDish.id,
-                    name: matchedDish.name,
-                    price: matchedDish.price,
-                    image: dishImg,
-                    restaurantId: matchedDish.restaurant?.id || 1,
-                    restaurantName: restName,
-                    city: city
-                }
-            };
-        }
-
-        // Fallback cuối cùng
-        return {
-            text: "Cảm ơn câu hỏi của bạn. Bạn có thể hỏi tôi về gợi ý món ăn, mã giảm giá hot, thời gian giao hàng hoặc chính sách hủy đơn nhé! 😊"
-        };
-
-        // 7. Đơn hàng tối thiểu
-        if (text.includes("tối thiểu") || text.includes("min order")) {
-            return {
-                text: "Đơn hàng tối thiểu là mức tiền tối thiểu bạn cần đạt được để áp dụng mã giảm giá thành công. Nếu bạn bớt món ăn khiến tổng tiền giảm xuống dưới mức này, mã giảm giá sẽ tự động được gỡ bỏ."
-            };
-        }
-
-        // 8. Hủy đơn hàng
-        if (text.includes("hủy") || text.includes("cancel")) {
-            return {
-                text: "Bạn có thể dễ dàng hủy các đơn hàng chưa thanh toán (PENDING) bằng cách bấm nút **[Hủy đơn hàng]** trực tiếp tại trang Lịch sử đơn hàng trong Hồ sơ cá nhân. Đối với đơn đã thanh toán hoặc đang chuẩn bị, vui lòng liên hệ trực tiếp quán ăn để được hỗ trợ nhé!"
-            };
-        }
-
-        // 9. Giao hàng
-        if (text.includes("giao hàng") || text.includes("ship") || text.includes("bao lâu") || text.includes("thời gian")) {
-            return {
-                text: "🚚 Online Food Ordering cam kết giao thức ăn nóng hổi đến tay bạn trong vòng 30 phút kể từ lúc nhà hàng hoàn thành chuẩn bị món. Bạn có thể theo dõi tiến độ đơn hàng thời gian thực trên hệ thống!"
-            };
-        }
-
-        // 10. Stripe
-        if (text.includes("stripe") || text.includes("thanh toán") || text.includes("thẻ") || text.includes("card")) {
-            return {
-                text: "💳 Hệ thống hỗ trợ cổng thanh toán quốc tế Stripe và COD. Sau khi đặt hàng, bạn sẽ được tự động chuyển sang cổng Stripe bảo mật cao cấp để quẹt thẻ thanh toán an toàn."
-            };
-        }
-
-        // 11. Tác giả
-        if (text.includes("tác giả") || text.includes("ai tạo ra") || text.includes("sinh viên") || text.includes("phát triển") || text.includes("code")) {
-            return {
-                text: "Hệ thống Đặt đồ ăn trực tuyến (Online Food Ordering) này được nghiên cứu, thiết kế và phát triển bởi sinh viên **Lê Quốc Anh** và cộng sự, xây dựng trên nền tảng Spring Boot, React và Kiến trúc Tác tử AI (Agentic AI)!"
-            };
+        } else if (wantsWarmSoup) {
+            replyText = `Dạ thời tiết se lạnh hay lúc muốn ấm bụng thì một tô **${matchedDish.name}** nóng hổi tại **${restName}** là chuẩn bài nhất luôn ạ! 🍲`;
         }
 
         return {
-            text: "Cảm ơn câu hỏi của bạn. Bạn có thể hỏi tôi về gợi ý món ăn, mã giảm giá hot, thời gian giao hàng hoặc chính sách hủy đơn nhé! 😊"
+            text: replyText,
+            dish: {
+                id: matchedDish.id,
+                name: matchedDish.name,
+                price: matchedDish.price,
+                image: dishImg,
+                restaurantId: matchedDish.restaurant?.id || 1,
+                restaurantName: restName,
+                city: city
+            }
         };
     };
 
