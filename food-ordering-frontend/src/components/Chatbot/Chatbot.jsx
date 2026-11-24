@@ -65,8 +65,8 @@ export const Chatbot = () => {
 
     const suggestions = [
         "🔥 Món nào đang bán chạy nhất?",
-        "🍜 Trời mưa lạnh ăn gì ấm bụng?",
-        "💰 Gợi ý món ngon giá dưới 50k",
+        "🥤 Gợi ý trà sữa hoặc đồ uống giải nhiệt",
+        "🥗 Có món ăn chay thanh đạm nào không?",
         "🎟️ Có mã giảm giá nào dùng được không?",
         "❌ Làm sao để hủy đơn hàng đã đặt?"
     ];
@@ -224,6 +224,7 @@ export const Chatbot = () => {
         }
 
         // D. Trích xuất ngân sách nếu có
+        const isStrictlyUnder = text.includes("dưới") || text.includes("<");
         const budgetMatch = text.match(/(?:dưới|tầm|khoảng|<=|<)\s*(\d+)\s*(?:k|nghìn|ngàn|000)?/i);
         let maxBudget = null;
         if (budgetMatch) {
@@ -268,8 +269,10 @@ export const Chatbot = () => {
 
             // 6. Ràng buộc ngân sách
             if (maxBudget) {
-                if (f.price <= maxBudget) score += 90;
-                else score -= 120;
+                const meetsBudget = isStrictlyUnder ? f.price < maxBudget : f.price <= maxBudget;
+                if (meetsBudget) score += 120;
+                else if (f.price === maxBudget && isStrictlyUnder) score += 20;
+                else score -= 150;
             }
 
             // 7. Token matching n-gram
@@ -306,7 +309,11 @@ export const Chatbot = () => {
             } else if (isRejection) {
                 replyText = `Dạ em xin lỗi vì món vừa rồi chưa đúng ý bạn! 😊 Em đã đổi ngay sang món **${matchedDish.name}** tại **${restName}** cho bạn rồi đây ạ. Món này đang là Best-Seller đạt đánh giá rất cao hôm nay!`;
             } else if (maxBudget) {
-                replyText = `Dạ với ngân sách khoảng ${maxBudget.toLocaleString('vi-VN')} đ, món **${matchedDish.name}** (giá ${Number(matchedDish.price).toLocaleString('vi-VN')} đ) tại **${restName}** là lựa chọn tuyệt vời vừa vặn túi tiền và chất lượng nhất hôm nay!`;
+                if (isStrictlyUnder && matchedDish.price >= maxBudget) {
+                    replyText = `Dạ hiện tại các món ăn tiêu chuẩn trên hệ thống có giá từ ${Number(matchedDish.price).toLocaleString('vi-VN')} đ (như món **${matchedDish.name}** tại **${restName}**). Tuy nhiên, khi bạn nhập mã ưu đãi **GIAM20K** trong giỏ hàng, giá thực trả sẽ chỉ còn **${(matchedDish.price - 20000).toLocaleString('vi-VN')} đ** (thấp hơn nhiều so với ngân sách ${maxBudget.toLocaleString('vi-VN')} đ của bạn)!`;
+                } else {
+                    replyText = `Dạ với ngân sách khoảng ${maxBudget.toLocaleString('vi-VN')} đ, món **${matchedDish.name}** (giá ${Number(matchedDish.price).toLocaleString('vi-VN')} đ) tại **${restName}** là lựa chọn tuyệt vời vừa vặn túi tiền và chất lượng nhất hôm nay!`;
+                }
             } else if (wantsWarmSoup) {
                 replyText = `Dạ thời tiết se lạnh hay lúc muốn ấm bụng thì một tô **${matchedDish.name}** nóng hổi tại **${restName}** là chuẩn bài nhất luôn ạ! 🍲`;
             } else if (wantsTra || wantsDrink) {
