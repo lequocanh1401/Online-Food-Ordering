@@ -281,7 +281,6 @@ export const Chatbot = () => {
             text.includes("k") ||
             text.includes("đ") ||
             text.includes("ship") ||
-            text.includes("ấm bụng") ||
             text.includes("thanh mát") ||
             text.includes("cay") ||
             text.includes("ngọt") ||
@@ -330,8 +329,9 @@ export const Chatbot = () => {
         const wantsBanhMi = text.includes("bánh mì") || text.includes("bánh mỳ");
         const wantsGaRan = text.includes("gà rán") || text.includes("kfc") || text.includes("gà giòn");
         const wantsCoffee = text.includes("cà phê") || text.includes("cafe") || text.includes("coffee") || text.includes("phin");
-        const wantsWarmSoup = text.includes("ấm") || isBrothContext || text.includes("trời mưa") || text.includes("lạnh") || text.includes("nóng") || text.includes("xúp") || text.includes("canh");
-        const wantsHearty = text.includes("no") || text.includes("trưa") || text.includes("tối") || text.includes("đói");
+        const isLunch = text.includes("trưa");
+        const isDinner = text.includes("tối");
+        const wantsHearty = text.includes("no") || text.includes("đói") || isLunch || isDinner;
 
         // F. Khôi phục nếu người dùng nhấn mạnh lại món (VD: "Bún cơ mà", "Tôi bảo bún")
         if (wantsBun) {
@@ -423,17 +423,12 @@ export const Chatbot = () => {
             if (wantsMi && (fName.includes("mỳ") || fName.includes("mì") || fName.includes("spaghetti"))) score += 400;
             if (wantsLau && fName.includes("lẩu")) score += 450;
 
-            // 6. Ngữ cảnh thời tiết / ấm bụng
-            if (wantsWarmSoup && !isDrink && (fName.includes("bún") || fName.includes("phở") || fName.includes("lẩu") || fName.includes("canh") || fName.includes("mỳ"))) {
-                score += 150;
+            // 6. Ngữ cảnh no bụng / bữa chính (trưa / tối)
+            if (wantsHearty && !isDrink && (fName.includes("cơm") || fName.includes("sườn") || fName.includes("bún") || fName.includes("phở") || fName.includes("pizza") || fName.includes("mì"))) {
+                score += 120;
             }
 
-            // 7. Ngữ cảnh no bụng / bữa chính
-            if (wantsHearty && !isDrink && (fName.includes("cơm") || fName.includes("sườn") || fName.includes("bún") || fName.includes("phở") || fName.includes("pizza"))) {
-                score += 100;
-            }
-
-            // 8. Ràng buộc ngân sách
+            // 7. Ràng buộc ngân sách
             if (maxBudget) {
                 const meetsBudget = isStrictlyUnder ? f.price < maxBudget : f.price <= maxBudget;
                 if (meetsBudget) score += 150;
@@ -503,8 +498,10 @@ export const Chatbot = () => {
             } else {
                 replyText = `Dạ với ngân sách khoảng ${maxBudget.toLocaleString('vi-VN')} đ, món **${matchedDish.name}** (giá ${Number(matchedDish.price).toLocaleString('vi-VN')} đ) tại **${restName}** là lựa chọn tuyệt vời vừa vặn túi tiền và chất lượng nhất hôm nay!`;
             }
-        } else if (wantsWarmSoup) {
-            replyText = `Dạ thời tiết se lạnh hay lúc muốn ấm bụng thì một tô **${matchedDish.name}** nóng hổi tại **${restName}** là chuẩn bài nhất luôn ạ! 🍲`;
+        } else if (isLunch) {
+            replyText = `Dạ cho bữa trưa ngon miệng và nạp đầy năng lượng, tôi xin gợi ý món **${matchedDish.name}** tại **${restName}** chuẩn vị, phục vụ cực nhanh! 🍱`;
+        } else if (isDinner) {
+            replyText = `Dạ cho bữa tối ngon miệng và ấm cúng, tôi xin gợi ý món **${matchedDish.name}** tại **${restName}** rất được yêu thích hôm nay! 🍽️`;
         }
 
         return {
