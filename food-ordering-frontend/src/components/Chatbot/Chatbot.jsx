@@ -64,11 +64,11 @@ export const Chatbot = () => {
     }, [messages, isTyping]);
 
     const suggestions = [
-        "💡 Gợi ý cơm trưa ngon hôm nay",
-        "🔥 Món bán chạy nhất tuần này",
-        "🍜 Trời mưa se lạnh ăn gì ấm bụng?",
-        "💰 Món ngon sinh viên dưới 50k",
-        "🎟️ Xem các mã giảm giá đang hot"
+        "🔥 Món nào đang bán chạy nhất?",
+        "🍜 Trời mưa lạnh ăn gì ấm bụng?",
+        "💰 Gợi ý món ngon giá dưới 50k",
+        "🎟️ Có mã giảm giá nào dùng được không?",
+        "❌ Làm sao để hủy đơn hàng đã đặt?"
     ];
 
     const getBotResponse = (userText) => {
@@ -96,7 +96,7 @@ export const Chatbot = () => {
         // 4.1. Hủy đơn hàng
         if (text.includes("hủy") || text.includes("cancel")) {
             return {
-                text: "Bạn có thể dễ dàng hủy các đơn hàng chưa thanh toán (PENDING) bằng cách bấm nút **[Hủy đơn hàng]** trực tiếp tại trang Lịch sử đơn hàng trong Hồ sơ cá nhân. Đối với đơn đã thanh toán hoặc đang chuẩn bị, vui lòng liên hệ trực tiếp quán ăn để được hỗ trợ nhé!"
+                text: "Bạn có thể dễ dàng hủy các đơn hàng khi còn ở trạng thái chờ (PENDING) bằng cách bấm nút **[Hủy đơn hàng]** trực tiếp tại trang Lịch sử đơn hàng trong Hồ sơ cá nhân. Hệ thống sẽ tự động hoàn trả số lượng tồn kho nguyên liệu ngay lập tức! Đối với đơn đã chuyển sang trạng thái chế biến hoặc đã thanh toán, vui lòng liên hệ trực tiếp quán ăn để được hỗ trợ nhé."
             };
         }
         // 4.2. Giao hàng
@@ -112,7 +112,8 @@ export const Chatbot = () => {
             };
         }
         // 4.4. Tác giả
-        if (text.includes("tác giả") || text.includes("ai tạo ra") || text.includes("sinh viên") || text.includes("phát triển") || text.includes("code")) {
+        if ((text.includes("tác giả") || text.includes("ai tạo ra") || text.includes("ai làm ra") || text.includes("ai code") || text.includes("thông tin tác giả")) 
+                && !text.includes("món") && !text.includes("ăn") && !text.includes("cơm") && !text.includes("bún")) {
             return {
                 text: "Hệ thống Đặt đồ ăn trực tuyến (Online Food Ordering) này được nghiên cứu, thiết kế và phát triển bởi sinh viên **Lê Quốc Anh (23020005)**, Trường ĐH Công nghệ - ĐHQGHN, tích hợp kiến trúc Trí tuệ nhân tạo Agentic AI và Menu Catalog RAG!"
             };
