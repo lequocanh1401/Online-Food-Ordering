@@ -708,6 +708,65 @@ public class AiCopilotServiceImpl implements AiCopilotService {
             return action;
         }
 
+        // Restaurant Owner Action 2: Smart Inventory & Preventive Menu Lock (Overselling Risk Mitigation)
+        if (queryLower.contains("tồn kho") || queryLower.contains("nguyên liệu") || queryLower.contains("kho") 
+                || queryLower.contains("khóa món") || queryLower.contains("sắp hết") || queryLower.contains("hết hàng")
+                || queryLower.contains("dự báo") || queryLower.contains("nhập kho")) {
+            
+            Long targetRestId = restaurantId != null ? restaurantId : 1L;
+            List<IngredientsItem> restIngredients = ingredientItemRepository.findByRestaurantId(targetRestId);
+            
+            // Tìm nguyên liệu đang cạn kiệt hoặc sắp hết (quantity <= minThreshold)
+            IngredientsItem atRiskIngredient = restIngredients.stream()
+                    .filter(i -> i.getQuantity() != null && i.getMinThreshold() != null && i.getQuantity() <= i.getMinThreshold())
+                    .findFirst().orElse(null);
+
+            if (atRiskIngredient == null) {
+                atRiskIngredient = restIngredients.stream()
+                        .filter(i -> i.getQuantity() != null)
+                        .min(Comparator.comparingDouble(IngredientsItem::getQuantity))
+                        .orElse(null);
+            }
+
+            if (atRiskIngredient != null) {
+                List<Food> foods = foodRepository.findByRestaurantId(targetRestId);
+                IngredientsItem finalIng = atRiskIngredient;
+                
+                // Ưu tiên món đang mở bán có chứa nguyên liệu này
+                Food atRiskFood = foods.stream()
+                        .filter(f -> f.isAvailable() && f.getIngredients() != null && f.getIngredients().stream().anyMatch(ing -> ing.getId().equals(finalIng.getId())))
+                        .findFirst().orElse(null);
+
+                if (atRiskFood == null) {
+                    atRiskFood = foods.stream()
+                            .filter(f -> f.getIngredients() != null && f.getIngredients().stream().anyMatch(ing -> ing.getId().equals(finalIng.getId())))
+                            .findFirst().orElse(null);
+                }
+
+                if (atRiskFood != null) {
+                    double currentQty = atRiskIngredient.getQuantity() != null ? atRiskIngredient.getQuantity() : 0.0;
+                    String qtyStr = (currentQty % 1 == 0) ? String.format("%.0f", currentQty) : String.valueOf(currentQty);
+                    String unitStr = atRiskIngredient.getUnit() != null ? atRiskIngredient.getUnit() : "phần";
+                    String thresholdStr = atRiskIngredient.getMinThreshold() != null 
+                            ? ((atRiskIngredient.getMinThreshold() % 1 == 0) ? String.format("%.0f", atRiskIngredient.getMinThreshold()) : String.valueOf(atRiskIngredient.getMinThreshold()))
+                            : "10";
+
+                    Map<String, Object> action = new HashMap<>();
+                    action.put("type", "LOCK_FOOD_AVAILABILITY");
+                    action.put("foodId", atRiskFood.getId());
+                    action.put("foodName", atRiskFood.getName());
+                    action.put("currentAvailable", atRiskFood.isAvailable());
+                    action.put("title", "⚠️ Tác tử AI Đề Xuất: Tạm Khóa Phòng Ngừa Món Có Nguy Cơ Thiếu Hụt (" + atRiskFood.getName() + ")");
+                    action.put("reason", "Hệ thống phát hiện nguyên liệu '" + atRiskIngredient.getName() + "' hiện chỉ còn " + qtyStr + " " + unitStr 
+                            + " (đã chạm ngưỡng cảnh báo an toàn " + thresholdStr + " " + unitStr + "). Vào khung giờ cao điểm, nguy cơ thiếu hụt rất cao nếu khách đặt dồn nhiều đơn. Tác tử AI đề xuất tạm khóa món '" 
+                            + atRiskFood.getName() + "' trên thực đơn online để phòng ngừa việc nhận đơn vượt quá khả năng phục vụ (Overselling Risk), bảo vệ uy tín nhà hàng và tránh bị phạt tỷ lệ hủy đơn.");
+                    action.put("buttonLabel", "🔒 Đồng ý: AI tạm khóa món '" + atRiskFood.getName() + "' ngay");
+                    action.put("successMessage", "Món '" + atRiskFood.getName() + "' đã được tạm khóa thành công trên thực đơn online của quán! Khách hàng sẽ không thể đặt món này cho tới khi kho được bổ sung.");
+                    return action;
+                }
+            }
+        }
+
         return null;
     }
 
