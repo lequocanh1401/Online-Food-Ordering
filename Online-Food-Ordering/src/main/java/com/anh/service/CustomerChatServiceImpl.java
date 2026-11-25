@@ -99,7 +99,8 @@ public class CustomerChatServiceImpl implements CustomerChatService {
                             "temperature", 0.4, // Nhiệt độ thấp để đảm bảo bám sát dữ liệu thật (Grounding)
                             "topK", 30,
                             "topP", 0.9,
-                            "maxOutputTokens", 600
+                            "maxOutputTokens", 1500,
+                            "thinkingConfig", Map.of("thinkingBudget", 0)
                     )
             );
 
@@ -110,7 +111,7 @@ public class CustomerChatServiceImpl implements CustomerChatService {
                     .uri(URI.create(url))
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
-                    .timeout(Duration.ofSeconds(4)) // Timeout 4s để đảm bảo phản hồi nhanh
+                    .timeout(Duration.ofSeconds(8)) // Timeout 8s đảm bảo phản hồi đầy đủ
                     .build();
 
             // 4. GIAI ĐOẠN 3: GENERATION (Gọi Google Gemini 2.5 Flash)

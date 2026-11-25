@@ -268,7 +268,8 @@ public class AiCopilotServiceImpl implements AiCopilotService {
                             "temperature", 0.7,
                             "topK", 40,
                             "topP", 0.95,
-                            "maxOutputTokens", 1500
+                            "maxOutputTokens", 2048,
+                            "thinkingConfig", Map.of("thinkingBudget", 0)
                     )
             );
 

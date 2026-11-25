@@ -532,7 +532,7 @@ export const Chatbot = () => {
             const res = await axios.post(`${API_URL}/api/chat/concierge`, {
                 message: text,
                 dislikedFoodIds: Array.from(dislikedDishIdsRef.current)
-            }, { timeout: 4500 });
+            }, { timeout: 8500 });
 
             if (res.data && res.data.reply && res.data.engineUsed === 'GEMINI_2_5_FLASH') {
                 const geminiDish = res.data.dish ? {
