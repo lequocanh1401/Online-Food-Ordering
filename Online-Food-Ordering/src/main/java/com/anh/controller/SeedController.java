@@ -1292,64 +1292,63 @@ public class SeedController {
                 }
             }
 
-            // 5.2. Cấu hình nguyên liệu cạn kho cho Tiệm Cơm Tấm Sài Gòn để demo "Smart Inventory Agent" của Chủ quán
+            // 5.2. Cấu hình nguyên liệu và định lượng BOM cho Tiệm Cơm Tấm Sài Gòn
             Restaurant comTam = restaurantRepository.findAll().stream().filter(r -> r.getName() != null && r.getName().contains("Cơm Tấm")).findFirst().orElse(null);
             if (comTam != null) {
-                IngredientCategory catThit = ingredientCategoryRepository.findByRestaurantId(comTam.getId()).stream().filter(c -> c.getName().equalsIgnoreCase("Thịt Tươi Sống") || c.getName().equalsIgnoreCase("Thịt")).findFirst().orElse(null);
-                if (catThit == null) {
-                    catThit = new IngredientCategory();
-                    catThit.setName("Thịt Tươi Sống");
-                    catThit.setRestaurant(comTam);
-                    catThit = ingredientCategoryRepository.save(catThit);
-                }
-                IngredientCategory catTopping = ingredientCategoryRepository.findByRestaurantId(comTam.getId()).stream().filter(c -> c.getName().equalsIgnoreCase("Topping")).findFirst().orElse(null);
-                if (catTopping == null) {
-                    catTopping = new IngredientCategory();
-                    catTopping.setName("Topping");
-                    catTopping.setRestaurant(comTam);
-                    catTopping = ingredientCategoryRepository.save(catTopping);
-                }
+                IngredientCategory catThit = getOrCreateIngCategory(comTam, "Thịt Tươi Sống");
+                IngredientCategory catTopping = getOrCreateIngCategory(comTam, "Topping");
+                IngredientCategory catGao = getOrCreateIngCategory(comTam, "Gạo & Lương Thực");
+                IngredientCategory catRau = getOrCreateIngCategory(comTam, "Rau Củ & Nấu Canh");
+                IngredientCategory catDoUong = getOrCreateIngCategory(comTam, "Đồ Uống & Nước Giải Khát");
 
-                // Sườn cây tươi - ĐÃ CẠN KHO (0 kg)
-                IngredientsItem suonCay = ingredientItemRepository.findByRestaurantId(comTam.getId()).stream().filter(i -> i.getName().equalsIgnoreCase("Sườn cây tươi")).findFirst().orElse(null);
-                if (suonCay == null) {
-                    suonCay = new IngredientsItem();
-                    suonCay.setName("Sườn cây tươi");
-                    suonCay.setCategory(catThit);
-                    suonCay.setRestaurant(comTam);
-                }
-                suonCay.setQuantity(0.0);
-                suonCay.setUnit("kg");
-                suonCay.setMinThreshold(10.0);
-                suonCay.setInStock(false);
-                suonCay = ingredientItemRepository.save(suonCay);
+                IngredientsItem suonCay = getOrCreateIngItem(comTam, catThit, "Sườn cây tươi", 15.0, 5.0, "kg", true);
+                IngredientsItem suonCotLet = getOrCreateIngItem(comTam, catThit, "Sườn cốt lết tươi", 20.0, 5.0, "kg", true);
+                IngredientsItem baRoi = getOrCreateIngItem(comTam, catThit, "Thịt ba rọi tươi", 20.0, 5.0, "kg", true);
+                IngredientsItem duiGa = getOrCreateIngItem(comTam, catThit, "Đùi gà tươi", 15.0, 5.0, "kg", true);
+                IngredientsItem gaoTam = getOrCreateIngItem(comTam, catGao, "Gạo tấm thơm", 50.0, 10.0, "kg", true);
+                IngredientsItem trungGa = getOrCreateIngItem(comTam, catTopping, "Trứng gà ta", 2.0, 10.0, "quả", true); // 2 quả < 10 để cảnh báo vàng
+                IngredientsItem thitCua = getOrCreateIngItem(comTam, catTopping, "Thịt cua tươi", 10.0, 3.0, "kg", true);
+                IngredientsItem khoQua = getOrCreateIngItem(comTam, catRau, "Khổ qua tươi", 12.0, 3.0, "kg", true);
+                IngredientsItem caiChua = getOrCreateIngItem(comTam, catRau, "Cải chua muối", 10.0, 3.0, "kg", true);
+                IngredientsItem traLai = getOrCreateIngItem(comTam, catDoUong, "Trà lài khô", 30.0, 5.0, "gói", true);
+                IngredientsItem miaTuoi = getOrCreateIngItem(comTam, catDoUong, "Mía tươi", 40.0, 5.0, "cây", true);
 
-                // Trứng gà ta - SẮP HẾT (2 quả)
-                IngredientsItem trungGa = ingredientItemRepository.findByRestaurantId(comTam.getId()).stream().filter(i -> i.getName().equalsIgnoreCase("Trứng gà ta")).findFirst().orElse(null);
-                if (trungGa == null) {
-                    trungGa = new IngredientsItem();
-                    trungGa.setName("Trứng gà ta");
-                    trungGa.setCategory(catTopping);
-                    trungGa.setRestaurant(comTam);
-                }
-                trungGa.setQuantity(2.0);
-                trungGa.setUnit("quả");
-                trungGa.setMinThreshold(10.0);
-                trungGa.setInStock(true);
-                trungGa = ingredientItemRepository.save(trungGa);
-
-                // Gắn nguyên liệu vào món Cơm Sườn Cây Nướng Mật Ong
                 List<Food> comTamFoods = foodRepository.findByRestaurantId(comTam.getId());
                 for (Food f : comTamFoods) {
-                    if (f.getName().contains("Sườn Cây")) {
-                        if (!f.getIngredients().contains(suonCay)) {
-                            f.getIngredients().add(suonCay);
-                        }
-                        if (!f.getIngredients().contains(trungGa)) {
-                            f.getIngredients().add(trungGa);
-                        }
-                        foodRepository.save(f);
+                    if (f.getName() == null) continue;
+                    List<IngredientsItem> ings = f.getIngredients();
+                    if (ings == null) ings = new ArrayList<>();
+                    ings.clear();
+
+                    if (f.getName().contains("Sườn Bì Chả")) {
+                        ings.add(suonCotLet);
+                        ings.add(gaoTam);
+                    } else if (f.getName().contains("Sườn Cây")) {
+                        ings.add(suonCay);
+                        ings.add(trungGa);
+                    } else if (f.getName().contains("Ba Rọi")) {
+                        ings.add(baRoi);
+                        ings.add(gaoTam);
+                    } else if (f.getName().contains("Chả Trứng Cua")) {
+                        ings.add(thitCua);
+                        ings.add(trungGa);
+                    } else if (f.getName().contains("Trứng Ốp La")) {
+                        ings.add(trungGa);
+                    } else if (f.getName().contains("Đùi Gà")) {
+                        ings.add(duiGa);
+                    } else if (f.getName().contains("Khổ Qua")) {
+                        ings.add(khoQua);
+                        ings.add(baRoi);
+                    } else if (f.getName().contains("Cải Chua")) {
+                        ings.add(caiChua);
+                        ings.add(suonCay);
+                    } else if (f.getName().contains("Trà Đá")) {
+                        ings.add(traLai);
+                    } else if (f.getName().contains("Mía")) {
+                        ings.add(miaTuoi);
                     }
+                    f.setIngredients(ings);
+                    foodRepository.save(f);
                 }
             }
 
@@ -1728,5 +1727,35 @@ public class SeedController {
         map.put("category", category);
         map.put("imageUrl", imageUrl);
         return map;
+    }
+
+    private IngredientCategory getOrCreateIngCategory(Restaurant rest, String name) {
+        IngredientCategory cat = ingredientCategoryRepository.findByRestaurantId(rest.getId()).stream()
+                .filter(c -> c.getName() != null && c.getName().equalsIgnoreCase(name))
+                .findFirst().orElse(null);
+        if (cat == null) {
+            cat = new IngredientCategory();
+            cat.setName(name);
+            cat.setRestaurant(rest);
+            cat = ingredientCategoryRepository.save(cat);
+        }
+        return cat;
+    }
+
+    private IngredientsItem getOrCreateIngItem(Restaurant rest, IngredientCategory cat, String name, double qty, double minThresh, String unit, boolean inStock) {
+        IngredientsItem item = ingredientItemRepository.findByRestaurantId(rest.getId()).stream()
+                .filter(i -> i.getName() != null && i.getName().equalsIgnoreCase(name))
+                .findFirst().orElse(null);
+        if (item == null) {
+            item = new IngredientsItem();
+            item.setName(name);
+            item.setCategory(cat);
+            item.setRestaurant(rest);
+        }
+        item.setQuantity(qty);
+        item.setMinThreshold(minThresh);
+        item.setUnit(unit);
+        item.setInStock(inStock);
+        return ingredientItemRepository.save(item);
     }
 }
