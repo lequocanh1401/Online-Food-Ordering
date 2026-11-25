@@ -158,7 +158,30 @@ export const MenuTable = () => {
                                     </TableCell>
                                     <TableCell align="right">{item.name}</TableCell>
                                     <TableCell align="right">
-                                        {item.ingredients?.map((ing) => ing.name).join(", ")}
+                                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5, justifyContent: 'flex-end' }}>
+                                            {item.ingredients && item.ingredients.length > 0 ? (
+                                                item.ingredients.map((ing) => {
+                                                    const isOutOfStock = ing.outOfStock || (ing.quantity != null && ing.quantity <= 0);
+                                                    const isLow = ing.lowStock || (ing.quantity != null && ing.minThreshold != null && ing.quantity <= ing.minThreshold);
+                                                    return (
+                                                        <Chip
+                                                            key={ing.id}
+                                                            label={`${ing.name}${ing.quantity != null ? ` (${ing.quantity} ${ing.unit || ''})` : ''}`}
+                                                            size="small"
+                                                            sx={{
+                                                                fontSize: '0.72rem',
+                                                                fontWeight: isOutOfStock || isLow ? 'bold' : 'normal',
+                                                                bgcolor: isOutOfStock ? 'rgba(239, 68, 68, 0.15)' : isLow ? 'rgba(245, 158, 11, 0.15)' : 'rgba(255, 255, 255, 0.06)',
+                                                                color: isOutOfStock ? '#f87171' : isLow ? '#fbbf24' : '#d1d5db',
+                                                                border: `1px solid ${isOutOfStock ? 'rgba(239, 68, 68, 0.35)' : isLow ? 'rgba(245, 158, 11, 0.35)' : 'rgba(255, 255, 255, 0.12)'}`
+                                                            }}
+                                                        />
+                                                    );
+                                                })
+                                            ) : (
+                                                <span className="text-gray-500 text-xs italic">Chưa gắn</span>
+                                            )}
+                                        </Box>
                                     </TableCell>
                                     <TableCell align="right">{item.price?.toLocaleString()} VND</TableCell>
                                     <TableCell align="right">

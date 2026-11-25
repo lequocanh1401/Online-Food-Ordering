@@ -14,15 +14,18 @@ export const CreateIngredientForm = ({ open, handleClose }) => {
     const formik = useFormik({
         initialValues: { 
             name: "", 
-            categoryId: ""
+            categoryId: "",
+            quantity: 50,
+            unit: "phần",
+            minThreshold: 10
         },
         onSubmit: (values) => {
             const data = {
                 name: values.name.trim(),
                 categoryId: values.categoryId,
-                quantity: 100,
-                unit: "phần",
-                minThreshold: 0,
+                quantity: Number(values.quantity) || 0,
+                unit: (values.unit || "phần").trim(),
+                minThreshold: Number(values.minThreshold) || 5,
                 restaurantId: restaurant.usersRestaurant?.id
             };
             dispatch(createIngredient({ data, jwt }));
@@ -74,6 +77,43 @@ export const CreateIngredientForm = ({ open, handleClose }) => {
                             ))}
                         </Select>
                     </FormControl>
+
+                    <div className="grid grid-cols-3 gap-2 mb-4">
+                        <TextField 
+                            id="quantity" 
+                            name="quantity" 
+                            label="Tồn kho ban đầu" 
+                            type="number"
+                            variant="outlined" 
+                            onChange={formik.handleChange} 
+                            value={formik.values.quantity} 
+                            sx={{ '& .MuiOutlinedInput-root': { bgcolor: 'rgba(255,255,255,0.03)' } }} 
+                            required 
+                        />
+                        <TextField 
+                            id="unit" 
+                            name="unit" 
+                            label="Đơn vị tính" 
+                            variant="outlined" 
+                            onChange={formik.handleChange} 
+                            value={formik.values.unit} 
+                            sx={{ '& .MuiOutlinedInput-root': { bgcolor: 'rgba(255,255,255,0.03)' } }} 
+                            placeholder="kg, quả..." 
+                            required 
+                        />
+                        <TextField 
+                            id="minThreshold" 
+                            name="minThreshold" 
+                            label="Ngưỡng cảnh báo" 
+                            type="number"
+                            variant="outlined" 
+                            onChange={formik.handleChange} 
+                            value={formik.values.minThreshold} 
+                            sx={{ '& .MuiOutlinedInput-root': { bgcolor: 'rgba(255,255,255,0.03)' } }} 
+                            title="Ngưỡng cảnh báo sắp hết hàng"
+                            required 
+                        />
+                    </div>
 
                     <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl mb-6 flex items-center gap-2">
                         <span className="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
