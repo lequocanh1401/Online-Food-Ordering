@@ -639,7 +639,7 @@ export const AiCopilot = () => {
                                                                 <div>
                                                                     <span className="text-gray-400 block text-[11px]">Mã ưu đãi kích cầu AOV đề xuất:</span>
                                                                     <span className="font-extrabold text-amber-300 text-base tracking-wider font-mono">
-                                                                        🏷️ {msg.agentAction.couponPayload?.code || 'GIAM20K_AI'}
+                                                                        🏷️ {msg.agentAction.couponPayload?.code || 'TCTSG20K_120K'}
                                                                     </span>
                                                                     <span className="text-gray-400 block text-[10px] mt-0.5">
                                                                         Giảm: <strong className="text-emerald-400">{Number(msg.agentAction.couponPayload?.discountValue || 20000).toLocaleString('vi-VN')}đ</strong> cho đơn từ <strong className="text-white">{Number(msg.agentAction.couponPayload?.minimumOrderValue || 120000).toLocaleString('vi-VN')}đ</strong>
@@ -701,7 +701,7 @@ export const AiCopilot = () => {
                                                                 <div>
                                                                     <span className="text-gray-400 block text-[11px]">Chiến dịch Voucher toàn sàn đề xuất:</span>
                                                                     <span className="font-extrabold text-amber-300 text-base tracking-wider font-mono">
-                                                                        ⚡ {msg.agentAction.couponPayload?.code || 'MEGASALE_AI'}
+                                                                        ⚡ {msg.agentAction.couponPayload?.code || 'MEGASALE_150K'}
                                                                     </span>
                                                                     <span className="text-gray-400 block text-[10px] mt-0.5">
                                                                         Ưu đãi sàn: <strong className="text-emerald-400">{Number(msg.agentAction.couponPayload?.discountValue || 25000).toLocaleString('vi-VN')}đ</strong> cho đơn từ <strong className="text-white">{Number(msg.agentAction.couponPayload?.minimumOrderValue || 150000).toLocaleString('vi-VN')}đ</strong>

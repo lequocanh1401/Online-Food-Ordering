@@ -479,6 +479,9 @@ public class AiCopilotServiceImpl implements AiCopilotService {
         // Trường hợp 3: Đề xuất chiến lược tăng doanh thu & kích cầu giỏ hàng (AOV Upsell)
         if (qLower.contains("tăng doanh thu") || qLower.contains("kích cầu") || qLower.contains("aov") 
                 || qLower.contains("giỏ hàng") || qLower.contains("chiến lược") || qLower.contains("voucher")) {
+            String acronym = getRestaurantAcronym(restName);
+            String suggestedCode = acronym + "20K_120K";
+
             StringBuilder sb = new StringBuilder();
             sb.append("### 💡 Đề Xuất Chiến Lược Tăng Doanh Thu & Kích Cầu Giỏ Hàng (AOV Upsell) — ").append(restName).append("\n\n");
             sb.append("> *Hệ thống AI phân tích ma trận giỏ hàng và đề xuất chiến lược tối ưu hóa ngưỡng khuyến mãi.* \n\n");
@@ -488,7 +491,7 @@ public class AiCopilotServiceImpl implements AiCopilotService {
             sb.append("- **Hành vi người dùng**: Đa số khách hàng chỉ đặt 1 suất cơm đơn lẻ, rất ít khi gọi thêm canh, chả bì hoặc nước giải khát.\n\n");
 
             sb.append("#### 🎯 2. Giải Pháp Kích Cầu Bằng Thuật Toán Khoảng Cách Ngưỡng (Upsell Gap Analysis)\n");
-            sb.append("- Tác tử AI đề xuất phát hành mã **`GIAM20K_AI`** (Giảm 20.000đ cho đơn hàng từ **120.000đ**).\n");
+            sb.append("- Tác tử AI đề xuất phát hành mã **`").append(suggestedCode).append("`** (Giảm 20.000đ cho đơn hàng từ **120.000đ**).\n");
             sb.append("- **Tác động tâm lý**: Khi thấy giỏ hàng 120k được giảm 20k (thực trả 100k), khách hàng sẽ chủ động gọi thêm 1 phần chả trứng (15k) và 1 lon nước ngọt (15k) để đủ điều kiện áp mã.\n");
             sb.append("- **Hiệu quả dự kiến**: Tăng giá trị đơn trung bình (AOV) từ `52.000đ` lên `120.000đ` (**+25% doanh thu thuần** sau chiết khấu).\n\n");
 
@@ -592,17 +595,50 @@ public class AiCopilotServiceImpl implements AiCopilotService {
 
             if (queryLower.contains("chiến dịch") || queryLower.contains("khuyến mãi") || queryLower.contains("voucher") 
                     || queryLower.contains("mega sale") || queryLower.contains("freeship") || queryLower.contains("gmv") || queryLower.contains("kích cầu")) {
+                
+                long discountVal = 25000L;
+                long minOrderVal = 150000L;
+                String discType = "FLAT";
+
+                // Bóc tách số tiền nếu Admin gõ cụ thể
+                java.util.regex.Matcher mDisc = java.util.regex.Pattern.compile("(?:giảm|bớt)\\s*(\\d+)\\s*(k|nghìn|%|pt)?", java.util.regex.Pattern.CASE_INSENSITIVE).matcher(queryLower);
+                if (mDisc.find()) {
+                    try {
+                        long val = Long.parseLong(mDisc.group(1));
+                        String unit = mDisc.group(2) != null ? mDisc.group(2).toLowerCase() : "";
+                        if (unit.contains("%") || unit.contains("pt")) {
+                            discType = "PERCENTAGE";
+                            discountVal = Math.min(val, 50L);
+                        } else {
+                            discountVal = val < 1000 ? val * 1000 : val;
+                        }
+                    } catch (Exception ignored) {}
+                }
+
+                java.util.regex.Matcher mMin = java.util.regex.Pattern.compile("(?:đơn(?:\\s*từ)?|từ)\\s*(\\d+)\\s*(?:k|nghìn|000)?", java.util.regex.Pattern.CASE_INSENSITIVE).matcher(queryLower);
+                if (mMin.find()) {
+                    try {
+                        long mVal = Long.parseLong(mMin.group(1));
+                        minOrderVal = mVal < 1000 ? mVal * 1000 : mVal;
+                    } catch (Exception ignored) {}
+                }
+
+                String discountStr = discType.equals("PERCENTAGE") ? (discountVal + "%") : (discountVal / 1000 + "K");
+                String couponCode = (minOrderVal <= 0)
+                        ? ("GIAM" + discountStr)
+                        : ("MEGASALE_" + (minOrderVal / 1000) + "K");
+
                 Map<String, Object> action = new HashMap<>();
                 action.put("type", "CREATE_GLOBAL_COUPON");
-                action.put("title", "⚡ Tác tử AI Đề Xuất: Khởi Động Chiến Dịch Kích Cầu Sàn 'MEGASALE_AI'");
-                action.put("reason", "Phân tích dữ liệu giao dịch toàn sàn: Tỷ lệ chuyển đổi vào khung giờ ăn trưa văn phòng đang có dấu hiệu chững lại ở các nhà hàng đối tác mới. Tác tử AI đề xuất phát hành voucher toàn sàn 'MEGASALE_AI' (Giảm 25.000đ cho đơn từ 150.000đ) nhằm kích thích người dùng đặt đơn nhóm, dự kiến đẩy tổng GMV toàn sàn tăng 20 - 30%.");
-                action.put("buttonLabel", "🚀 Đồng ý: Phê duyệt Chiến dịch Sàn 'MEGASALE_AI'");
-                action.put("successMessage", "Chiến dịch Mega Sale đã được kích hoạt! Voucher 'MEGASALE_AI' đã sẵn sàng áp dụng cho tất cả khách hàng trên toàn sàn.");
+                action.put("title", "⚡ Tác tử AI Đề Xuất: Khởi Động Chiến Dịch Sàn '" + couponCode + "'");
+                action.put("reason", "Phân tích dữ liệu giao dịch toàn sàn: Tác tử AI đề xuất phát hành voucher toàn sàn '" + couponCode + "' (" + (discType.equals("PERCENTAGE") ? ("Giảm " + discountVal + "%") : ("Giảm " + NumberFormatUtil(discountVal) + "đ")) + (minOrderVal > 0 ? (" cho đơn từ " + NumberFormatUtil(minOrderVal) + "đ") : " không giới hạn đơn") + ") nhằm kích thích người dùng đặt đơn nhóm, dự kiến đẩy tổng GMV toàn sàn tăng 20 - 30%.");
+                action.put("buttonLabel", "🚀 Đồng ý: Phê duyệt Chiến dịch Sàn '" + couponCode + "'");
+                action.put("successMessage", "Chiến dịch Mega Sale đã được kích hoạt! Voucher '" + couponCode + "' đã sẵn sàng áp dụng cho tất cả khách hàng trên toàn sàn.");
                 Map<String, Object> couponPayload = new HashMap<>();
-                couponPayload.put("code", "MEGASALE_AI");
-                couponPayload.put("discountType", "FLAT");
-                couponPayload.put("discountValue", 25000L);
-                couponPayload.put("minimumOrderValue", 150000L);
+                couponPayload.put("code", couponCode);
+                couponPayload.put("discountType", discType);
+                couponPayload.put("discountValue", discountVal);
+                couponPayload.put("minimumOrderValue", minOrderVal);
                 couponPayload.put("active", true);
                 action.put("couponPayload", couponPayload);
                 return action;
@@ -612,27 +648,84 @@ public class AiCopilotServiceImpl implements AiCopilotService {
         }
 
         // Restaurant Owner Action: Dynamic Promotion & Smart Revenue Upselling (AOV Optimization)
-        // DUY NHẤT Prompt 2 mới kích hoạt Tác tử tạo mã kích cầu giỏ hàng
         if (queryLower.contains("tăng doanh thu") || queryLower.contains("kích cầu") || queryLower.contains("aov") 
                 || queryLower.contains("giỏ hàng") || queryLower.contains("voucher")) {
+            String restName = (String) metrics.getOrDefault("restaurantName", "Tiệm Cơm Tấm Sài Gòn");
+            String acronym = getRestaurantAcronym(restName);
+
+            long discountVal = 20000L;
+            long minOrderVal = 120000L;
+            String discType = "FLAT";
+
+            // Bóc tách số tiền nếu chủ quán gõ cụ thể (Dynamic Intent Extraction)
+            // Ví dụ: "giảm 10k", "giảm 15k", "giảm 15%"
+            java.util.regex.Matcher mDisc = java.util.regex.Pattern.compile("(?:giảm|bớt)\\s*(\\d+)\\s*(k|nghìn|%|pt)?", java.util.regex.Pattern.CASE_INSENSITIVE).matcher(queryLower);
+            if (mDisc.find()) {
+                try {
+                    long val = Long.parseLong(mDisc.group(1));
+                    String unit = mDisc.group(2) != null ? mDisc.group(2).toLowerCase() : "";
+                    if (unit.contains("%") || unit.contains("pt")) {
+                        discType = "PERCENTAGE";
+                        discountVal = Math.min(val, 50L);
+                    } else {
+                        discountVal = val < 1000 ? val * 1000 : val;
+                    }
+                } catch (Exception ignored) {}
+            }
+
+            // Bóc tách đơn tối thiểu nếu có: "đơn từ 80k", "đơn 100k"
+            java.util.regex.Matcher mMin = java.util.regex.Pattern.compile("(?:đơn(?:\\s*từ)?|từ)\\s*(\\d+)\\s*(?:k|nghìn|000)?", java.util.regex.Pattern.CASE_INSENSITIVE).matcher(queryLower);
+            if (mMin.find()) {
+                try {
+                    long mVal = Long.parseLong(mMin.group(1));
+                    minOrderVal = mVal < 1000 ? mVal * 1000 : mVal;
+                } catch (Exception ignored) {}
+            } else if (discountVal != 20000L) {
+                // Tự tính ngưỡng tối thiểu hợp lý (gấp 4-5 lần số tiền giảm) để bảo toàn biên lợi nhuận
+                minOrderVal = discType.equals("PERCENTAGE") ? 100000L : discountVal * 5;
+            }
+
+            // Định dạng mã chuẩn: Nếu minOrderVal <= 0 -> TCTSG15%, nếu minOrderVal > 0 -> TCTSG20K_120K
+            String discountStr = discType.equals("PERCENTAGE") ? (discountVal + "%") : (discountVal / 1000 + "K");
+            String couponCode = (minOrderVal <= 0) 
+                    ? (acronym + discountStr) 
+                    : (acronym + discountStr + "_" + (minOrderVal / 1000) + "K");
+
             Map<String, Object> action = new HashMap<>();
             action.put("type", "CREATE_RESTAURANT_COUPON");
             action.put("restaurantId", restaurantId != null ? restaurantId : 1L);
-            action.put("title", "🎁 Tác tử AI Đề Xuất: Tối Ưu Doanh Thu & Kích Cầu Giỏ Hàng (AOV Upsell)");
-            action.put("reason", "Phân tích dữ liệu đơn hàng cho thấy khách chủ yếu gọi suất cơm đơn lẻ (~50.000đ - 55.000đ), khiến giá trị giỏ hàng trung bình (AOV) của quán ở mức thấp. Tác tử AI đề xuất phát hành mã kích cầu 'GIAM20K_AI' (Giảm 20.000đ cho đơn từ 120.000đ) nhằm thúc đẩy khách đặt kèm đồ uống và món phụ (Upsell Gap Analysis), dự kiến nâng AOV lên 120.000đ (+25% doanh thu).");
-            action.put("buttonLabel", "🚀 Đồng ý: AI tạo & kích hoạt mã 'GIAM20K_AI' ngay");
-            action.put("successMessage", "Mã khuyến mãi 'GIAM20K_AI' đã được kích hoạt thành công trên thực đơn của quán!");
+            action.put("title", "🎁 Tác tử AI Đề Xuất: Tối Ưu Doanh Thu & Kích Cầu Giỏ Hàng (" + couponCode + ")");
+            action.put("reason", "Phân tích dữ liệu đơn hàng cho thấy khách chủ yếu gọi suất cơm đơn lẻ (~50.000đ - 55.000đ), khiến giá trị giỏ hàng trung bình (AOV) của quán ở mức thấp. Tác tử AI đề xuất phát hành mã '" + couponCode + "' (" + (discType.equals("PERCENTAGE") ? ("Giảm " + discountVal + "%") : ("Giảm " + NumberFormatUtil(discountVal) + "đ")) + (minOrderVal > 0 ? (" cho đơn từ " + NumberFormatUtil(minOrderVal) + "đ") : " không giới hạn đơn") + ") nhằm thúc đẩy khách đặt kèm đồ uống và món phụ (Upsell Gap Analysis), dự kiến nâng AOV lên " + NumberFormatUtil(minOrderVal) + "đ (+25% doanh thu bán mà quán vẫn bảo toàn biên lợi nhuận lãi ròng).");
+            action.put("buttonLabel", "🚀 Đồng ý: AI tạo & kích hoạt mã '" + couponCode + "' ngay");
+            action.put("successMessage", "Mã khuyến mãi '" + couponCode + "' đã được kích hoạt thành công trên thực đơn của quán!");
             Map<String, Object> couponPayload = new HashMap<>();
-            couponPayload.put("code", "GIAM20K_AI");
-            couponPayload.put("discountType", "FLAT");
-            couponPayload.put("discountValue", 20000L);
-            couponPayload.put("minimumOrderValue", 120000L);
+            couponPayload.put("code", couponCode);
+            couponPayload.put("discountType", discType);
+            couponPayload.put("discountValue", discountVal);
+            couponPayload.put("minimumOrderValue", minOrderVal);
             couponPayload.put("active", true);
             action.put("couponPayload", couponPayload);
             return action;
         }
 
         return null;
+    }
+
+    private String getRestaurantAcronym(String name) {
+        if (name == null || name.trim().isEmpty()) return "TCTSG";
+        String clean = name.split("[-–|]")[0].trim();
+        String[] words = clean.split("\\s+");
+        StringBuilder sb = new StringBuilder();
+        for (String w : words) {
+            if (!w.isEmpty()) {
+                sb.append(w.charAt(0));
+            }
+        }
+        String acr = java.text.Normalizer.normalize(sb.toString(), java.text.Normalizer.Form.NFD)
+                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
+                .replaceAll("[^A-Za-z0-9]", "")
+                .toUpperCase();
+        return acr.isEmpty() ? "TCTSG" : acr;
     }
 
     /**
