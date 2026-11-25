@@ -287,11 +287,13 @@ export const Chatbot = () => {
             text.includes("chua") ||
             text.includes("béo");
 
-        // Nếu câu hỏi hoàn toàn ngoài lề dịch vụ ẩm thực (thời tiết, chứng khoán, tin tức...)
+        const standardBestSellerFallback = {
+            text: "Dạ hiện tại tôi chưa tìm thấy món ăn hoặc đồ uống nào trong thực đơn hoàn toàn khớp với yêu cầu chi tiết này của bạn. 🥺\n\nBạn có thể thử chọn các món Best-Seller nổi tiếng như **Cơm Sườn Bì Chả Sài Gòn**, **Phở Bò Tái Lăn Bát Đàn**, **Bún Chả Hương Liên (Obama)**, **Pizza 4 Cheeses** hay **Trà Ô Long Phê La** nhé! 😊"
+        };
+
+        // Nếu câu hỏi hoàn toàn ngoài lề dịch vụ ẩm thực hoặc không khớp nhu cầu
         if (!isFoodOrServiceRelated) {
-            return {
-                text: "Dạ xin lỗi bạn, tôi là **Trợ lý Ẩm thực AI (Concierge)** chuyên phục vụ trên nền tảng **Online Food Ordering**! 🍜🥤\n\nTôi được thiết kế chuyên sâu để giúp bạn:\n• 🍱 Tìm kiếm và gợi ý các món ăn, đồ uống chuẩn vị theo sở thích và ngân sách\n• 🎟️ Cung cấp mã giảm giá hot và thông tin ưu đãi đối tác\n• 💳 Hướng dẫn quy trình đặt món, thanh toán Stripe và chính sách hủy đơn hàng\n\nHiện tại tôi chưa hỗ trợ các chủ đề ngoài dịch vụ ẩm thực (như thời tiết, tin tức xã hội hay kỹ thuật). Bạn hãy thử hỏi tôi các câu như: *'Trưa nay ăn gì?'*, *'Gợi ý trà sữa giải nhiệt'* hoặc *'Món nào bán chạy nhất'* nhé! 😊"
-            };
+            return standardBestSellerFallback;
         }
 
         // D. Phát hiện các món phổ biến ngoài thực đơn (Unsupported Catalog Items)
@@ -310,9 +312,7 @@ export const Chatbot = () => {
 
         const matchedUnsupported = unsupportedDishKeywords.find(item => text.includes(item.kw));
         if (matchedUnsupported) {
-            return {
-                text: `Dạ hiện tại trên hệ thống **Online Food Ordering** chưa có đối tác nhà hàng nào phục vụ món **${matchedUnsupported.name}** ạ! 🥺\n\nTuy nhiên, các quán đối tác đang phục vụ rất nhiều món ngon Best-Seller cực kỳ chuẩn vị như **Cơm Sườn Bì Chả Sài Gòn**, **Phở Bò Tái Bát Đàn**, **Bún Chả Hương Liên (Obama)**, **Pizza 4 Cheeses**, **Sushi Rồng** hay **Trà Ô Long Phê La**.\n\nBạn có muốn đổi sang thử một trong các món Best-Seller này không ạ? 😊`
-            };
+            return standardBestSellerFallback;
         }
 
         // E. Trích xuất ý định món ăn cụ thể

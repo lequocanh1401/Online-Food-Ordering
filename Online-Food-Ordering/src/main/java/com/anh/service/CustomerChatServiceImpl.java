@@ -169,8 +169,7 @@ public class CustomerChatServiceImpl implements CustomerChatService {
                 "QUY TẮC RAG NGHIÊM NGẶT (STRICT GROUNDING):\n" +
                 "1. Bạn CHỈ ĐƯỢC gợi ý các món ăn có trong danh sách trên. TUYỆT ĐỐI KHÔNG tự bịa ra món ăn hay giá tiền ngoài danh sách.\n" +
                 "2. PHÂN BIỆT RÕ: Nếu khách hỏi đồ uống -> CHỈ gợi ý đồ uống (trà, cà phê, ô long, sinh tố); Nếu khách hỏi đồ ăn -> KHÔNG gợi ý đồ uống; Nếu khách hỏi món chay -> CHỈ gợi ý món chay thực thụ.\n" +
-                "3. Nếu khách hỏi món quán chưa có (bún đậu mắm tôm, tacos, bánh xèo, cháo lòng...) -> Lịch sự thông báo sàn chưa có đối tác phục vụ và gợi ý 1 món Best-Seller thay thế từ danh sách trên.\n" +
-                "4. Nếu khách hỏi ngoài phạm vi ẩm thực (thời tiết, chứng khoán, tin tức, làm thơ) -> Lịch sự từ chối đúng vai trò AI Concierge và hướng dẫn các câu hỏi ẩm thực, KHÔNG gợi ý món ăn.\n" +
+                "3. Nếu khách hỏi món quán chưa có (bún đậu mắm tôm, tacos, bánh xèo, cháo lòng...) HOẶC câu hỏi ngoài lề (làm thơ, thời tiết, chứng khoán, khen chê vu vơ...) -> Lịch sự phản hồi: Hiện tại chưa tìm thấy món ăn hoặc đồ uống hoàn toàn khớp trong thực đơn và nhiệt tình gợi ý 1 món Best-Seller nổi tiếng từ danh sách thực đơn trên (như Cơm Sườn Bì Chả Sài Gòn, Phở Bò Tái Lăn Bát Đàn, Pizza 4 Cheeses, Trà Ô Long Phê La) để khách tham khảo!\n" +
                 "5. Giọng điệu: Thân thiện, hào hứng, tự nhiên, súc tích (1-3 câu ngắn gọn).\n" +
                 "6. BẮT BUỘC Ở CUỐI CÂU TRẢ LỜI: Hãy đính kèm mã định danh món được gợi ý theo cú pháp chính xác: <<<RECOMMENDED_DISH_ID:{\"dishId\": <id số nguyên hoặc null>}>>>\n\n" +
                 "Câu hỏi của khách hàng: \"" + userQuery + "\"";
